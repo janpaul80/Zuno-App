@@ -25,12 +25,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24">
           
-          {/* Logo Section - Custom Typography Gradient Logo matching the concept benchmark */}
+          {/* Logo - Official ZUNO Logo Image */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="group flex items-center">
-              <span className="font-luckiest text-3xl sm:text-4xl italic tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-zuno-gold via-zuno-blue via-zuno-purple to-zuno-magenta filter drop-shadow-[0_0_10px_rgba(0,210,255,0.6)] group-hover:scale-105 group-hover:-rotate-1 transition-all duration-200">
-                ZUNO
-              </span>
+              <img
+                src="/logo-zuno.png"
+                alt="ZUNO"
+                className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(255,107,0,0.4)] group-hover:scale-105 transition-transform duration-200"
+              />
             </Link>
           </div>
 
@@ -56,12 +58,12 @@ export default function Navbar() {
               );
             })}
             
-            {/* Play Now Skewed corner action button */}
+            {/* PLAY NOW — benchmark artwork style: angled, thick black border, shadow, arcade/comic feel */}
             <Link
               href="/how-to-play"
-              className="ml-6 px-6 py-2.5 rounded font-russo text-xs font-black uppercase tracking-widest game-skew-btn-gold"
+              className="ml-6 inline-flex items-center justify-center px-7 py-2.5 -skew-x-12 border-[2.5px] border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.11em] text-xs shadow-[0_0_16px_rgba(255,122,0,0.5),4px_4px_0_#14002e] hover:shadow-[0_0_20px_rgba(255,122,0,0.65),5px_5px_0_#14002e] hover:-translate-y-0.5 transition-all duration-150"
             >
-              <span>Play Now</span>
+              <span className="skew-x-12 inline-block">Play Now</span>
             </Link>
           </div>
 

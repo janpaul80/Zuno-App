@@ -86,8 +86,8 @@ export default function Footer() {
           <div className="space-y-6">
             <Link href="/" className="inline-block">
               <img
-                src="/zuno-logo.png"
-                alt="ZUNO Logo"
+                src="/logo-zuno.png"
+                alt="ZUNO"
                 className="h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,107,0,0.3)] hover:scale-105 transition-transform duration-300"
               />
             </Link>
