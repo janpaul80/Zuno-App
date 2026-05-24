@@ -3,25 +3,27 @@
 @theme {
   --color-zuno-blue: #00d2ff;
   --color-zuno-purple: #bd00ff;
-  --color-zuno-magenta: #ec4899;
-  --color-zuno-gold: #facc15;
-  --color-zuno-orange: #f97316;
-  --color-zuno-green: #39ff14;
+  --color-zuno-magenta: #ff2bd6;
+  --color-zuno-gold: #ffd21f;
+  --color-zuno-orange: #ff7a00;
+  --color-zuno-green: #7cff00;
   --color-zuno-dark: #030214;
-  
+
   --font-orbitron: var(--font-orbitron);
   --font-inter: var(--font-inter);
   --font-luckiest: var(--font-luckiest);
   --font-russo: var(--font-russo);
+  --font-bangers: var(--font-bangers);
 }
 
 :root {
-  --background: #030214;
+  --background: #020617;
   --foreground: #ffffff;
   --font-orbitron: "Orbitron", sans-serif;
   --font-inter: "Inter", sans-serif;
   --font-luckiest: "Luckiest Guy", sans-serif;
   --font-russo: "Russo One", sans-serif;
+  --font-bangers: "Bangers", cursive;
 }
 
 body {
@@ -36,7 +38,7 @@ body {
   width: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: #030214;
+  background: #020617;
   border-left: 3px solid #000;
 }
 ::-webkit-scrollbar-thumb {
@@ -54,200 +56,31 @@ body {
     transform: translateY(0px) translateX(0px) scale(0.8) rotate(0deg);
     opacity: 0;
   }
-  10% {
-    opacity: 0.7;
-  }
-  90% {
-    opacity: 0.7;
-  }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
   100% {
     transform: translateY(-120px) translateX(15px) scale(1.1) rotate(180deg);
     opacity: 0;
   }
 }
-
 .animate-embers {
   animation: embers-float 8s ease-in-out infinite;
 }
 
 /* Pulsing Cosmic Nebula Background */
 @keyframes nebula-pulse {
-  0%, 100% {
-    opacity: 0.35;
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    opacity: 0.55;
-    transform: scale(1.1) rotate(5deg);
-  }
+  0%, 100% { opacity: 0.35; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.55; transform: scale(1.1) rotate(5deg); }
 }
-
 .animate-nebula {
   animation: nebula-pulse 15s ease-in-out infinite;
 }
 
-/* Skewed Gaming Actions Button Styles (Concept Benchmarks) */
-.game-skew-btn-gold {
-  transform: skewX(-12deg);
-  background: linear-gradient(to bottom, #facc15, #f97316);
-  border: 3px solid #000000;
-  box-shadow: 4px 4px 0px 0px #bd00ff;
-  color: #000000;
-  transition: all 0.15s ease-in-out;
-  text-shadow: 0.5px 0.5px 0px #fff;
-}
-.game-skew-btn-gold > * {
-  transform: skewX(12deg); /* Unskew text contents */
-}
-.game-skew-btn-gold:hover {
-  transform: skewX(-12deg) translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #bd00ff;
-  background: linear-gradient(to bottom, #fde047, #ea580c);
-}
-.game-skew-btn-gold:active {
-  transform: skewX(-12deg) translate(3px, 3px);
-  box-shadow: 1px 1px 0px 0px #bd00ff;
-}
-
-.game-skew-btn-blue {
-  transform: skewX(-12deg);
-  background: linear-gradient(to bottom, #00d2ff, #1d4ed8);
-  border: 3px solid #000000;
-  box-shadow: 4px 4px 0px 0px #ec4899;
-  color: #ffffff;
-  transition: all 0.15s ease-in-out;
-  text-shadow: 1px 1px 0px #000;
-}
-.game-skew-btn-blue > * {
-  transform: skewX(12deg); /* Unskew text contents */
-}
-.game-skew-btn-blue:hover {
-  transform: skewX(-12deg) translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #ec4899;
-  background: linear-gradient(to bottom, #38bdf8, #1e40af);
-}
-.game-skew-btn-blue:active {
-  transform: skewX(-12deg) translate(3px, 3px);
-  box-shadow: 1px 1px 0px 0px #ec4899;
-}
-
-/* Glowing Console Card Decks (.glass-panel) */
-.glass-panel {
-  background-color: rgba(5, 2, 26, 0.85);
-  border: 3px solid #1e1b4b;
-  box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.glass-panel:hover {
-  border-color: #bd00ff;
-  box-shadow: 0px 0px 16px 2px rgba(189, 0, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-/* Custom Jagged Gaming Containers (Surrounds "Why Play Zuno") */
-.jagged-console-container {
-  position: relative;
-  background-color: rgba(2, 2, 28, 0.9);
-  border: 3px solid #000000;
-  box-shadow: 0px 0px 30px 0px rgba(189, 0, 255, 0.15);
-  clip-path: polygon(
-    0% 12px, 
-    12px 0%, 
-    calc(100% - 12px) 0%, 
-    100% 12px, 
-    100% calc(100% - 12px), 
-    calc(100% - 12px) 100%, 
-    12px 100%, 
-    0% calc(100% - 12px)
-  );
-}
-
-/* Glowing Edges and Color-Coded Card Themes */
-.glow-card-blue {
-  border-top: 3px solid #00d2ff;
-  background: linear-gradient(to bottom, rgba(0, 210, 255, 0.03), transparent);
-}
-.glow-card-blue:hover {
-  border-color: #00d2ff;
-  box-shadow: 0px 0px 20px 0px rgba(0, 210, 255, 0.25);
-}
-
-.glow-card-purple {
-  border-top: 3px solid #bd00ff;
-  background: linear-gradient(to bottom, rgba(189, 0, 255, 0.03), transparent);
-}
-.glow-card-purple:hover {
-  border-color: #bd00ff;
-  box-shadow: 0px 0px 20px 0px rgba(189, 0, 255, 0.25);
-}
-
-.glow-card-gold {
-  border-top: 3px solid #facc15;
-  background: linear-gradient(to bottom, rgba(250, 204, 21, 0.03), transparent);
-}
-.glow-card-gold:hover {
-  border-color: #facc15;
-  box-shadow: 0px 0px 20px 0px rgba(250, 204, 21, 0.25);
-}
-
-.glow-card-red {
-  border-top: 3px solid #ec4899;
-  background: linear-gradient(to bottom, rgba(236, 72, 153, 0.03), transparent);
-}
-.glow-card-red:hover {
-  border-color: #ec4899;
-  box-shadow: 0px 0px 20px 0px rgba(236, 72, 153, 0.25);
-}
-
-.glow-card-green {
-  border-top: 3px solid #39ff14;
-  background: linear-gradient(to bottom, rgba(57, 255, 20, 0.03), transparent);
-}
-.glow-card-green:hover {
-  border-color: #39ff14;
-  box-shadow: 0px 0px 20px 0px rgba(57, 255, 20, 0.25);
-}
-
-/* Glowing Border Classes for Subpage Modules */
-.glow-border-blue {
-  border: 2px solid #00d2ff;
-  box-shadow: 0px 0px 12px 0px rgba(0, 210, 255, 0.2);
-}
-.glow-border-orange {
-  border: 2px solid #f97316;
-  box-shadow: 0px 0px 12px 0px rgba(249, 115, 22, 0.2);
-}
-.glow-border-purple {
-  border: 2px solid #bd00ff;
-  box-shadow: 0px 0px 12px 0px rgba(189, 0, 255, 0.2);
-}
-.glow-border-green {
-  border: 2px solid #39ff14;
-  box-shadow: 0px 0px 12px 0px rgba(57, 255, 20, 0.2);
-}
-
-/* Comic Text Stroke & Shadow Effects */
-.comic-text-stroke {
-  -webkit-text-stroke: 2px #000000;
-  text-shadow: 4px 4px 0px #000000;
-}
-.comic-text-stroke-sm {
-  -webkit-text-stroke: 1.5px #000000;
-  text-shadow: 3px 3px 0px #000000;
-}
-
 /* Animated Sunburst Vector Keyframes */
 @keyframes rotate-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-
 .animate-rotate-slow {
   animation: rotate-slow 50s linear infinite;
 }
@@ -258,7 +91,6 @@ body {
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
-
 .animate-game-float {
   animation: game-float 6s ease-in-out infinite;
 }
@@ -267,7 +99,30 @@ body {
   0%, 100% { opacity: 0.25; }
   50% { opacity: 0.45; }
 }
-
 .animate-pulse-slow {
   animation: pulse-slow 6s ease-in-out infinite;
+}
+
+/* Slow drifting cloud */
+@keyframes cloud-drift {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(20px) scale(1.05); }
+  100% { transform: translateX(0) scale(1); }
+}
+.animate-cloud-drift {
+  animation: cloud-drift 20s ease-in-out infinite;
+}
+
+/* Jagged console clip */
+.jagged-console-container {
+  position: relative;
+  background-color: rgba(2, 2, 28, 0.9);
+  border: 3px solid #000000;
+  box-shadow: 0px 0px 30px 0px rgba(189, 0, 255, 0.15);
+  clip-path: polygon(
+    0% 12px, 12px 0%,
+    calc(100% - 12px) 0%, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    12px 100%, 0% calc(100% - 12px)
+  );
 }
