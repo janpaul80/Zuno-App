@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" class="inter_c15e96cb-module__0bjUvq__variable russo_one_9d2bb8ba-module__qLAxCq__variable luckiest_guy_b4aace58-module__2l4HhG__variable">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preload" href="/_next/static/media/3601f32897df77ee-s.p.0ps8kv494pv52.woff2" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" href="/_next/static/media/83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" href="/_next/static/media/e58a1399fcbda48b-s.p.0fzixq0up6-gw.woff2" as="font" crossorigin="" type="font/woff2"/>
+<link rel="preload" as="image" href="/zuno-logo.png"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" />
+<style>
+  :root {
+    --deep-navy:#020617;
+    --cosmic-purple:#14002e;
+    --electric-blue:#00c8ff;
+    --neon-magenta:#ff2bd6;
+    --zuno-yellow:#ffd21f;
+    --adventure-orange:#ff7a00;
+    --lime-green:#7cff00;
+    --white:#ffffff;
+  }
+  body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background: var(--deep-navy);
+    color: var(--white);
+    overflow-x:hidden;
+  }
+  .nav {
+    position:fixed;
+    top:0; left:0; right:0;
+    background:rgba(0,0,0,0.8);
+    backdrop-filter:blur(4px);
+    padding:0.5rem 1rem;
+    display:flex;
+    justify-content:center;
+    gap:1rem;
+    z-index:10;
+  }
+  .nav a {
+    font-family: 'Russo One', sans-serif;
+    font-size:0.85rem;
+    color:var(--white);
+    text-decoration:none;
+    position:relative;
+  }
+  .nav a::after{
+    content:"";
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:0;
+    height:2px;
+    background:var(--zuno-yellow);
+    transition:width .3s;
+  }
+  .nav a:hover::after{width:100%;}
+  .play-btn{
+    font-family:'Russo One',sans-serif;
+    background:var(--zuno-yellow);
+    color:var(--deep-navy);
+    border:none;
+    padding:0.6rem 1.2rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:0.9rem;
+    transition:transform .2s;
+  }
+  .play-btn:hover{transform:scale(1.05);}
+  .hero{
+    position:relative;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:linear-gradient(135deg,var(--cosmic-purple),var(--deep-navy));
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at center,rgba(0,200,255,0.15),transparent 70%);
+    z-index:0;
+  }
+  .hero-content{
+    position:relative;
+    z-index:1;
+    max-width:1200px;
+  }
+  .hero h1{
+    font-family:'Bangers',cursive;
+    font-size:8rem;
+    margin:0;
+    text-shadow:0 0 10px var(--electric-blue),0 0 20px var(--neon-magenta);
+  }
+  .hero p{
+    font-size:1.5rem;
+    margin:1rem 0;
+    color:var(--white);
+  }
+  .hero .logo{
+    max-width:200px;
+    margin:0 auto;
+  }
+  .hero .animals{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0; left:0;
+    pointer-events:none;
+    opacity:0.8;
+  }
+  .hero .animals img{
+    position:absolute;
+    width:150px;
+    opacity:0.6;
+  }
+  .section{
+    padding:4rem 1rem;
+    background:var(--cosmic-purple);
+    color:var(--white);
+    text-align:center;
+  }
+  .section h2{
+    font-family:'Luckiest Guy',cursive;
+    font-size:2.5rem;
+    margin-bottom:1rem;
+    color:var(--electric-blue);
+    text-shadow:0 0 5px var(--electric-blue);
+  }
+  .card{
+    background:rgba(0,0,0,0.5);
+    border:2px solid var(--electric-blue);
+    border-radius:8px;
+    padding:1.5rem;
+    margin:1rem auto;
+    max-width:600px;
+    box-shadow:0 0 15px var(--electric-blue);
+    transition:transform .3s;
+  }
+  .card:hover{transform:scale(1.02);}
+  .footer{
+    background:var(--deep-navy);
+    padding:2rem 1rem;
+    text-align:center;
+    font-size:0.9rem;
+    color:var(--gray);
+  }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/">Home</a>
+  <a href="/about">About ZUNO</a>
+  <a href="/how-to-play">How To Play</a>
+  <a href="/rewards">Rewards &amp; Coins</a>
+  <a href="/ai-operations">AI Operations</a>
+  <a href="/support">Support</a>
+  <button class="play-btn">Play Now</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <img src="/zuno-logo.png" alt="ZUNO Logo" class="logo">
+    <h1>ENTER THE ARENA.</h1>
+    <h1>BECOME A LEGEND.</h1>
+    <p>ZUNO is a next-gen animal battle adventure where strategy, skill, and AI collide in an epic fight for glory.</p>
+  </div>
+  <div class="animals">
+    <img src="/images/character-showcase.png" alt="Blue Wolf" class="animals-img" style="top:10%; left:10%; transform:rotate(15deg);">
+    <img src="/images/character-showcase.png" alt="Orange Fox" class="animals-img" style="top:20%; right:10%; transform:rotate(-10deg);">
+    <img src="/images/character-showcase.png" alt="Panda" class="animals-img" style="bottom:15%; left:50%; transform:translateX(-50%) rotate(5deg);">
+    <img src="/images/character-showcase.png" alt="Cheetah" class="animals-img" style="bottom:30%; right:15%; transform:rotate(-15deg);">
+  </div>
+</section>
+
+<section class="section">
+  <h2>WHY PLAY ZUNO?</h2>
+  <div class="card">
+    <h3>Strategic Battles</h3>
+    <p>Use unique skills and team combos to win intense battles.</p>
+  </div>
+  <div class="card">
+    <h3>AI Powered</h3>
+    <p>Advanced AI systems adapt to your moves in real-time.</p>
+  </div>
+  <div class="card">
+    <h3>Earn &amp; Upgrade</h3>
+    <p>Earn rewards, upgrade your animals, and unlock new powers.</p>
+  </div>
+  <div class="card">
+    <h3>Compete &amp; Rank</h3>
+    <p>Climb the ranks and prove you’re the ultimate champion.</p>
+  </div>
+  <div class="card">
+    <h3>Explore the World</h3>
+    <p>Discover stunning arenas and hidden secrets.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>EPIC ANIMAL BATTLES</h2>
+  <p>Join fast-paced 3v3 battles in stunning arenas. Build your team, master your strategy, and crush your opponents!</p>
+  <div class="card">
+    <h3>Explore Gameplay</h3>
+    <a href="/how-to-play" class="play-btn">Explore Gameplay</a>
+  </div>
+</section>
+
+<section class="section">
+  <h2>BUILD YOUR TEAM.</h2>
+  <h1>RULE THE ARENA.</h1>
+  <p>Collect, upgrade, and evolve powerful animals. Your legend starts now.</p>
+  <a href="/how-to-play" class="play-btn">🐾 Play Zuno Now</a>
+</section>
+
+<footer class="footer">
+  © 2026 ZUNO Game Studio. All rights reserved.<br>
+  ZUNO was created by Paul Hartmann.<br>
+  Powered by AI operations v1.0.0 (Production Build)
+</footer>
+</body>
+</html>
