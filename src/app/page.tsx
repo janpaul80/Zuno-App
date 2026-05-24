@@ -46,39 +46,35 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen overflow-hidden pb-16">
       
-      {/* Hero / Main Arena Section */}
-      <section className="relative flex flex-col items-center justify-center text-center px-4 pt-8 pb-16 z-10">
-        
-        {/* Rotating Sunburst Rays Background */}
-        <div className="absolute top-[35%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[900px] h-[900px] pointer-events-none z-0 opacity-40 mix-blend-screen animate-rotate-slow bg-[radial-gradient(circle_at_center,rgba(189,0,255,0.25)_0%,rgba(0,210,255,0.15)_30%,transparent_70%)]" />
-        
-        <div className="max-w-6xl mx-auto space-y-8 relative z-10">
-          
-          {/* Main Enormous Logo - Glowing Drop Shadow */}
-          <div className="flex justify-center animate-game-float relative">
-            <div className="absolute inset-0 bg-zuno-purple/10 rounded-full filter blur-3xl scale-90" />
-            <img
-              src="/zuno-logo.png"
-              alt="ZUNO Official Logo"
-              className="w-80 sm:w-[460px] md:w-[580px] lg:w-[680px] h-auto object-contain filter drop-shadow-[0_0_24px_rgba(189,0,255,0.35)] hover:scale-[1.02] transition-all duration-300 cursor-pointer"
-            />
-          </div>
+      {/* Hero / Main Arena Section - Benchmark Full-Screen Cinematic Backdrop */}
+      <section 
+        className="relative flex flex-col items-center justify-end text-center px-4 pt-64 pb-20 md:pb-28 min-h-[95vh] sm:min-h-[100vh] z-10 bg-cover bg-center overflow-hidden border-b border-white/5"
+        style={{ backgroundImage: "url('/zuno-logo.png')" }}
+      >
+        {/* Soft atmospheric overlay gradients to blend with global twilight sky */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030214] via-[#030214]/65 to-transparent z-0 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-[#030214]/85 to-transparent z-0 pointer-events-none" />
 
+        {/* Rotating Sunburst Rays Background Overlay */}
+        <div className="absolute top-[35%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[900px] h-[900px] pointer-events-none z-0 opacity-25 mix-blend-screen animate-rotate-slow bg-[radial-gradient(circle_at_center,rgba(189,0,255,0.25)_0%,rgba(0,210,255,0.15)_30%,transparent_70%)]" />
+        
+        <div className="max-w-6xl mx-auto space-y-6 relative z-10">
+          
           {/* Heading - Cinematic Capitals */}
           <div className="space-y-1">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-russo font-black uppercase italic tracking-widest text-white leading-none">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-russo font-black uppercase italic tracking-widest text-white leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
               ENTER THE ARENA.
             </h2>
             <h1 className="text-4xl sm:text-6xl lg:text-8xl font-luckiest uppercase italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-zuno-gold via-zuno-orange to-zuno-magenta comic-text-stroke leading-none">
               BECOME A LEGEND.
             </h1>
-            <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-white/90 font-medium tracking-wide leading-relaxed pt-3">
+            <p className="max-w-2xl mx-auto text-xs sm:text-sm md:text-base text-white/90 font-bold tracking-wide leading-relaxed pt-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               ZUNO is a next-gen animal battle adventure where strategy, skill, and AI collide in an epic fight for glory.
             </p>
           </div>
 
           {/* Call to Actions - Dual Skewed Gaming Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-2">
             <Link
               href="/how-to-play"
               className="group px-8 py-3.5 font-russo font-black text-sm uppercase tracking-widest game-skew-btn-gold flex items-center gap-2"

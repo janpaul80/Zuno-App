@@ -25,14 +25,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24">
           
-          {/* Logo Section - Glowing Drop Shadow */}
+          {/* Logo Section - Custom Typography Gradient Logo matching the concept benchmark */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="group flex items-center">
-              <img
-                src="/zuno-logo.png"
-                alt="ZUNO Logo"
-                className="h-12 sm:h-16 w-auto object-contain transition-all duration-200 group-hover:scale-105 group-hover:-rotate-1 filter drop-shadow-[0_0_12px_rgba(0,210,255,0.4)]"
-              />
+              <span className="font-luckiest text-3xl sm:text-4xl italic tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-zuno-gold via-zuno-blue via-zuno-purple to-zuno-magenta filter drop-shadow-[0_0_10px_rgba(0,210,255,0.6)] group-hover:scale-105 group-hover:-rotate-1 transition-all duration-200">
+                ZUNO
+              </span>
             </Link>
           </div>
 
