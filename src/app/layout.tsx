@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Inter, Russo_One, Luckiest_Guy } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,9 +10,17 @@ const inter = Inter({
   display: "swap",
 });
 
-const orbitron = Orbitron({
+const russo = Russo_One({
   subsets: ["latin"],
-  variable: "--font-orbitron",
+  weight: "400",
+  variable: "--font-russo",
+  display: "swap",
+});
+
+const luckiest = Luckiest_Guy({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-luckiest",
   display: "swap",
 });
 
@@ -51,25 +59,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${orbitron.variable}`}>
-      <body className="bg-deep-navy text-gray-100 flex flex-col min-h-screen relative antialiased selection:bg-neon-orange selection:text-white">
+    <html lang="en" className={`${inter.variable} ${russo.variable} ${luckiest.variable}`}>
+      <body className="bg-sky-50 text-slate-800 flex flex-col min-h-screen relative antialiased selection:bg-yellow-400 selection:text-black">
         
-        {/* Dynamic Background Layout */}
+        {/* Saturated Daylight Gaming Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          {/* Neon orange ambient orb */}
-          <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-neon-orange/10 blur-[120px] animate-pulse-slow" />
+          {/* Saturated Daylight sky base gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-sky-50 to-amber-50" />
           
-          {/* Electric blue ambient orb */}
-          <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] rounded-full bg-electric-blue/10 blur-[130px] animate-pulse-slow" />
-
-          {/* Purple ambient center orb */}
-          <div className="absolute top-[40%] left-[30%] w-[500px] h-[500px] rounded-full bg-neon-purple/5 blur-[150px]" />
-
-          {/* Glowing gaming mesh grids */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#060b26_1px,transparent_1px),linear-gradient(to_bottom,#060b26_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-20" />
+          {/* Vibrant glowing sunburst spots */}
+          <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-yellow-300/15 blur-[100px] animate-pulse-slow" />
+          <div className="absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-orange-200/15 blur-[120px]" />
+          
+          {/* Subtle cartoon mesh pattern grids */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-75" />
+          
+          {/* Floating clouds shapes blur */}
+          <div className="absolute top-[25%] right-[15%] w-80 h-32 bg-white/20 rounded-full blur-[40px]" />
+          <div className="absolute top-[60%] left-[10%] w-96 h-40 bg-white/35 rounded-full blur-[50px]" />
         </div>
 
-        {/* Global Navigation Header */}
+        {/* Global Navigation Console Deck */}
         <Navbar />
 
         {/* Dynamic page container */}
