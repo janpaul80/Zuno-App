@@ -60,30 +60,46 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${russo.variable} ${luckiest.variable}`}>
-      <body className="bg-sky-50 text-slate-800 flex flex-col min-h-screen relative antialiased selection:bg-yellow-400 selection:text-black">
+      <body className="bg-[#030214] text-white flex flex-col min-h-screen relative antialiased selection:bg-yellow-400 selection:text-black font-inter">
         
-        {/* Saturated Daylight Gaming Background */}
+        {/* Saturated Cosmic Twilight Gaming Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          {/* Saturated Daylight sky base gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-sky-50 to-amber-50" />
           
-          {/* Vibrant glowing sunburst spots */}
-          <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-yellow-300/15 blur-[100px] animate-pulse-slow" />
-          <div className="absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-orange-200/15 blur-[120px]" />
+          {/* Deep indigo background base */}
+          <div className="absolute inset-0 bg-[#030214]" />
           
-          {/* Subtle cartoon mesh pattern grids */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-75" />
+          {/* Saturated electric-blue light beams on left */}
+          <div className="absolute top-0 left-[-10%] w-[80%] h-[90%] rounded-full bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.18)_0%,transparent_70%)] animate-nebula" />
           
-          {/* Floating clouds shapes blur */}
-          <div className="absolute top-[25%] right-[15%] w-80 h-32 bg-white/20 rounded-full blur-[40px]" />
-          <div className="absolute top-[60%] left-[10%] w-96 h-40 bg-white/35 rounded-full blur-[50px]" />
+          {/* Saturated magenta/fuchsia clouds on right */}
+          <div className="absolute top-[20%] right-[-10%] w-[70%] h-[80%] rounded-full bg-[radial-gradient(circle_at_right,rgba(217,70,239,0.16)_0%,transparent_65%)] animate-pulse-slow" />
+          
+          {/* Saturated golden yellow/amber sunset glow at bottom left */}
+          <div className="absolute bottom-[-10%] left-[5%] w-[60%] h-[60%] rounded-full bg-[radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.12)_0%,transparent_60%)]" />
+
+          {/* Saturated lime green flare spot */}
+          <div className="absolute top-[40%] left-[30%] w-[350px] h-[350px] rounded-full bg-emerald-500/5 blur-[90px]" />
+
+          {/* Videogame Halftone Grid overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-80" />
+          
+          {/* Saturated horizontal glowing action lines */}
+          <div className="absolute top-[30%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent" />
+          <div className="absolute top-[70%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/10 to-transparent" />
+
+          {/* Floating Embers/Particles Effects */}
+          <div className="absolute top-[80%] left-[15%] w-2.5 h-2.5 bg-yellow-400/40 rounded-full blur-[1px] animate-embers" style={{ animationDelay: "0s", animationDuration: "7s" }} />
+          <div className="absolute top-[90%] left-[45%] w-1.5 h-1.5 bg-cyan-400/50 rounded-full blur-[0.5px] animate-embers" style={{ animationDelay: "2s", animationDuration: "9s" }} />
+          <div className="absolute top-[75%] left-[70%] w-3 h-3 bg-pink-500/30 rounded-full blur-[1px] animate-embers" style={{ animationDelay: "4s", animationDuration: "8s" }} />
+          <div className="absolute top-[85%] left-[85%] w-2 h-2 bg-emerald-400/40 rounded-full blur-[0.5px] animate-embers" style={{ animationDelay: "1s", animationDuration: "6s" }} />
+          <div className="absolute top-[60%] left-[25%] w-1.5 h-1.5 bg-amber-500/35 rounded-full blur-[1px] animate-embers" style={{ animationDelay: "5.5s", animationDuration: "10s" }} />
         </div>
 
-        {/* Global Navigation Console Deck */}
+        {/* Global Transparent Navigation Console */}
         <Navbar />
 
         {/* Dynamic page container */}
-        <main className="flex-grow pt-28 md:pt-36 relative z-10">
+        <main className="flex-grow pt-24 relative z-10">
           {children}
         </main>
 

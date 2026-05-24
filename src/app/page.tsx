@@ -1,259 +1,280 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Sparkles, Award, ShieldAlert, Cpu, Sword, Coins, Compass } from "lucide-react";
+import { Shield, Cpu, Coins, Swords, Globe, Sparkles, Play, ArrowRight } from "lucide-react";
 
 export default function HomePage() {
+  
+  const features = [
+    {
+      title: "Strategic Battles",
+      desc: "Use unique skills and team combos to win intense battles.",
+      icon: <Shield className="h-6 w-6 text-zuno-blue" />,
+      colorClass: "glow-card-blue",
+      badgeColor: "bg-zuno-blue/10 border-zuno-blue text-zuno-blue",
+    },
+    {
+      title: "AI Powered",
+      desc: "Advanced AI systems adapt to your moves in real-time.",
+      icon: <Cpu className="h-6 w-6 text-zuno-purple" />,
+      colorClass: "glow-card-purple",
+      badgeColor: "bg-zuno-purple/10 border-zuno-purple text-zuno-purple",
+    },
+    {
+      title: "Earn & Upgrade",
+      desc: "Earn rewards, upgrade your animals, and unlock new powers.",
+      icon: <Coins className="h-6 w-6 text-zuno-gold" />,
+      colorClass: "glow-card-gold",
+      badgeColor: "bg-zuno-gold/10 border-zuno-gold text-zuno-gold",
+    },
+    {
+      title: "Compete & Rank",
+      desc: "Climb the ranks and prove you're the ultimate champion.",
+      icon: <Swords className="h-6 w-6 text-zuno-magenta" />,
+      colorClass: "glow-card-red",
+      badgeColor: "bg-zuno-magenta/10 border-zuno-magenta text-zuno-magenta",
+    },
+    {
+      title: "Explore the World",
+      desc: "Discover stunning arenas and hidden secrets.",
+      icon: <Globe className="h-6 w-6 text-zuno-green" />,
+      colorClass: "glow-card-green",
+      badgeColor: "bg-zuno-green/10 border-zuno-green text-zuno-green",
+    },
+  ];
+
   return (
-    <div className="relative min-h-screen text-slate-800 font-inter overflow-hidden pb-20">
+    <div className="relative min-h-screen overflow-hidden pb-16">
       
-      {/* Hero Section - Bright, Saturated Sky-Blue/Amber with Comic Solar burst */}
-      <section className="relative flex flex-col items-center justify-center text-center px-4 pt-12 pb-24 z-10">
+      {/* Hero / Main Arena Section */}
+      <section className="relative flex flex-col items-center justify-center text-center px-4 pt-8 pb-16 z-10">
         
-        {/* Rotating Solar burst vector background */}
-        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[800px] h-[800px] pointer-events-none z-0 opacity-40 mix-blend-multiply bg-[radial-gradient(circle_at_center,rgba(253,224,71,0.45)_0%,transparent_70%)] animate-rotate-slow" />
+        {/* Rotating Sunburst Rays Background */}
+        <div className="absolute top-[35%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[900px] h-[900px] pointer-events-none z-0 opacity-40 mix-blend-screen animate-rotate-slow bg-[radial-gradient(circle_at_center,rgba(189,0,255,0.25)_0%,rgba(0,210,255,0.15)_30%,transparent_70%)]" />
         
-        <div className="max-w-5xl mx-auto space-y-12 relative z-10">
+        <div className="max-w-6xl mx-auto space-y-8 relative z-10">
           
-          {/* Main Enormous Logo - Pulsing drop shadow over explosive comic backdrop */}
+          {/* Main Enormous Logo - Glowing Drop Shadow */}
           <div className="flex justify-center animate-game-float relative">
-            <div className="absolute inset-0 bg-yellow-300/35 rounded-full filter blur-xl scale-95" />
+            <div className="absolute inset-0 bg-zuno-purple/10 rounded-full filter blur-3xl scale-90" />
             <img
               src="/zuno-logo.png"
-              alt="ZUNO Logo"
-              className="w-80 sm:w-[480px] md:w-[620px] lg:w-[720px] h-auto object-contain filter drop-shadow-[4px_4px_0px_#000] hover:scale-[1.03] transition-all duration-300 cursor-pointer"
+              alt="ZUNO Official Logo"
+              className="w-80 sm:w-[460px] md:w-[580px] lg:w-[680px] h-auto object-contain filter drop-shadow-[0_0_24px_rgba(189,0,255,0.35)] hover:scale-[1.02] transition-all duration-300 cursor-pointer"
             />
           </div>
 
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-300 border-3 border-black shadow-[3px_3px_0px_0px_#000]">
-              <Sparkles className="h-4 w-4 text-black" />
-              <span className="text-xs font-russo font-extrabold uppercase tracking-widest text-black">
-                AI-Powered Gaming Platform
-              </span>
-            </div>
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-luckiest uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 via-orange-500 to-red-600 comic-text-stroke leading-none">
-              ANIMAL BATTLE WORLD
+          {/* Heading - Cinematic Capitals */}
+          <div className="space-y-1">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-russo font-black uppercase italic tracking-widest text-white leading-none">
+              ENTER THE ARENA.
+            </h2>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-luckiest uppercase italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-zuno-gold via-zuno-orange to-zuno-magenta comic-text-stroke leading-none">
+              BECOME A LEGEND.
             </h1>
-            <p className="max-w-2xl mx-auto text-base sm:text-xl text-slate-800 font-bold leading-relaxed">
-              Explore a bright, colorful adventure! Progress through exciting levels, earn validated coins, unlock upgrades, and conquer tier boss battles created by <strong className="text-orange-600 font-russo">Paul Hartmann</strong>.
+            <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-white/90 font-medium tracking-wide leading-relaxed pt-3">
+              ZUNO is a next-gen animal battle adventure where strategy, skill, and AI collide in an epic fight for glory.
             </p>
           </div>
 
-          {/* Call to Actions - Thick game buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          {/* Call to Actions - Dual Skewed Gaming Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
             <Link
               href="/how-to-play"
-              className="group px-8 py-4.5 rounded-2xl font-russo font-black text-sm uppercase tracking-widest game-btn-gold flex items-center gap-2"
+              className="group px-8 py-3.5 font-russo font-black text-sm uppercase tracking-widest game-skew-btn-gold flex items-center gap-2"
             >
-              Start Battle <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" />
+              <span>🐾 Play Now</span>
             </Link>
             <Link
               href="/ai-operations"
-              className="px-8 py-4.5 rounded-2xl font-russo font-black text-sm uppercase tracking-widest game-btn-blue flex items-center gap-2"
+              className="px-8 py-3.5 font-russo font-black text-sm uppercase tracking-widest game-skew-btn-blue flex items-center gap-2"
             >
-              <Cpu className="h-4 w-4" /> AI Operations
+              <span><Play className="h-4 w-4 fill-current inline" /> Watch Trailer</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Media & Artwork Showcases - Specific Contrast Areas (High-Impact Dark Cards) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* "WHY PLAY ZUNO?" Section - Jagged Console Frame */}
+      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        {/* Custom Jagged container deck */}
+        <div className="jagged-console-container p-6 md:p-10 space-y-8">
           
-          {/* Gameplay Preview - Saturated dark contrast container */}
-          <div className="game-card-dark rounded-3xl p-4 md:p-6 relative overflow-hidden group">
-            <div className="absolute top-4 left-4 z-20 px-3.5 py-2 rounded-xl bg-sky-400 border-2 border-black text-black font-russo font-bold text-xs uppercase tracking-wider shadow-[2px_2px_0px_#000]">
-              Gameplay Preview
-            </div>
-            <img
-              src="/images/gameplay-preview.png"
-              alt="ZUNO Fantasy Battle World"
-              className="w-full h-auto object-cover rounded-2xl transition-transform duration-300 group-hover:scale-[1.02] border-3 border-black shadow-[4px_4px_0px_#000]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020514] via-transparent to-transparent opacity-85 pointer-events-none" />
-            <div className="relative pt-6 space-y-2">
-              <h3 className="text-2xl font-russo font-bold tracking-wide text-white uppercase">Vibrant Saturated Arenas</h3>
-              <p className="text-slate-300 text-xs sm:text-sm font-semibold">Explore gorgeous glowing arenas balanced continuously by the AI Game Director for absolute tactical fun.</p>
+          {/* Header Line */}
+          <div className="text-center relative">
+            <div className="absolute top-[50%] left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-zuno-purple/40 to-transparent z-0" />
+            <span className="relative z-10 px-6 py-1 border border-zuno-purple/35 bg-[#030214] text-xs font-russo font-bold uppercase tracking-widest text-zuno-purple drop-shadow-[0_0_6px_rgba(189,0,255,0.4)]">
+              WHY PLAY ZUNO?
+            </span>
+          </div>
+
+          {/* Features cards layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pt-2">
+            {features.map((feat) => (
+              <div
+                key={feat.title}
+                className={`glass-panel ${feat.colorClass} p-5 rounded-xl flex flex-col items-center text-center space-y-4`}
+              >
+                {/* Glowing Circular Icon Badge */}
+                <div className={`h-12 w-12 rounded-full border flex items-center justify-center ${feat.badgeColor} shadow-[0_0_8px_currentColor]`}>
+                  {feat.icon}
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-xs font-russo font-extrabold uppercase text-white tracking-wider">
+                    {feat.title}
+                  </h3>
+                  <p className="text-[10px] sm:text-xs text-white/60 font-semibold leading-relaxed">
+                    {feat.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* "EPIC ANIMAL BATTLES" Section - High contrast Grid with characters overlay */}
+      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          {/* Text panel */}
+          <div className="lg:col-span-5 space-y-6 text-left">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-russo font-black uppercase italic tracking-wider text-white">
+              EPIC ANIMAL <br />
+              <span className="text-zuno-blue drop-shadow-[0_0_8px_rgba(0,210,255,0.3)]">BATTLES</span>
+            </h2>
+            <p className="text-white/80 text-sm sm:text-base font-semibold leading-relaxed">
+              Join fast-paced 3v3 battles in stunning arenas. Build your team, master your strategy, and crush your opponents!
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/how-to-play"
+                className="px-6 py-3 font-russo font-black text-xs uppercase tracking-widest game-skew-btn-blue inline-flex items-center gap-1"
+              >
+                <span>Explore Gameplay <ArrowRight className="h-3 w-3 inline ml-1" /></span>
+              </Link>
             </div>
           </div>
 
-          {/* Character Showcase - Matching high-contrast frame */}
-          <div className="game-card-dark rounded-3xl p-4 md:p-6 relative overflow-hidden group">
-            <div className="absolute top-4 left-4 z-20 px-3.5 py-2 rounded-xl bg-yellow-400 border-2 border-black text-black font-russo font-bold text-xs uppercase tracking-wider shadow-[2px_2px_0px_#000]">
-              Featured Champion
+          {/* Gameplay Preview Screen - Electric outline with glows */}
+          <div className="lg:col-span-7 relative group">
+            
+            {/* Cyan glowing electric jagged border */}
+            <div className="absolute inset-[-4px] bg-gradient-to-r from-zuno-blue via-zuno-purple to-zuno-blue rounded-2xl filter blur-[4px] opacity-75 group-hover:opacity-100 transition-all" />
+            <div className="absolute inset-0 border-2 border-zuno-blue rounded-2xl z-10 pointer-events-none" />
+
+            {/* Screen mask wrapper */}
+            <div className="relative rounded-2xl border-3 border-black overflow-hidden bg-[#05021a] z-0">
+              <img
+                src="/images/gameplay-preview.png"
+                alt="ZUNO Fast-paced 3v3 battles"
+                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
             </div>
-            <img
-              src="/images/character-showcase.png"
-              alt="Featured ZUNO Champion"
-              className="w-full h-auto object-cover rounded-2xl transition-transform duration-300 group-hover:scale-[1.02] border-3 border-black shadow-[4px_4px_0px_#000]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020514] via-transparent to-transparent opacity-85 pointer-events-none" />
-            <div className="relative pt-6 space-y-2">
-              <h3 className="text-2xl font-russo font-bold tracking-wide text-white uppercase">Legendary Animal Warriors</h3>
-              <p className="text-slate-300 text-xs sm:text-sm font-semibold">Unlock customizable, cute but fierce warriors. Tailor upgrades, master active skills, and conquer tiers.</p>
+
+            {/* Timer HUD overlay */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-black/80 border-2 border-zuno-blue text-white font-russo font-bold text-xs shadow-[0_0_8px_rgba(0,210,255,0.4)]">
+              01:30
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* AI-Powered Adventure System (Bright Gradients, Cream Panels) */}
-      <section className="py-20 bg-amber-100/40 relative z-10 border-y-4 border-black">
-        <div className="absolute inset-0 comic-stripes opacity-[0.2] pointer-events-none" />
+      {/* Floating Characters Showcase Section - Integrated into layout composition */}
+      <section className="relative z-10 py-12 max-w-6xl mx-auto px-4 overflow-visible">
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-300 border-2 border-black shadow-[2px_2px_0px_#000]">
-              <Cpu className="h-4 w-4 text-black" />
-              <span className="text-xs font-russo font-extrabold uppercase tracking-widest text-black">
-                ZUNO AI Intelligence
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-luckiest uppercase text-black tracking-wider comic-text-stroke-sm">
-              AI-Powered Adventure System
+        {/* Decorative elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.06)_0%,transparent_60%)] pointer-events-none" />
+
+        {/* Dynamic Composition Grid with floating warriors */}
+        <div className="relative border-y border-white/5 py-12 flex flex-col items-center justify-center text-center space-y-6">
+          
+          {/* Integrated Character 1: Leopard Warrior Left */}
+          <div className="absolute left-[-20px] bottom-[-20px] hidden md:block w-36 lg:w-44 h-auto pointer-events-none z-20 animate-game-float filter drop-shadow-[0_0_12px_rgba(249,115,22,0.4)] hover:scale-105 transition-all">
+            <img
+              src="/images/character-showcase.png"
+              alt="Leopard Warrior"
+              className="w-full h-auto object-contain scale-[1.3] translate-x-[-10%] translate-y-[10%]"
+            />
+          </div>
+
+          {/* Integrated Character 2: Shadow Cat Right */}
+          <div className="absolute right-[-20px] top-[-30px] hidden md:block w-36 lg:w-44 h-auto pointer-events-none z-20 animate-game-float filter drop-shadow-[0_0_12px_rgba(189,0,255,0.4)] hover:scale-105 transition-all" style={{ animationDelay: "2.5s" }}>
+            <img
+              src="/images/character-showcase.png"
+              alt="Purple Shadow Cat"
+              className="w-full h-auto object-contain scale-[1.3] translate-x-[10%] translate-y-[-10%] rotate-6"
+            />
+          </div>
+
+          <div className="space-y-2 relative z-10 max-w-2xl">
+            <h2 className="text-3xl sm:text-4xl font-russo font-black uppercase italic text-white leading-none">
+              BUILD YOUR TEAM.
             </h2>
-            <p className="text-slate-800 font-bold">
-              ZUNO is designed from day one with an AI-assisted game operations layer that balances levels, secures progression, audits the coin economy, and customizes rewards.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-luckiest uppercase italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-zuno-gold via-zuno-orange to-zuno-magenta comic-text-stroke leading-none">
+              RULE THE ARENA.
+            </h1>
+            <p className="text-white/80 font-medium text-xs sm:text-sm tracking-wide pt-2">
+              Collect, upgrade, and evolve powerful animals. Your legend starts now.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* AI Director - Cream card */}
-            <div className="game-card-cream p-8 rounded-2xl space-y-4">
-              <div className="h-12 w-12 rounded-xl bg-orange-100 border-2 border-black flex items-center justify-center text-orange-600">
-                <Compass className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-russo font-bold text-black uppercase tracking-wider">AI Game Director</h3>
-              <p className="text-slate-800 text-xs sm:text-sm leading-relaxed font-semibold">
-                Procedurally plans level layouts, distributes glowing items, and schedules map event layouts for constant gameplay freshness.
-              </p>
-            </div>
-
-            {/* AI Balancer - Cream card */}
-            <div className="game-card-cream p-8 rounded-2xl space-y-4">
-              <div className="h-12 w-12 rounded-xl bg-emerald-100 border-2 border-black flex items-center justify-center text-emerald-600">
-                <Sword className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-russo font-bold text-black uppercase tracking-wider">AI Level Balancer</h3>
-              <p className="text-slate-800 text-xs sm:text-sm leading-relaxed font-semibold">
-                Evaluates win/loss records across stages and automatically balances NPC combat stats, cooldowns, and layout difficulties.
-              </p>
-            </div>
-
-            {/* AI Monitor - Cream card */}
-            <div className="game-card-cream p-8 rounded-2xl space-y-4">
-              <div className="h-12 w-12 rounded-xl bg-blue-100 border-2 border-black flex items-center justify-center text-blue-600">
-                <Coins className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-russo font-bold text-black uppercase tracking-wider">AI Economy Monitor</h3>
-              <p className="text-slate-800 text-xs sm:text-sm leading-relaxed font-semibold">
-                Screens coin collections and shop prices against anomalous spikes in real-time, executing strict server-side validation integrity.
-              </p>
-            </div>
+          <div className="pt-2 relative z-10">
+            <Link
+              href="/how-to-play"
+              className="px-10 py-4 font-russo font-black text-sm uppercase tracking-widest game-skew-btn-gold flex items-center gap-2"
+            >
+              <span>🐾 Play Zuno Now</span>
+            </Link>
           </div>
+
         </div>
       </section>
 
-      {/* Level Progression & Difficulty Selection (White Game Cards, Grassy/Amber Accents) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-300 border-2 border-black shadow-[2px_2px_0px_#000]">
-            <Award className="h-4 w-4 text-black" />
-            <span className="text-xs font-russo font-extrabold uppercase tracking-widest text-black">
-              Battle Stages
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-luckiest uppercase text-black tracking-wider comic-text-stroke-sm">
-            Level Tiers Overview
-          </h2>
-          <p className="text-slate-800 font-bold">
-            Test your animal combat skills across three distinct balanced tiers. Earn higher coin multipliers by conquering extreme arenas.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Easy - White Card */}
-          <div className="game-card-light rounded-2xl p-8 space-y-6 flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-lg border-2 border-black bg-emerald-100 text-emerald-700 font-russo font-bold text-xs uppercase tracking-wider">
-                  Easy Tier
-                </span>
-                <span className="text-xs text-gray-400 font-bold uppercase">Stage 1 - 10</span>
-              </div>
-              <h3 className="text-2xl font-russo font-bold text-black uppercase">Meadow Lands</h3>
-              <p className="text-slate-700 text-xs sm:text-sm leading-relaxed font-semibold">
-                Perfect for newcomers. Master animal movement, skill dodging, primary key layouts, and easy coin collection loops.
-              </p>
+      {/* Saturated Stats Footer */}
+      <section className="relative z-10 max-w-5xl mx-auto px-4 pt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-t border-white/10 pt-10">
+          
+          <div className="space-y-1">
+            <div className="text-3xl sm:text-4xl font-russo font-black italic tracking-wide text-zuno-blue drop-shadow-[0_0_8px_rgba(0,210,255,0.4)]">
+              1M+
             </div>
-            <div className="pt-6 border-t border-black/10 flex items-center justify-between text-xs text-slate-500 font-bold">
-              <span>Coin Multiplier: 1.0x</span>
-              <span className="text-emerald-600">100% Safe</span>
+            <div className="text-[10px] sm:text-xs font-russo font-bold uppercase tracking-wider text-white/50">
+              Active Players
             </div>
           </div>
 
-          {/* Medium - White Card */}
-          <div className="game-card-light rounded-2xl p-8 space-y-6 flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-lg border-2 border-black bg-amber-100 text-amber-700 font-russo font-bold text-xs uppercase tracking-wider">
-                  Medium Tier
-                </span>
-                <span className="text-xs text-gray-400 font-bold uppercase">Stage 11 - 25</span>
-              </div>
-              <h3 className="text-2xl font-russo font-bold text-black uppercase">Volcano Core</h3>
-              <p className="text-slate-700 text-xs sm:text-sm leading-relaxed font-semibold">
-                Dynamic lava obstacles, faster enemy entities, and challenging vertical layout mechanics that challenge your elements.
-              </p>
+          <div className="space-y-1">
+            <div className="text-3xl sm:text-4xl font-russo font-black italic tracking-wide text-zuno-magenta drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
+              250+
             </div>
-            <div className="pt-6 border-t border-black/10 flex items-center justify-between text-xs text-slate-500 font-bold">
-              <span>Coin Multiplier: 1.8x</span>
-              <span className="text-amber-600">Medium Risk</span>
+            <div className="text-[10px] sm:text-xs font-russo font-bold uppercase tracking-wider text-white/50">
+              Unique Animals
             </div>
           </div>
 
-          {/* Hard - White Card */}
-          <div className="game-card-light rounded-2xl p-8 space-y-6 flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-lg border-2 border-black bg-fuchsia-100 text-fuchsia-700 font-russo font-bold text-xs uppercase tracking-wider">
-                  Hard Tier
-                </span>
-                <span className="text-xs text-gray-400 font-bold uppercase">Stage 26+</span>
-              </div>
-              <h3 className="text-2xl font-russo font-bold text-black uppercase">Deep Purple Rift</h3>
-              <p className="text-slate-700 text-xs sm:text-sm leading-relaxed font-semibold">
-                Intense boss combat triggers, fast cooldown attacks, and unpredictable layouts generated by the AI Game Director.
-              </p>
+          <div className="space-y-1">
+            <div className="text-3xl sm:text-4xl font-russo font-black italic tracking-wide text-zuno-gold drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">
+              50+
             </div>
-            <div className="pt-6 border-t border-black/10 flex items-center justify-between text-xs text-slate-500 font-bold">
-              <span>Coin Multiplier: 3.0x</span>
-              <span className="text-fuchsia-600">Extreme Risk</span>
+            <div className="text-[10px] sm:text-xs font-russo font-bold uppercase tracking-wider text-white/50">
+              Fantasy Arenas
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* APK & Apple App Store badge preview section (White/Gold Cartridge styling) */}
-      <section className="max-w-4xl mx-auto px-4 py-16 text-center relative z-10 game-card-cream rounded-3xl">
-        <div className="space-y-6">
-          <ShieldAlert className="h-10 w-10 text-orange-600 mx-auto animate-game-float" />
-          <h2 className="text-3xl sm:text-4xl font-luckiest uppercase text-black tracking-wide comic-text-stroke-sm">
-            Mobile Adventure Coming Soon
-          </h2>
-          <p className="max-w-xl mx-auto text-slate-700 font-semibold text-sm sm:text-base leading-relaxed">
-            We are actively packaging ZUNO for high-performance mobile clients. Prepare to explore, combat, and collect validated upgrades on the go.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <div className="px-6 py-3.5 bg-white border-3 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_#000]">
-              <span className="text-emerald-600 text-xs font-russo font-bold uppercase tracking-widest">Android APK</span>
-              <span className="text-slate-500 text-xs font-bold font-russo">COMING SOON</span>
+          <div className="space-y-1">
+            <div className="text-3xl sm:text-4xl font-russo font-black italic tracking-wide text-zuno-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">
+              24/7
             </div>
-            <div className="px-6 py-3.5 bg-white border-3 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_#000]">
-              <span className="text-sky-600 text-xs font-russo font-bold uppercase tracking-widest">Apple Store</span>
-              <span className="text-slate-500 text-xs font-bold font-russo">COMING SOON</span>
+            <div className="text-[10px] sm:text-xs font-russo font-bold uppercase tracking-wider text-white/50">
+              AI Operations
             </div>
           </div>
+
         </div>
       </section>
 
