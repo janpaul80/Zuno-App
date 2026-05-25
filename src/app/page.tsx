@@ -67,50 +67,94 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============= EPIC ANIMAL BATTLES ============= */}
-      <section className="relative z-10 py-16 md:py-20 bg-[#020617]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(0,200,255,0.07),transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <h2 className="font-bangers text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.92] tracking-[0.03em] text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)] [text-shadow:0_0_16px_rgba(0,200,255,0.35)]">
+      {/* ============= MIDDLE: NATIVE BENCHMARK COMPOSITION (sharp, interactive) ============= */}
+      <section className="relative z-10 w-full bg-[#020617] overflow-hidden">
+        {/* Background energy atmosphere */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_40%,rgba(0,200,255,0.09),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_55%,rgba(189,0,255,0.07),transparent_50%)]" />
+
+        <div className="relative max-w-[960px] mx-auto px-4 sm:px-6 py-14 md:py-18">
+
+          {/* Row: Left text + Center gameplay frame */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
+
+            {/* LEFT: gameplay text block */}
+            <div className="lg:w-[320px] flex-shrink-0 pt-2">
+              <h2 className="font-bangers text-[clamp(2.6rem,7vw,5rem)] leading-[0.92] tracking-[0.04em] text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.65)]">
                 EPIC ANIMAL
                 <span className="block text-[#00c8ff]">BATTLES</span>
               </h2>
-              <p className="mt-4 text-white/84 text-sm md:text-base font-inter leading-relaxed max-w-lg">
+              <p className="mt-4 text-white/90 text-sm font-inter leading-relaxed">
                 Join fast-paced 3v3 battles in stunning arenas. Build your team, master your strategy, and crush your opponents.
               </p>
-              <Link href="/how-to-play" className="mt-6 inline-flex items-center gap-2 px-7 py-3 rounded-lg border border-[#00c8ff]/50 bg-[linear-gradient(180deg,rgba(0,200,255,0.12)_0%,rgba(2,6,23,0.92)_100%)] font-russo text-xs uppercase tracking-[0.14em] text-white shadow-[0_0_16px_rgba(0,200,255,0.25)] backdrop-blur-sm transition hover:-translate-y-0.5">
+              <Link href="/how-to-play" className="mt-5 inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#00c8ff]/45 bg-[linear-gradient(180deg,rgba(0,200,255,0.12)_0%,rgba(2,6,23,0.92)_100%)] font-russo text-xs uppercase tracking-[0.13em] text-white shadow-[0_0_14px_rgba(0,200,255,0.22)] backdrop-blur-sm transition hover:-translate-y-0.5">
                 Explore Gameplay →
               </Link>
             </div>
-            <div className="relative">
-              <div className="absolute inset-[-5px] rounded-2xl bg-[linear-gradient(90deg,#00c8ff,#ff2bd6)] blur-md opacity-70" />
-              <div className="relative rounded-2xl border-2 border-[#00c8ff] overflow-hidden bg-[#020617]">
-                <img src="/images/gameplay-preview.png" alt="ZUNO gameplay" className="w-full h-auto object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(2,6,23,0.82)_0%,transparent_48%)]" />
+
+            {/* CENTER: sharp gameplay frame (max-width 500px, ~580px max-height) */}
+            <div className="relative flex-1 max-w-[500px] mx-auto lg:mx-0">
+              {/* Outer glow */}
+              <div className="absolute inset-[-4px] rounded-2xl bg-[linear-gradient(120deg,#00c8ff,#ff2bd6)] blur-sm opacity-80" />
+              {/* Inner neon border + angled feel */}
+              <div className="relative rounded-2xl border-2 border-[#00c8ff] overflow-hidden bg-[#020617] shadow-[0_0_28px_rgba(0,200,255,0.28)]">
+                <img
+                  src="/images/gameplay-preview.png"
+                  alt="ZUNO gameplay preview"
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: "580px" }}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(2,6,23,0.70)_0%,transparent_45%)]" />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ============= BUILD YOUR TEAM ============= */}
-      <section className="relative z-10 py-16 md:py-20 bg-[#020617]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,43,214,0.08),transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="font-russo text-2xl sm:text-3xl uppercase tracking-[0.1em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-            BUILD YOUR TEAM.
-          </h2>
-          <h3 className="mt-1 font-bangers text-[clamp(2.8rem,8vw,6.2rem)] leading-[0.9] tracking-[0.04em] text-transparent bg-clip-text bg-[linear-gradient(90deg,#ffd21f_0%,#ff7a00_45%,#ff2bd6_100%)] drop-shadow-[0_5px_8px_rgba(0,0,0,0.65)]">
-            RULE THE ARENA.
-          </h3>
-          <p className="mx-auto mt-4 max-w-2xl text-white/84 text-sm font-inter leading-relaxed">
+          </div>
+
+          {/* BUILD YOUR TEAM / RULE THE ARENA — tight spacing below */}
+          <div className="mt-10 md:mt-12 text-center">
+            <h3 className="font-russo text-xl sm:text-2xl uppercase tracking-[0.11em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+              BUILD YOUR TEAM.
+            </h3>
+            <h4 className="mt-1 font-bangers text-[clamp(2.6rem,8vw,5.5rem)] leading-[0.90] tracking-[0.045em] text-transparent bg-clip-text bg-[linear-gradient(90deg,#ffd21f_0%,#ff7a00_45%,#ff2bd6_100%)] drop-shadow-[0_5px_8px_rgba(0,0,0,0.65)]">
+              RULE THE ARENA.
+            </h4>
+          </div>
+
+          {/* Row: Bottom-left animal + PLAY NOW button + Bottom-right animal */}
+          <div className="relative mt-6 md:mt-8 flex items-center justify-center">
+            {/* Bottom-left hero character */}
+            <div className="absolute left-[-10px] md:left-[-24px] bottom-[-6px] w-[90px] md:w-[120px] opacity-90 pointer-events-none select-none">
+              <img
+                src="/images/character-showcase.png"
+                alt=""
+                className="w-full h-auto object-contain drop-shadow-[0_0_16px_rgba(255,122,0,0.35)]"
+                style={{ transform: "scaleX(-1)" }}
+              />
+            </div>
+
+            {/* Real clickable PLAY NOW button */}
+            <Link
+              href="/how-to-play"
+              className="relative z-10 inline-flex items-center gap-2 px-12 py-4 rounded-lg border-[2.5px] border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.13em] text-sm shadow-[0_0_28px_rgba(255,122,0,0.55),5px_5px_0_#14002e] transition hover:-translate-y-0.5"
+            >
+              🐾 Play Zuno Now
+            </Link>
+
+            {/* Bottom-right purple cat character */}
+            <div className="absolute right-[-10px] md:right-[-24px] bottom-[-4px] w-[90px] md:w-[120px] opacity-90 pointer-events-none select-none">
+              <img
+                src="/images/character-showcase.png"
+                alt=""
+                className="w-full h-auto object-contain drop-shadow-[0_0_16px_rgba(189,0,255,0.35)]"
+              />
+            </div>
+          </div>
+
+          {/* Tagline below button */}
+          <p className="mt-6 text-center text-white/85 text-sm font-inter max-w-md mx-auto">
             Collect, upgrade, and evolve powerful animals. Your legend starts now.
           </p>
-          <Link href="/how-to-play" className="mt-7 inline-flex items-center gap-2 px-10 py-4 rounded-lg border-2 border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.14em] text-sm shadow-[0_0_24px_rgba(255,122,0,0.45),5px_5px_0_#14002e] transition hover:-translate-y-0.5">
-            Play Zuno Now
-          </Link>
+
         </div>
       </section>
 
