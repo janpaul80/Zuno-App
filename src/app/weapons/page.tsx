@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 
 type CharacterKey = "jean" | "bambo" | "wolf" | "marjorie" | "onyx";
 type WeaponKey = "frost" | "thunder" | "solar" | "armor" | "void";
@@ -122,6 +122,13 @@ const categoryTabs: Hotspot[] = [
   { key: "loadout", label: "My loadout", className: "left-[76.4%] top-[32.05%] h-[2.4%] w-[14.5%]", ring: "#ff2bd6" },
 ];
 
+const connectorSegments = [
+  "left-[19.6%] top-[61.63%] h-[0.36%] w-[6.6%]",
+  "left-[37.3%] top-[61.63%] h-[0.36%] w-[6.7%]",
+  "left-[57.8%] top-[61.63%] h-[0.36%] w-[4.8%]",
+  "left-[75.8%] top-[61.63%] h-[0.36%] w-[4.4%]",
+];
+
 const upgradeButtons: Hotspot[] = [
   { key: "thunder-up", label: "Upgrade Thunder Claws", className: "left-[30.5%] top-[52.05%] h-[2.55%] w-[14.2%]", ring: "#00c8ff" },
   { key: "solar-up", label: "Upgrade Solar Spear", className: "left-[49.0%] top-[52.05%] h-[2.55%] w-[14.2%]", ring: "#ff7a00" },
@@ -136,6 +143,14 @@ const upgradeTiers: Hotspot[] = [
   { key: "tier-four", label: "Upgrade path tier four absolute zero", className: "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "rgba(255,255,255,0.55)" },
   { key: "tier-five", label: "Upgrade path tier five winter reign", className: "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "rgba(255,255,255,0.55)" },
 ];
+
+const tierPowerBoxes: Record<string, string> = {
+  "tier-one": "left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  "tier-two": "left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  "tier-three": "left-[43.95%] top-[60.45%] h-[3.65%] w-[13.55%]",
+  "tier-four": "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  "tier-five": "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]",
+};
 
 const loadoutSlots: Hotspot[] = [
   { key: "slot-one", label: "Loadout slot one", className: "left-[5.7%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "#00c8ff" },
@@ -153,52 +168,76 @@ function playTone(kind: "fire" | "grunt" | "howl" | "void" | "shadow" | "ice" | 
 
   const context = new AudioContextClass();
   const now = context.currentTime;
-  const gain = context.createGain();
-  gain.connect(context.destination);
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.035, now + 0.025);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+  const output = context.createGain();
+  output.connect(context.destination);
+  output.gain.setValueAtTime(0.0001, now);
+  output.gain.exponentialRampToValueAtTime(0.11, now + 0.018);
+  output.gain.exponentialRampToValueAtTime(0.0001, now + 0.74);
 
   const osc = context.createOscillator();
   const filter = context.createBiquadFilter();
+  const growl = context.createOscillator();
+  const growlGain = context.createGain();
+
   osc.connect(filter);
-  filter.connect(gain);
+  filter.connect(output);
+  growl.connect(growlGain);
+  growlGain.connect(output);
 
   const settings = {
-    fire: { type: "sawtooth" as OscillatorType, start: 110, end: 54, filter: 520 },
-    grunt: { type: "triangle" as OscillatorType, start: 78, end: 44, filter: 260 },
-    howl: { type: "sine" as OscillatorType, start: 260, end: 420, filter: 980 },
-    void: { type: "sine" as OscillatorType, start: 185, end: 72, filter: 420 },
-    shadow: { type: "sawtooth" as OscillatorType, start: 96, end: 48, filter: 360 },
-    ice: { type: "sine" as OscillatorType, start: 620, end: 980, filter: 1800 },
-    electric: { type: "square" as OscillatorType, start: 340, end: 780, filter: 2200 },
-    frost: { type: "triangle" as OscillatorType, start: 480, end: 760, filter: 1600 },
+    fire: { type: "sawtooth" as OscillatorType, start: 128, end: 42, filter: 640, growl: 38 },
+    grunt: { type: "triangle" as OscillatorType, start: 92, end: 36, filter: 320, growl: 28 },
+    howl: { type: "sine" as OscillatorType, start: 250, end: 520, filter: 1150, growl: 64 },
+    void: { type: "sine" as OscillatorType, start: 210, end: 58, filter: 520, growl: 44 },
+    shadow: { type: "sawtooth" as OscillatorType, start: 116, end: 38, filter: 410, growl: 34 },
+    ice: { type: "sine" as OscillatorType, start: 680, end: 1180, filter: 2200, growl: 96 },
+    electric: { type: "square" as OscillatorType, start: 380, end: 920, filter: 2800, growl: 140 },
+    frost: { type: "triangle" as OscillatorType, start: 520, end: 860, filter: 1900, growl: 86 },
   }[kind];
 
   osc.type = settings.type;
   osc.frequency.setValueAtTime(settings.start, now);
-  osc.frequency.exponentialRampToValueAtTime(settings.end, now + 0.32);
+  osc.frequency.exponentialRampToValueAtTime(settings.end, now + 0.36);
   filter.type = "lowpass";
   filter.frequency.setValueAtTime(settings.filter, now);
-  osc.start(now);
-  osc.stop(now + 0.58);
 
-  window.setTimeout(() => context.close().catch(() => undefined), 720);
+  growl.type = "sawtooth";
+  growl.frequency.setValueAtTime(settings.growl, now);
+  growl.frequency.exponentialRampToValueAtTime(Math.max(22, settings.growl * 0.72), now + 0.5);
+  growlGain.gain.setValueAtTime(0.0001, now);
+  growlGain.gain.exponentialRampToValueAtTime(0.035, now + 0.03);
+  growlGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.62);
+
+  osc.start(now);
+  growl.start(now);
+  osc.stop(now + 0.78);
+  growl.stop(now + 0.78);
+
+  window.setTimeout(() => context.close().catch(() => undefined), 900);
 }
 
-function HotspotButton({ label, className, ring, onClick }: { label: string; className: string; ring: string; onClick?: () => void }) {
+function HotspotButton({
+  label,
+  className,
+  ring,
+  active = false,
+  round = "rounded-md",
+  onClick,
+}: {
+  label: string;
+  className: string;
+  ring: string;
+  active?: boolean;
+  round?: string;
+  onClick?: () => void;
+}) {
   return (
     <button
       aria-label={label}
-      className={`absolute ${className} rounded-md cursor-pointer focus:outline-none focus-visible:ring-2 transition-[box-shadow,background-color] duration-300 hover:bg-white/[0.025]`}
-      style={{ boxShadow: `inset 0 0 0 1px transparent`, outlineColor: ring }}
+      aria-pressed={active}
+      className={`absolute ${className} ${round} z-20 cursor-pointer focus:outline-none transition-transform duration-300 hover:scale-[1.018] active:scale-[0.985] hotspot-real ${active ? "is-active" : ""}`}
+      style={{ "--hotspot": ring } as CSSProperties}
       onClick={onClick}
-      onFocus={(event) => {
-        event.currentTarget.style.boxShadow = `0 0 0 2px ${ring}, 0 0 20px ${ring}`;
-      }}
-      onBlur={(event) => {
-        event.currentTarget.style.boxShadow = "inset 0 0 0 1px transparent";
-      }}
     />
   );
 }
@@ -207,11 +246,20 @@ export default function WeaponsPage() {
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterKey>("bambo");
   const [activeWeapon, setActiveWeapon] = useState<WeaponKey>("frost");
   const [burstWeapon, setBurstWeapon] = useState<WeaponKey | null>(null);
+  const [burstCharacter, setBurstCharacter] = useState<CharacterKey | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
+  const [activeTier, setActiveTier] = useState("tier-three");
+  const [activeLoadout, setActiveLoadout] = useState("slot-one");
   const burstTimer = useRef<number | null>(null);
+  const characterTimer = useRef<number | null>(null);
 
   const chooseCharacter = (character: (typeof characters)[number]) => {
     setSelectedCharacter(character.key);
+    setBurstCharacter(character.key);
     playTone(character.sound);
+
+    if (characterTimer.current) window.clearTimeout(characterTimer.current);
+    characterTimer.current = window.setTimeout(() => setBurstCharacter(null), 760);
   };
 
   const energizeWeapon = (weapon: (typeof weaponCards)[number]) => {
@@ -220,7 +268,13 @@ export default function WeaponsPage() {
     playTone(weapon.sound);
 
     if (burstTimer.current) window.clearTimeout(burstTimer.current);
-    burstTimer.current = window.setTimeout(() => setBurstWeapon(null), 680);
+    burstTimer.current = window.setTimeout(() => setBurstWeapon(null), 760);
+  };
+
+  const cycleWeapon = (direction: 1 | -1) => {
+    const currentIndex = weaponCards.findIndex((weapon) => weapon.key === activeWeapon);
+    const nextWeapon = weaponCards[(currentIndex + direction + weaponCards.length) % weaponCards.length];
+    energizeWeapon(nextWeapon);
   };
 
   return (
@@ -260,23 +314,26 @@ export default function WeaponsPage() {
               const isSelected = selectedCharacter === character.key;
 
               return (
-                <div key={character.key} className={`absolute ${character.box} rounded-[10%]`}>
+                <div key={character.key} className={`absolute ${character.box} rounded-[10%] z-20 character-card-shell ${isSelected ? "is-selected" : ""} ${burstCharacter === character.key ? "is-burst" : ""}`}>
                   <div
-                    className={`pointer-events-none absolute inset-0 rounded-[10%] character-life ${isSelected ? "is-selected" : ""}`}
+                    className={`pointer-events-none absolute inset-0 rounded-[10%] character-life ${isSelected ? "is-selected" : ""} ${burstCharacter === character.key ? "is-burst" : ""}`}
                     style={{
+                      color: character.color,
                       borderColor: character.color,
                       boxShadow: isSelected
-                        ? `0 0 0 1px ${character.color}, 0 0 20px ${character.aura}, inset 0 0 22px ${character.aura}`
-                        : `0 0 0 1px color-mix(in srgb, ${character.color} 28%, transparent)`,
+                        ? `0 0 0 2px ${character.color}, 0 0 30px ${character.aura}, inset 0 0 28px ${character.aura}`
+                        : `0 0 0 1px color-mix(in srgb, ${character.color} 42%, transparent), inset 0 0 16px rgba(255,255,255,0.025)`,
                     }}
                   />
                   <div
-                    className={`pointer-events-none absolute inset-[8%] rounded-[12%] character-breath ${isSelected ? "is-selected" : ""}`}
+                    className={`pointer-events-none absolute inset-[-8%] rounded-[14%] character-breath ${isSelected ? "is-selected" : ""}`}
                     style={{ background: `radial-gradient(circle at 50% 35%, ${character.aura}, transparent 58%)` }}
                   />
+                  <div className={`pointer-events-none absolute inset-[18%] rounded-full character-eye-glow ${isSelected ? "is-selected" : ""}`} style={{ background: character.aura }} />
                   <button
                     aria-label={character.label}
-                    className="absolute inset-0 rounded-[10%] cursor-pointer focus:outline-none focus-visible:ring-2 transition-transform duration-300 hover:scale-[1.018]"
+                    aria-pressed={isSelected}
+                    className="absolute inset-0 rounded-[10%] cursor-pointer focus:outline-none focus-visible:ring-2 transition-transform duration-300 hover:scale-[1.018] active:scale-[0.965]"
                     style={{ outlineColor: character.color }}
                     onMouseEnter={() => setSelectedCharacter(character.key)}
                     onClick={() => chooseCharacter(character)}
@@ -287,7 +344,17 @@ export default function WeaponsPage() {
 
             {/* Weapon category tabs */}
             {categoryTabs.map((tab) => (
-              <HotspotButton key={tab.key} label={tab.label} className={tab.className} ring={tab.ring} />
+              <HotspotButton
+                key={tab.key}
+                label={tab.label}
+                className={tab.className}
+                ring={tab.ring}
+                active={activeTab === tab.key}
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  playTone(tab.key === "legendary" ? "fire" : "electric");
+                }}
+              />
             ))}
 
             {/* Weapon cards — subtle element-specific energy aligned to the existing cards. */}
@@ -318,28 +385,38 @@ export default function WeaponsPage() {
             ))}
 
             {/* Carousel arrows */}
-            <HotspotButton label="Previous weapons" className="left-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%] rounded-full" ring="#00c8ff" onClick={() => playTone("ice")} />
-            <HotspotButton label="Next weapons" className="right-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%] rounded-full" ring="#00c8ff" onClick={() => playTone("ice")} />
+            <HotspotButton label="Previous weapons" className="left-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%]" round="rounded-full" ring="#00c8ff" onClick={() => cycleWeapon(-1)} />
+            <HotspotButton label="Next weapons" className="right-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%]" round="rounded-full" ring="#00c8ff" onClick={() => cycleWeapon(1)} />
 
-            {/* Upgrade path energy — no layout change, only an animated flow sitting on the baked connector line. */}
-            <div className="pointer-events-none absolute left-[17.8%] top-[61.75%] h-[1.05%] w-[68.0%] upgrade-energy-flow" />
-            <div className="pointer-events-none absolute left-[43.5%] top-[60.2%] h-[4.2%] w-[14.5%] rounded-full active-tier-power" />
-            <div className="pointer-events-none absolute left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full unlocked-tier-pulse" />
-            <div className="pointer-events-none absolute left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full unlocked-tier-pulse delay-one" />
+            {/* Upgrade path energy — segmented only on the baked connector lines, no rectangle overlay. */}
+            {connectorSegments.map((segment) => (
+              <div key={segment} className={`pointer-events-none absolute ${segment} connector-energy`} />
+            ))}
+            <div className={`pointer-events-none absolute ${tierPowerBoxes[activeTier]} rounded-full active-tier-power`} />
             {upgradeTiers.map((tier) => (
-              <HotspotButton key={tier.key} label={tier.label} className={`${tier.className} rounded-full`} ring={tier.ring} onClick={() => playTone(tier.key === "tier-three" ? "fire" : "ice")} />
+              <HotspotButton
+                key={tier.key}
+                label={tier.label}
+                className={tier.className}
+                round="rounded-full"
+                ring={tier.ring}
+                active={activeTier === tier.key}
+                onClick={() => {
+                  setActiveTier(tier.key);
+                  playTone(tier.key === "tier-three" ? "fire" : "ice");
+                }}
+              />
             ))}
 
-            {/* Live gameplay video: exactly inside the existing preview frame footprint. */}
-            <div className="absolute left-[73.6%] top-[71.1%] h-[9.9%] w-[20.8%] overflow-hidden rounded-lg bg-black/70 shadow-[inset_0_0_20px_rgba(0,200,255,0.18),0_0_18px_rgba(0,200,255,0.12)]">
+            {/* Live gameplay video: placed inside the baked gameplay preview frame only. */}
+            <div className="absolute left-[72.35%] top-[66.25%] h-[12.25%] w-[23.25%] overflow-hidden rounded-[1.1%] bg-black/80 shadow-[inset_0_0_20px_rgba(0,200,255,0.16),0_0_18px_rgba(0,200,255,0.1)]">
               <video
-                className="h-full w-full object-contain opacity-90"
+                className="h-full w-full object-cover opacity-92"
                 autoPlay
                 muted
                 loop
                 playsInline
                 preload="metadata"
-                poster="/weapons-composition.png"
                 aria-label="Live ZUNO battle gameplay preview"
               >
                 <source src="/battle.mp4" type="video/mp4" />
@@ -348,13 +425,26 @@ export default function WeaponsPage() {
             </div>
             <button
               aria-label="Play Frost Blade preview video"
-              className="absolute left-[73.6%] top-[71.1%] h-[9.9%] w-[20.8%] rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00c8ff]/80"
+              aria-pressed="false"
+              className="absolute left-[72.35%] top-[66.25%] h-[12.25%] w-[23.25%] z-20 rounded-[1.1%] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00c8ff]/80 hotspot-real"
+              style={{ "--hotspot": "#00c8ff" } as CSSProperties}
               onClick={() => playTone("ice")}
             />
 
             {/* Loadout slots */}
             {loadoutSlots.map((slot) => (
-              <HotspotButton key={slot.key} label={slot.label} className={`${slot.className} rounded-full`} ring={slot.ring} onClick={() => playTone("void")} />
+              <HotspotButton
+                key={slot.key}
+                label={slot.label}
+                className={slot.className}
+                round="rounded-full"
+                ring={slot.ring}
+                active={activeLoadout === slot.key}
+                onClick={() => {
+                  setActiveLoadout(slot.key);
+                  playTone(slot.key.includes("four") || slot.key.includes("five") ? "void" : "ice");
+                }}
+              />
             ))}
 
             {/* Final CTA */}
@@ -380,6 +470,41 @@ export default function WeaponsPage() {
           animation: armoryAmbient 8s ease-in-out infinite alternate;
         }
 
+        .hotspot-real {
+          --hotspot: #00c8ff;
+          background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--hotspot) 10%, transparent), transparent 62%);
+          border: 1px solid color-mix(in srgb, var(--hotspot) 24%, transparent);
+          box-shadow: inset 0 0 16px color-mix(in srgb, var(--hotspot) 8%, transparent);
+          opacity: 0.42;
+        }
+
+        .hotspot-real:hover,
+        .hotspot-real:focus-visible,
+        .hotspot-real.is-active {
+          opacity: 1;
+          background:
+            linear-gradient(115deg, transparent 16%, color-mix(in srgb, var(--hotspot) 24%, transparent) 48%, transparent 74%),
+            radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--hotspot) 20%, transparent), transparent 66%);
+          border-color: color-mix(in srgb, var(--hotspot) 70%, transparent);
+          box-shadow: 0 0 18px color-mix(in srgb, var(--hotspot) 38%, transparent), inset 0 0 18px color-mix(in srgb, var(--hotspot) 18%, transparent);
+          animation: hotspotPowered 2.1s ease-in-out infinite;
+        }
+
+        .character-card-shell {
+          transform-origin: center;
+          transition: transform 260ms ease, filter 260ms ease;
+        }
+
+        .character-card-shell:hover,
+        .character-card-shell.is-selected {
+          transform: translateY(-1.6%) scale(1.018);
+          filter: brightness(1.08) saturate(1.08);
+        }
+
+        .character-card-shell.is-burst {
+          animation: characterClickMove 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
         .character-life {
           border: 1px solid;
           opacity: 0.58;
@@ -400,21 +525,48 @@ export default function WeaponsPage() {
         }
 
         .character-breath.is-selected {
-          opacity: 0.65;
-          animation: characterBreath 3.4s ease-in-out infinite;
+          opacity: 0.82;
+          animation: characterBreath 3.0s ease-in-out infinite;
+        }
+
+        .character-eye-glow {
+          opacity: 0;
+          filter: blur(9px);
+          mix-blend-mode: screen;
+          transform: scale(0.46);
+          transition: opacity 240ms ease, transform 240ms ease;
+        }
+
+        .character-eye-glow.is-selected {
+          opacity: 0.74;
+          transform: scale(0.74);
+          animation: eyesAlive 1.8s ease-in-out infinite;
+        }
+
+        .character-life.is-burst::after {
+          content: "";
+          position: absolute;
+          inset: -7%;
+          border-radius: inherit;
+          border: 1px solid currentColor;
+          opacity: 0;
+          animation: roarRipple 760ms ease-out both;
         }
 
         .weapon-fx {
           border: 1px solid transparent;
-          opacity: 0;
+          opacity: 0.18;
           mix-blend-mode: screen;
-          transition: opacity 280ms ease, box-shadow 280ms ease;
+          background-blend-mode: screen;
+          transition: opacity 220ms ease, box-shadow 220ms ease, transform 220ms ease;
         }
 
         .weapon-fx.is-active,
         .weapon-fx:hover {
-          opacity: 0.78;
-          box-shadow: inset 0 0 26px rgba(255, 255, 255, 0.04), 0 0 18px color-mix(in srgb, currentColor 34%, transparent);
+          opacity: 1;
+          border-color: currentColor;
+          box-shadow: inset 0 0 30px color-mix(in srgb, currentColor 16%, transparent), 0 0 26px color-mix(in srgb, currentColor 42%, transparent);
+          animation: weaponCardBreath 2.4s ease-in-out infinite;
         }
 
         .weapon-fx::before,
@@ -495,28 +647,28 @@ export default function WeaponsPage() {
           box-shadow: 0 0 28px currentColor, inset 0 0 20px currentColor;
         }
 
-        .upgrade-energy-flow {
+        .connector-energy {
           overflow: hidden;
           border-radius: 999px;
-          background: linear-gradient(90deg, rgba(0, 200, 255, 0.02), rgba(0, 200, 255, 0.12), rgba(255, 122, 0, 0.13), rgba(255, 255, 255, 0.03));
-          filter: blur(0.2px);
+          background: transparent;
           mix-blend-mode: screen;
-          opacity: 0.72;
         }
 
-        .upgrade-energy-flow::before {
+        .connector-energy::before {
           content: "";
           position: absolute;
-          inset: -80% -25%;
-          background: linear-gradient(90deg, transparent 0%, rgba(0, 200, 255, 0.2) 18%, rgba(255, 255, 255, 0.38) 30%, rgba(255, 122, 0, 0.24) 44%, transparent 58%);
-          animation: tierFlow 3.6s linear infinite;
+          inset: -80% -140%;
+          background: linear-gradient(90deg, transparent 0%, rgba(0, 200, 255, 0.0) 18%, rgba(0, 200, 255, 0.55) 34%, rgba(255, 255, 255, 0.9) 49%, rgba(255, 122, 0, 0.58) 63%, transparent 82%);
+          filter: blur(0.3px);
+          animation: tierFlow 2.6s linear infinite;
         }
 
-        .active-tier-power {
+        .active-tier-power,
+        .selected-tier-power {
           border: 1px solid rgba(255, 122, 0, 0.72);
           box-shadow: 0 0 24px rgba(255, 122, 0, 0.34), inset 0 0 22px rgba(255, 122, 0, 0.15);
           mix-blend-mode: screen;
-          animation: activeTierShine 2.7s ease-in-out infinite;
+          animation: activeTierShine 2.2s ease-in-out infinite;
         }
 
         .active-tier-power::before {
@@ -555,6 +707,33 @@ export default function WeaponsPage() {
         .cta-life:hover {
           background-color: rgba(255, 210, 31, 0.04);
           box-shadow: 0 0 28px rgba(255, 122, 0, 0.24);
+        }
+
+        @keyframes hotspotPowered {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.28); }
+        }
+
+        @keyframes characterClickMove {
+          0% { transform: translateY(0) scale(1); }
+          28% { transform: translateY(-3.4%) scale(1.04) rotate(-0.4deg); }
+          62% { transform: translateY(1.1%) scale(0.992) rotate(0.25deg); }
+          100% { transform: translateY(-1.6%) scale(1.018); }
+        }
+
+        @keyframes eyesAlive {
+          0%, 100% { opacity: 0.42; filter: blur(10px) brightness(1); }
+          50% { opacity: 0.86; filter: blur(7px) brightness(1.55); }
+        }
+
+        @keyframes roarRipple {
+          0% { transform: scale(0.92); opacity: 0.78; box-shadow: 0 0 22px currentColor; }
+          100% { transform: scale(1.22); opacity: 0; box-shadow: 0 0 40px currentColor; }
+        }
+
+        @keyframes weaponCardBreath {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.34); }
         }
 
         @keyframes armoryAmbient {
@@ -632,14 +811,19 @@ export default function WeaponsPage() {
         }
 
         @media (prefers-reduced-motion: reduce) {
+          .hotspot-real,
           .ambient-armory-life,
+          .character-card-shell,
           .character-life,
           .character-breath,
+          .character-eye-glow,
+          .weapon-fx,
           .weapon-fx::before,
           .weapon-fx::after,
-          .upgrade-energy-flow::before,
+          .connector-energy::before,
           .active-tier-power,
           .active-tier-power::before,
+          .selected-tier-power,
           .unlocked-tier-pulse,
           .video-frame-polish {
             animation: none !important;
