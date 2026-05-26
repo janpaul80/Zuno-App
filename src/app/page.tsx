@@ -137,7 +137,7 @@ export default function HomePage() {
               href="/how-to-play"
               className="relative z-10 inline-flex items-center gap-2 px-12 py-4 rounded-lg border-[2.5px] border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.13em] text-sm shadow-[0_0_28px_rgba(255,122,0,0.55),5px_5px_0_#14002e] transition hover:-translate-y-0.5"
             >
-              🐾 Play Zuno Now
+              Play Zuno Now
             </Link>
 
             {/* Bottom-right purple cat character */}
