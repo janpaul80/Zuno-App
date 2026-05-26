@@ -236,14 +236,12 @@ export default function WeaponsPage() {
 
       <section className="relative z-10 pt-24 sm:pt-24 md:pt-24 pb-10">
         <div className="relative mx-auto w-full max-w-[1365px] px-0 sm:px-4">
-          <div className="relative mx-auto overflow-hidden bg-[#050816] shadow-[0_0_80px_rgba(0,0,0,0.45)]">
-            <img
-              src="/weapons-composition.png"
-              alt="ZUNO Weapons Arsenal complete armory screen"
-              className="block w-full h-auto select-none"
-              draggable={false}
-            />
-
+          <div
+            role="img"
+            aria-label="ZUNO Weapons Arsenal complete armory screen"
+            className="relative mx-auto aspect-[1024/1476] overflow-hidden bg-[#050816] bg-[length:100%_100%] bg-top bg-no-repeat shadow-[0_0_80px_rgba(0,0,0,0.45)]"
+            style={{ backgroundImage: "url('/weapons-composition.png')" }}
+          >
             <div className="pointer-events-none absolute inset-0 ambient-armory-life" />
 
             {/* Character rename overlays — keep visual identity, only replace labels. */}
