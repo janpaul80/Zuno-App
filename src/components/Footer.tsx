@@ -205,7 +205,15 @@ export default function Footer() {
           <div className="text-center md:text-left space-y-1">
             <div>&copy; {currentYear} ZUNO Game Studio. All rights reserved.</div>
             <div className="text-gray-400 font-bold">
-              ZUNO was created by Paul Hartmann.
+              ZUNO was created by{" "}
+              <a
+                href="https://paulhartmann.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#00c8ff] hover:text-white transition-colors duration-200"
+              >
+                Paul-Hartmann GmbH
+              </a>
             </div>
           </div>
           <div className="flex items-center gap-6">
