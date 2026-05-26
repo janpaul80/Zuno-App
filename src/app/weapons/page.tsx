@@ -5,6 +5,7 @@ import { useRef, useState, type CSSProperties } from "react";
 
 type CharacterKey = "jean" | "bambo" | "wolf" | "marjorie" | "onyx";
 type WeaponKey = "frost" | "thunder" | "solar" | "armor" | "void";
+type CategoryKey = "all" | "melee" | "ranged" | "elemental" | "legendary" | "loadout";
 
 type Hotspot = {
   key: string;
@@ -70,6 +71,9 @@ const weaponCards: Array<{
   color: string;
   className: string;
   sound: "ice" | "electric" | "fire" | "frost" | "void";
+  categories: CategoryKey[];
+  tier: string;
+  details: string;
 }> = [
   {
     key: "frost",
@@ -78,6 +82,9 @@ const weaponCards: Array<{
     color: "#66e7ff",
     className: "weapon-fx weapon-fx--ice",
     sound: "ice",
+    categories: ["all", "melee", "elemental", "loadout"],
+    tier: "tier-three",
+    details: "Melee elemental blade · freeze chain · arena-control finisher",
   },
   {
     key: "thunder",
@@ -86,6 +93,9 @@ const weaponCards: Array<{
     color: "#bd00ff",
     className: "weapon-fx weapon-fx--thunder",
     sound: "electric",
+    categories: ["all", "melee", "legendary", "loadout"],
+    tier: "tier-two",
+    details: "Legendary melee claws · burst dash · chain-lightning crits",
   },
   {
     key: "solar",
@@ -94,6 +104,9 @@ const weaponCards: Array<{
     color: "#ff7a00",
     className: "weapon-fx weapon-fx--solar",
     sound: "fire",
+    categories: ["all", "ranged", "elemental"],
+    tier: "tier-four",
+    details: "Ranged solar spear · burn stacks · precision lane pressure",
   },
   {
     key: "armor",
@@ -102,6 +115,9 @@ const weaponCards: Array<{
     color: "#00c8ff",
     className: "weapon-fx weapon-fx--armor",
     sound: "frost",
+    categories: ["all", "melee", "elemental", "loadout"],
+    tier: "tier-one",
+    details: "Defensive frost armor · shield pulse · slow-field counter",
   },
   {
     key: "void",
@@ -110,10 +126,13 @@ const weaponCards: Array<{
     color: "#d42bff",
     className: "weapon-fx weapon-fx--void",
     sound: "void",
+    categories: ["all", "ranged", "legendary"],
+    tier: "tier-five",
+    details: "Legendary ranged lance · void pierce · gravity-well rupture",
   },
 ];
 
-const categoryTabs: Hotspot[] = [
+const categoryTabs: Array<Hotspot & { key: CategoryKey }> = [
   { key: "all", label: "All weapons", className: "left-[13.7%] top-[32.05%] h-[2.4%] w-[13.5%]", ring: "#00c8ff" },
   { key: "melee", label: "Melee weapons", className: "left-[28.1%] top-[32.05%] h-[2.4%] w-[10.5%]", ring: "#ff2bd6" },
   { key: "ranged", label: "Ranged weapons", className: "left-[39.6%] top-[32.05%] h-[2.4%] w-[10.7%]", ring: "#ff2bd6" },
@@ -121,6 +140,23 @@ const categoryTabs: Hotspot[] = [
   { key: "legendary", label: "Legendary weapons", className: "left-[63.7%] top-[32.05%] h-[2.4%] w-[11.6%]", ring: "#ff7a00" },
   { key: "loadout", label: "My loadout", className: "left-[76.4%] top-[32.05%] h-[2.4%] w-[14.5%]", ring: "#ff2bd6" },
 ];
+
+
+const displaySlots = [
+  "left-[3.1%] top-[35.2%] h-[20.0%] w-[24.2%]",
+  "left-[29.0%] top-[35.2%] h-[20.0%] w-[17.6%]",
+  "left-[47.5%] top-[35.2%] h-[20.0%] w-[17.6%]",
+  "left-[66.3%] top-[35.2%] h-[20.0%] w-[17.0%]",
+  "left-[84.0%] top-[35.2%] h-[20.0%] w-[15.5%]",
+];
+
+const weaponTierBoxes: Record<WeaponKey, string> = {
+  frost: "left-[43.95%] top-[60.45%] h-[3.65%] w-[13.55%]",
+  thunder: "left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  solar: "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  armor: "left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%]",
+  void: "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]",
+};
 
 const connectorSegments = [
   "left-[19.6%] top-[61.63%] h-[0.36%] w-[6.6%]",
@@ -247,9 +283,15 @@ export default function WeaponsPage() {
   const [activeWeapon, setActiveWeapon] = useState<WeaponKey>("frost");
   const [burstWeapon, setBurstWeapon] = useState<WeaponKey | null>(null);
   const [burstCharacter, setBurstCharacter] = useState<CharacterKey | null>(null);
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState<CategoryKey>("all");
+  const [carouselOffset, setCarouselOffset] = useState(0);
   const [activeTier, setActiveTier] = useState("tier-three");
   const [activeLoadout, setActiveLoadout] = useState("slot-one");
+  const [previewPlaying, setPreviewPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const filteredWeapons = weaponCards.filter((weapon) => weapon.categories.includes(activeTab));
+  const carouselWeapons = filteredWeapons.map((_, index) => filteredWeapons[(index + carouselOffset) % filteredWeapons.length]);
+  const selectedWeapon = weaponCards.find((weapon) => weapon.key === activeWeapon) ?? weaponCards[0];
   const burstTimer = useRef<number | null>(null);
   const characterTimer = useRef<number | null>(null);
 
@@ -264,6 +306,7 @@ export default function WeaponsPage() {
 
   const energizeWeapon = (weapon: (typeof weaponCards)[number]) => {
     setActiveWeapon(weapon.key);
+    setActiveTier(weapon.tier);
     setBurstWeapon(weapon.key);
     playTone(weapon.sound);
 
@@ -272,9 +315,28 @@ export default function WeaponsPage() {
   };
 
   const cycleWeapon = (direction: 1 | -1) => {
-    const currentIndex = weaponCards.findIndex((weapon) => weapon.key === activeWeapon);
-    const nextWeapon = weaponCards[(currentIndex + direction + weaponCards.length) % weaponCards.length];
-    energizeWeapon(nextWeapon);
+    if (!filteredWeapons.length) return;
+    const currentIndex = filteredWeapons.findIndex((weapon) => weapon.key === activeWeapon);
+    const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+    const nextIndex = (safeIndex + direction + filteredWeapons.length) % filteredWeapons.length;
+    setCarouselOffset((offset) => (offset + direction + filteredWeapons.length) % filteredWeapons.length);
+    energizeWeapon(filteredWeapons[nextIndex]);
+  };
+
+  const togglePreviewVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      void video.play();
+      setPreviewPlaying(true);
+      playTone("ice");
+      return;
+    }
+
+    video.pause();
+    setPreviewPlaying(false);
+    playTone("frost");
   };
 
   return (
@@ -351,28 +413,39 @@ export default function WeaponsPage() {
                 ring={tab.ring}
                 active={activeTab === tab.key}
                 onClick={() => {
+                  const nextWeapons = weaponCards.filter((weapon) => weapon.categories.includes(tab.key));
                   setActiveTab(tab.key);
+                  setCarouselOffset(0);
+                  if (nextWeapons[0]) energizeWeapon(nextWeapons[0]);
                   playTone(tab.key === "legendary" ? "fire" : "electric");
                 }}
               />
             ))}
 
-            {/* Weapon cards — subtle element-specific energy aligned to the existing cards. */}
-            {weaponCards.map((weapon) => {
+            {/* Weapon cards — real selectable/filterable carousel aligned to the existing baked card slots. */}
+            {carouselWeapons.map((weapon, index) => {
               const isActive = activeWeapon === weapon.key;
               const isBurst = burstWeapon === weapon.key;
 
               return (
-                <div key={weapon.key} className={`absolute ${weapon.box} rounded-xl overflow-hidden`}>
+                <div
+                  key={`${activeTab}-${weapon.key}`}
+                  className={`absolute ${displaySlots[index]} rounded-xl overflow-hidden weapon-card-shell ${isActive ? "is-selected" : ""}`}
+                  style={{ "--weapon-color": weapon.color } as CSSProperties}
+                >
+                  <div className="pointer-events-none absolute inset-0 weapon-card-mask" />
                   <div
                     className={`${weapon.className} pointer-events-none absolute inset-0 rounded-xl ${isActive ? "is-active" : ""} ${isBurst ? "is-burst" : ""}`}
                     style={{ borderColor: weapon.color }}
                   />
+                  <div className="pointer-events-none absolute left-[7%] right-[7%] bottom-[6%] z-10 font-russo text-[clamp(5px,0.62vw,9px)] uppercase tracking-[0.12em] text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+                    {weapon.label.replace(" weapon card", "")}
+                  </div>
                   <button
                     aria-label={weapon.label}
+                    aria-pressed={isActive}
                     className="absolute inset-0 rounded-xl cursor-pointer focus:outline-none focus-visible:ring-2 transition-transform duration-300 hover:scale-[1.006]"
                     style={{ outlineColor: weapon.color }}
-                    onMouseEnter={() => setActiveWeapon(weapon.key)}
                     onClick={() => energizeWeapon(weapon)}
                   />
                 </div>
@@ -380,9 +453,23 @@ export default function WeaponsPage() {
             })}
 
             {/* Upgrade buttons on cards */}
-            {upgradeButtons.map((button) => (
-              <HotspotButton key={button.key} label={button.label} className={button.className} ring={button.ring} onClick={() => playTone("electric")} />
-            ))}
+            {upgradeButtons.map((button) => {
+              const weapon = weaponCards.find((card) => button.key.startsWith(card.key === "armor" ? "armor" : card.key));
+
+              return (
+                <HotspotButton
+                  key={button.key}
+                  label={button.label}
+                  className={button.className}
+                  ring={button.ring}
+                  active={weapon?.key === activeWeapon}
+                  onClick={() => {
+                    if (weapon) energizeWeapon(weapon);
+                    else playTone("electric");
+                  }}
+                />
+              );
+            })}
 
             {/* Carousel arrows */}
             <HotspotButton label="Previous weapons" className="left-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%]" round="rounded-full" ring="#00c8ff" onClick={() => cycleWeapon(-1)} />
@@ -393,6 +480,10 @@ export default function WeaponsPage() {
               <div key={segment} className={`pointer-events-none absolute ${segment} connector-energy`} />
             ))}
             <div className={`pointer-events-none absolute ${tierPowerBoxes[activeTier]} rounded-full active-tier-power`} />
+            <div className={`pointer-events-none absolute ${weaponTierBoxes[selectedWeapon.key]} rounded-full selected-weapon-tier`} style={{ "--weapon-color": selectedWeapon.color } as CSSProperties} />
+            <div className="pointer-events-none absolute left-[58.7%] top-[57.2%] z-10 w-[34.2%] rounded-md border border-white/10 bg-[#020617]/36 px-[1.2%] py-[0.55%] font-russo text-[clamp(5px,0.62vw,9px)] uppercase tracking-[0.11em] text-white/85 shadow-[0_0_18px_rgba(0,0,0,0.34)] backdrop-blur-[2px] selected-weapon-details" style={{ "--weapon-color": selectedWeapon.color } as CSSProperties}>
+              {selectedWeapon.details}
+            </div>
             {upgradeTiers.map((tier) => (
               <HotspotButton
                 key={tier.key}
@@ -409,29 +500,36 @@ export default function WeaponsPage() {
             ))}
 
             {/* Live gameplay video: placed inside the baked gameplay preview frame only. */}
-            <div className="absolute left-[72.35%] top-[66.25%] h-[12.25%] w-[23.25%] overflow-hidden rounded-[1.1%] bg-black/80 shadow-[inset_0_0_20px_rgba(0,200,255,0.16),0_0_18px_rgba(0,200,255,0.1)]">
+            <div className="absolute left-[72.72%] top-[66.82%] h-[11.18%] w-[22.42%] overflow-hidden rounded-[2.8%] bg-[#020617] video-frame-shell">
               <video
-                className="h-full w-full object-cover opacity-92"
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full scale-[1.045] object-cover opacity-[0.86]"
                 autoPlay
                 muted
                 loop
                 playsInline
                 preload="metadata"
                 aria-label="Live ZUNO battle gameplay preview"
+                onPlay={() => setPreviewPlaying(true)}
+                onPause={() => setPreviewPlaying(false)}
               >
                 <source src="/battle.mp4" type="video/mp4" />
               </video>
-              <div className="pointer-events-none absolute inset-0 video-frame-polish" />
+              <div className="pointer-events-none absolute inset-[-1px] video-frame-polish" />
             </div>
             <button
-              aria-label="Play Frost Blade preview video"
-              aria-pressed="false"
-              className="absolute left-[72.35%] top-[66.25%] h-[12.25%] w-[23.25%] z-20 rounded-[1.1%] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00c8ff]/80 hotspot-real"
+              aria-label="Toggle Frost Blade preview video"
+              aria-pressed={previewPlaying}
+              className="absolute left-[72.72%] top-[66.82%] h-[11.18%] w-[22.42%] z-20 rounded-[2.8%] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00c8ff]/80"
               style={{ "--hotspot": "#00c8ff" } as CSSProperties}
-              onClick={() => playTone("ice")}
+              onClick={togglePreviewVideo}
             />
 
             {/* Loadout slots */}
+            {loadoutSlots.slice(0, 3).map((slot, index) => (
+              <div key={`loadout-glow-${slot.key}`} className={`pointer-events-none absolute ${slot.className} rounded-full loadout-slot-life delay-${index}`} />
+            ))}
+            <div className="pointer-events-none absolute left-[58.4%] top-[82.1%] h-[8.2%] w-[35.8%] forge-ember-field" />
             {loadoutSlots.map((slot) => (
               <HotspotButton
                 key={slot.key}
@@ -553,6 +651,29 @@ export default function WeaponsPage() {
           animation: roarRipple 760ms ease-out both;
         }
 
+        .weapon-card-shell {
+          transform-origin: center;
+          transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 260ms ease;
+        }
+
+        .weapon-card-shell:hover,
+        .weapon-card-shell.is-selected {
+          transform: translateY(-1.4%) scale(1.018);
+          filter: saturate(1.14) brightness(1.08);
+        }
+
+        .weapon-card-mask {
+          background: linear-gradient(180deg, rgba(2, 6, 23, 0.02), rgba(2, 6, 23, 0.22));
+          box-shadow: inset 0 0 34px color-mix(in srgb, var(--weapon-color) 16%, transparent);
+          opacity: 0.54;
+          mix-blend-mode: multiply;
+        }
+
+        .weapon-card-shell.is-selected .weapon-card-mask {
+          opacity: 0.12;
+          mix-blend-mode: screen;
+        }
+
         .weapon-fx {
           border: 1px solid transparent;
           opacity: 0.18;
@@ -565,7 +686,7 @@ export default function WeaponsPage() {
         .weapon-fx:hover {
           opacity: 1;
           border-color: currentColor;
-          box-shadow: inset 0 0 30px color-mix(in srgb, currentColor 16%, transparent), 0 0 26px color-mix(in srgb, currentColor 42%, transparent);
+          box-shadow: inset 0 0 36px color-mix(in srgb, currentColor 22%, transparent), 0 0 34px color-mix(in srgb, currentColor 50%, transparent);
           animation: weaponCardBreath 2.4s ease-in-out infinite;
         }
 
@@ -690,13 +811,63 @@ export default function WeaponsPage() {
           animation-delay: 0.6s;
         }
 
+        .selected-weapon-tier {
+          border: 1px solid color-mix(in srgb, var(--weapon-color) 75%, transparent);
+          box-shadow: 0 0 28px color-mix(in srgb, var(--weapon-color) 42%, transparent), inset 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent);
+          mix-blend-mode: screen;
+          animation: activeTierShine 1.9s ease-in-out infinite;
+        }
+
+        .selected-weapon-details {
+          box-shadow: 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent), inset 0 0 14px rgba(255,255,255,0.035);
+        }
+
+        .video-frame-shell {
+          clip-path: inset(0 round 9px);
+          box-shadow: inset 0 0 0 1px rgba(0, 200, 255, 0.18), inset 0 0 26px rgba(2, 6, 23, 0.75), 0 0 18px rgba(0, 200, 255, 0.08);
+          mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.96) 78%, rgba(0,0,0,0.74) 100%);
+        }
+
         .video-frame-polish {
           background:
             linear-gradient(90deg, rgba(2, 6, 23, 0.22), transparent 14%, transparent 86%, rgba(2, 6, 23, 0.22)),
             linear-gradient(180deg, rgba(0, 200, 255, 0.13), transparent 24%, transparent 76%, rgba(189, 0, 255, 0.1));
-          border: 1px solid rgba(0, 200, 255, 0.22);
-          box-shadow: inset 0 0 18px rgba(0, 200, 255, 0.14);
+          border: 1px solid rgba(0, 200, 255, 0.16);
+          box-shadow: inset 0 0 22px rgba(2, 6, 23, 0.7), inset 0 0 18px rgba(0, 200, 255, 0.12);
           animation: videoScan 4s ease-in-out infinite;
+        }
+
+        .loadout-slot-life {
+          border: 1px solid rgba(0, 200, 255, 0.36);
+          box-shadow: 0 0 18px rgba(0, 200, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
+          mix-blend-mode: screen;
+          animation: loadoutGlow 3.1s ease-in-out infinite;
+        }
+
+        .loadout-slot-life.delay-1 { animation-delay: 0.45s; border-color: rgba(255, 122, 0, 0.34); box-shadow: 0 0 18px rgba(255, 122, 0, 0.2), inset 0 0 20px rgba(255,255,255,0.05); }
+        .loadout-slot-life.delay-2 { animation-delay: 0.9s; border-color: rgba(189, 0, 255, 0.34); box-shadow: 0 0 18px rgba(189, 0, 255, 0.22), inset 0 0 20px rgba(255,255,255,0.05); }
+
+        .forge-ember-field {
+          overflow: hidden;
+          border-radius: 18px;
+          mix-blend-mode: screen;
+          opacity: 0.62;
+        }
+
+        .forge-ember-field::before,
+        .forge-ember-field::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(circle, rgba(255, 210, 31, 0.4) 0 1px, transparent 2px), radial-gradient(circle, rgba(255, 122, 0, 0.28) 0 1px, transparent 2px);
+          background-size: 34px 34px, 58px 58px;
+          animation: forgeEmbers 4.2s linear infinite;
+        }
+
+        .forge-ember-field::after {
+          filter: blur(5px);
+          opacity: 0.42;
+          animation-duration: 6.4s;
         }
 
         .cta-life {
@@ -779,6 +950,17 @@ export default function WeaponsPage() {
           50% { transform: scale(1.18) rotate(3deg); opacity: 0.5; }
         }
 
+        @keyframes loadoutGlow {
+          0%, 100% { opacity: 0.38; transform: scale(0.985); }
+          50% { opacity: 0.82; transform: scale(1.025); }
+        }
+
+        @keyframes forgeEmbers {
+          0% { transform: translateY(24%) translateX(0); opacity: 0; }
+          18% { opacity: 0.5; }
+          100% { transform: translateY(-34%) translateX(2%); opacity: 0; }
+        }
+
         @keyframes energyClickBurst {
           0% { transform: scale(0.96); opacity: 0.95; }
           100% { transform: scale(1.08); opacity: 0; }
@@ -817,6 +999,7 @@ export default function WeaponsPage() {
           .character-life,
           .character-breath,
           .character-eye-glow,
+          .weapon-card-shell,
           .weapon-fx,
           .weapon-fx::before,
           .weapon-fx::after,
@@ -825,7 +1008,24 @@ export default function WeaponsPage() {
           .active-tier-power::before,
           .selected-tier-power,
           .unlocked-tier-pulse,
-          .video-frame-polish {
+          .selected-weapon-tier {
+          border: 1px solid color-mix(in srgb, var(--weapon-color) 75%, transparent);
+          box-shadow: 0 0 28px color-mix(in srgb, var(--weapon-color) 42%, transparent), inset 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent);
+          mix-blend-mode: screen;
+          animation: activeTierShine 1.9s ease-in-out infinite;
+        }
+
+        .selected-weapon-details {
+          box-shadow: 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent), inset 0 0 14px rgba(255,255,255,0.035);
+        }
+
+        .video-frame-shell {
+          clip-path: inset(0 round 9px);
+          box-shadow: inset 0 0 0 1px rgba(0, 200, 255, 0.18), inset 0 0 26px rgba(2, 6, 23, 0.75), 0 0 18px rgba(0, 200, 255, 0.08);
+          mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.96) 78%, rgba(0,0,0,0.74) 100%);
+        }
+
+        .video-frame-polish {
             animation: none !important;
           }
         }
