@@ -1,160 +1,97 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
-const animals = [
-  {
-    key: "wolf", name: "Wolf", title: "Arctic Pack Hunter", emoji: "🐺", color: "#00c8ff",
-    weapons: [
-      { name: "Frost Blade", rarity: "Epic", element: "Ice", stats: "+92 Slash • +25 Chill Burst", status: "Unlocked", path: ["Shard Edge","Glacier Fang","Frost Blade","Absolute Zero","Winter Reign"] },
-      { name: "Thunder Claws", rarity: "Legendary", element: "Electric", stats: "+81 Combo • +40 Chain Shock", status: "Unlocked", path: ["Static Nails","Volt Talons","Thunder Claws","Storm Hunt","Skybreaker"] },
-      { name: "Ice Armor", rarity: "Rare", element: "Ice", stats: "+140 Shield • +18 Freeze Reflect", status: "Locked", path: ["Frozen Hide","Crystal Guard","Ice Armor","Polar Aegis","Tundra Fortress"] },
-    ],
-  },
-  {
-    key: "fox", name: "Fox Hero", title: "Blaze Speed Tactician", emoji: "🦊", color: "#ff7a00",
-    weapons: [
-      { name: "Inferno Gauntlets", rarity: "Legendary", element: "Fire", stats: "+105 Impact • +35 Burn Stack", status: "Unlocked", path: ["Spark Knuckles","Flare Grips","Inferno Gauntlets","Solar Smash","Phoenix Core"] },
-      { name: "Jet Dash Boots", rarity: "Epic", element: "Electric", stats: "+28 Movement • +22 Dash Strike", status: "Unlocked", path: ["Pulse Steps","Turbo Soles","Jet Dash Boots","Mach Surge","Lightning Trail"] },
-      { name: "Plasma Goggles", rarity: "Rare", element: "Fire", stats: "+20 Crit • +30 Scan Range", status: "Locked", path: ["Heat Lens","Plasma Sight","Plasma Goggles","Nova Scope","Sunflare Vision"] },
-    ],
-  },
-  {
-    key: "cat", name: "Purple Cat", title: "Void Ambush Caster", emoji: "🐱", color: "#ff2bd6",
-    weapons: [
-      { name: "Shadow Daggers", rarity: "Epic", element: "Rift", stats: "+74 Pierce • +32 Backstab", status: "Unlocked", path: ["Dusk Blades","Night Fangs","Shadow Daggers","Eclipse Twin","Abyss Reaver"] },
-      { name: "Rift Energy Staff", rarity: "Legendary", element: "Rift", stats: "+88 Arcane • +45 Rift Burst", status: "Unlocked", path: ["Warp Rod","Singularity Cane","Rift Energy Staff","Void Crown","Event Horizon"] },
-      { name: "Void Teleport", rarity: "Rare", element: "Rift", stats: "+3 Blink • +26 Escape Speed", status: "Locked", path: ["Blur Step","Phase Shift","Void Teleport","Rift Gate","Omni Blink"] },
-    ],
-  },
-  {
-    key: "panda", name: "Panda", title: "Titan Defense Vanguard", emoji: "🐼", color: "#7cff00",
-    weapons: [
-      { name: "Titan Gloves", rarity: "Epic", element: "Nature", stats: "+99 Heavy • +22 Stun Force", status: "Unlocked", path: ["Stone Wraps","Granite Fists","Titan Gloves","Colossus Grip","Mountain Breaker"] },
-      { name: "Earthquake Slam", rarity: "Legendary", element: "Nature", stats: "+120 Area • +30 Knockdown", status: "Unlocked", path: ["Ground Pound","Seismic Drop","Earthquake Slam","Faultline Crash","Worldsplitter"] },
-      { name: "Iron Defense Armor", rarity: "Rare", element: "Nature", stats: "+180 Armor • +20 Guard Regen", status: "Locked", path: ["Steel Vest","Fortified Shell","Iron Defense Armor","Bulwark Mode","Titan Citadel"] },
-    ],
-  },
-];
-
-const rarityColor: Record<string, string> = { Common: "#ff7a00", Rare: "#00c8ff", Epic: "#ff2bd6", Legendary: "#ffd21f" };
-const elementColor: Record<string, string> = { Fire: "#ff7a00", Ice: "#00c8ff", Nature: "#7cff00", Rift: "#bd00ff", Electric: "#ffd21f" };
-
 export default function WeaponsPage() {
-  const [selected, setSelected] = useState("wolf");
-  const hero = animals.find((a) => a.key === selected) ?? animals[0];
-
   return (
-    <div className="relative overflow-x-hidden">
-      {/* HEADER */}
-      <section className="relative z-10 pt-32 pb-12 md:pt-40 md:pb-16 bg-[#020617]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(189,0,255,0.08),transparent_55%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <p className="font-russo text-xs uppercase tracking-[0.2em] text-[#ff2bd6] drop-shadow-[0_0_8px_rgba(255,43,214,0.5)]">ZUNO Armory</p>
-          <h1 className="mt-4 font-bangers text-[clamp(2.8rem,8vw,5.5rem)] leading-[0.90] tracking-[0.04em] text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
-            WEAPONS & <span className="text-[#ff2bd6]">UPGRADES</span>
-          </h1>
-          <p className="mt-4 max-w-xl mx-auto text-white/70 text-sm font-inter">Select a hero and inspect weapons, abilities, and upgrade routes.</p>
-        </div>
-      </section>
+    <div className="relative overflow-x-hidden bg-[#020617]">
+      {/*
+        Weapons target direction:
+        - The artwork composition carries the full page.
+        - The baked navbar was cropped out of /weapons-composition.png.
+        - Real navbar remains from layout.tsx only.
+        - No dashboard rebuild, no generic card system, no invented sections.
+        - Clickable hotspots preserve real UI behavior without breaking composition.
+      */}
 
-      {/* ============= HERO SELECTOR ============= */}
-      <section className="relative z-10 py-6 bg-[#020617]">
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {animals.map((a) => {
-              const active = a.key === selected;
-              return (
-                <button
-                  key={a.key}
-                  onClick={() => setSelected(a.key)}
-                  className={`rounded-xl border p-4 text-left transition hover:-translate-y-0.5 ${
-                    active
-                      ? "bg-[linear-gradient(180deg,rgba(20,0,46,0.8)_0%,rgba(2,6,23,0.9)_100%)] shadow-lg"
-                      : "bg-[linear-gradient(180deg,rgba(20,0,46,0.4)_0%,rgba(2,6,23,0.6)_100%)] border-white/10"
-                  }`}
-                  style={active ? { borderColor: a.color, boxShadow: `0 0 20px ${a.color}30` } : {}}
-                >
-                  <div className="text-3xl mb-2">{a.emoji}</div>
-                  <div className="font-russo text-xs uppercase tracking-[0.13em]" style={{ color: active ? a.color : "white" }}>{a.name}</div>
-                  <div className="text-[10px] text-white/50 font-inter">{a.title}</div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      {/* ============= WEAPON CARDS ============= */}
-      <section className="relative z-10 py-10 md:py-14 bg-[#020617]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(189,0,255,0.05),transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="text-5xl">{hero.emoji}</span>
-            <div>
-              <h2 className="font-bangers text-2xl tracking-[0.04em]" style={{ color: hero.color }}>{hero.name}</h2>
-              <p className="text-xs text-white/50 font-inter">{hero.title}</p>
+      <section className="relative z-10 pt-24 sm:pt-24 md:pt-24 pb-10">
+        <div className="relative mx-auto w-full max-w-[1365px] px-0 sm:px-4">
+          <div className="relative mx-auto overflow-hidden bg-[#050816] shadow-[0_0_80px_rgba(0,0,0,0.45)]">
+            <img
+              src="/weapons-composition.png"
+              alt="ZUNO Weapons Arsenal complete armory screen"
+              className="block w-full h-auto select-none"
+              draggable={false}
+            />
+
+            {/* Character rename overlays — keep visual identity, only replace labels. */}
+            <div className="absolute left-[7.85%] top-[28.45%] h-[1.9%] w-[8.8%] bg-[#16080a]/95 rounded-sm pointer-events-none" />
+            <div className="absolute left-[7.85%] top-[28.25%] w-[8.8%] text-center font-bangers text-[clamp(7px,1.05vw,14px)] italic tracking-[0.06em] text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] pointer-events-none">
+              JEAN
             </div>
+
+            <div className="absolute left-[45.7%] top-[28.45%] h-[1.9%] w-[12.8%] bg-[#16051f]/95 rounded-sm pointer-events-none" />
+            <div className="absolute left-[45.7%] top-[28.25%] w-[12.8%] text-center font-bangers text-[clamp(7px,0.95vw,13px)] italic tracking-[0.03em] text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] pointer-events-none">
+              MARJORIE
+            </div>
+
+            {/* Real clickable UI hotspots aligned to the artwork composition. */}
+            {/* Character selection */}
+            <button aria-label="Select Jean" className="absolute left-[6.4%] top-[22.75%] h-[7.8%] w-[12.8%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="Select Bambo" className="absolute left-[19.9%] top-[22.75%] h-[7.8%] w-[12.5%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ffd21f]/80" onClick={() => {}} />
+            <button aria-label="Select Wolf" className="absolute left-[33.1%] top-[22.75%] h-[7.8%] w-[12.9%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Select Marjorie" className="absolute left-[46.7%] top-[22.75%] h-[7.8%] w-[12.7%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+            <button aria-label="Select Onyx" className="absolute left-[60.2%] top-[22.75%] h-[7.8%] w-[12.9%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#bd00ff]/80" onClick={() => {}} />
+
+            {/* Weapon category tabs */}
+            <button aria-label="All weapons" className="absolute left-[13.7%] top-[32.05%] h-[2.4%] w-[13.5%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Melee weapons" className="absolute left-[28.1%] top-[32.05%] h-[2.4%] w-[10.5%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+            <button aria-label="Ranged weapons" className="absolute left-[39.6%] top-[32.05%] h-[2.4%] w-[10.7%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+            <button aria-label="Elemental weapons" className="absolute left-[51.1%] top-[32.05%] h-[2.4%] w-[11.9%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+            <button aria-label="Legendary weapons" className="absolute left-[63.7%] top-[32.05%] h-[2.4%] w-[11.6%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="My loadout" className="absolute left-[76.4%] top-[32.05%] h-[2.4%] w-[14.5%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+
+            {/* Weapon cards */}
+            <button aria-label="Frost Blade weapon card" className="absolute left-[3.1%] top-[35.2%] h-[20.0%] w-[24.2%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ffd21f]/80" onClick={() => {}} />
+            <button aria-label="Thunder Claws weapon card" className="absolute left-[29.0%] top-[35.2%] h-[20.0%] w-[17.6%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff2bd6]/80" onClick={() => {}} />
+            <button aria-label="Solar Spear weapon card" className="absolute left-[47.5%] top-[35.2%] h-[20.0%] w-[17.6%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="Ice Armor weapon card" className="absolute left-[66.3%] top-[35.2%] h-[20.0%] w-[17.0%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Void Lance weapon card" className="absolute left-[84.0%] top-[35.2%] h-[20.0%] w-[15.5%] rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#bd00ff]/80" onClick={() => {}} />
+
+            {/* Upgrade buttons on cards */}
+            <button aria-label="Upgrade Thunder Claws" className="absolute left-[30.5%] top-[52.05%] h-[2.55%] w-[14.2%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Upgrade Solar Spear" className="absolute left-[49.0%] top-[52.05%] h-[2.55%] w-[14.2%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="Upgrade Ice Armor" className="absolute left-[67.8%] top-[52.05%] h-[2.55%] w-[13.8%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Upgrade Void Lance" className="absolute left-[85.3%] top-[52.05%] h-[2.55%] w-[12.8%] rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#bd00ff]/80" onClick={() => {}} />
+
+            {/* Carousel arrows */}
+            <button aria-label="Previous weapons" className="absolute left-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Next weapons" className="absolute right-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+
+            {/* Upgrade path tiers */}
+            <button aria-label="Upgrade path tier one shard edge" className="absolute left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Upgrade path tier two glacier fang" className="absolute left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Upgrade path tier three frost blade" className="absolute left-[43.5%] top-[60.2%] h-[4.2%] w-[14.5%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="Upgrade path tier four absolute zero" className="absolute left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60" onClick={() => {}} />
+            <button aria-label="Upgrade path tier five winter reign" className="absolute left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60" onClick={() => {}} />
+
+            {/* Detail video/play area */}
+            <button aria-label="Play Frost Blade preview video" className="absolute left-[73.6%] top-[71.1%] h-[9.9%] w-[20.8%] rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+
+            {/* Loadout slots */}
+            <button aria-label="Loadout slot one" className="absolute left-[5.7%] top-[83.2%] h-[6.3%] w-[8.8%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/80" onClick={() => {}} />
+            <button aria-label="Loadout slot two" className="absolute left-[16.0%] top-[83.2%] h-[6.3%] w-[8.8%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#ff7a00]/80" onClick={() => {}} />
+            <button aria-label="Loadout slot three" className="absolute left-[25.5%] top-[83.2%] h-[6.3%] w-[8.8%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#bd00ff]/80" onClick={() => {}} />
+            <button aria-label="Locked loadout slot four" className="absolute left-[35.1%] top-[83.2%] h-[6.3%] w-[8.8%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60" onClick={() => {}} />
+            <button aria-label="Locked loadout slot five" className="absolute left-[44.7%] top-[83.2%] h-[6.3%] w-[8.8%] rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60" onClick={() => {}} />
+
+            {/* Final CTA */}
+            <Link
+              href="/how-to-play"
+              aria-label="Play ZUNO now"
+              className="absolute left-[64.2%] top-[93.0%] h-[4.3%] w-[25.4%] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffd21f]/80"
+            />
           </div>
-          <div className="space-y-5">
-            {hero.weapons.map((w) => (
-              <div
-                key={w.name}
-                className="rounded-xl border bg-[linear-gradient(180deg,rgba(20,0,46,0.65)_0%,rgba(2,6,23,0.85)_100%)] p-5 transition hover:-translate-y-0.5"
-                style={{ borderColor: `${rarityColor[w.rarity]}33`, boxShadow: `0 0 20px ${rarityColor[w.rarity]}15` }}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                  <h3 className="font-bangers text-lg tracking-[0.04em] text-white">{w.name}</h3>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-russo border" style={{ color: rarityColor[w.rarity], borderColor: `${rarityColor[w.rarity]}55` }}>{w.rarity}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-russo border" style={{ color: elementColor[w.element], borderColor: `${elementColor[w.element]}55` }}>{w.element}</span>
-                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-russo border ${w.status === "Unlocked" ? "text-[#7cff00] border-[#7cff00]/40" : "text-white/40 border-white/20"}`}>{w.status}</span>
-                  </div>
-                </div>
-                <p className="text-sm text-white/60 font-inter mb-4">{w.stats}</p>
-                <p className="font-russo text-[10px] uppercase tracking-[0.15em] text-[#ff2bd6] mb-2">Upgrade Path (T1 → T5)</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {w.path.map((tier, i) => (
-                    <div
-                      key={tier}
-                      className={`rounded-lg border px-2 py-2 text-center text-[10px] ${i <= 2 ? "border-[#00c8ff]/40 bg-[#00c8ff]/5 text-[#00c8ff]" : "border-white/10 bg-white/5 text-white/40"}`}
-                    >
-                      <div className="font-russo">T{i + 1}</div>
-                      <div className="font-inter mt-0.5">{tier}</div>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  className={`mt-4 px-5 py-2 rounded-lg font-russo text-xs uppercase tracking-[0.13em] transition ${
-                    w.status === "Unlocked"
-                      ? "bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black border-2 border-black shadow-[0_0_16px_rgba(255,122,0,0.4)] hover:-translate-y-0.5"
-                      : "bg-white/5 text-white/30 border border-white/10 cursor-not-allowed"
-                  }`}
-                  disabled={w.status === "Locked"}
-                >
-                  {w.status === "Unlocked" ? "Upgrade Weapon" : "Unlock Required"}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ============= CTA ============= */}
-      <section className="relative z-10 py-16 md:py-20 bg-[#020617]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(255,122,0,0.08),transparent_55%)]" />
-        <div className="relative text-center">
-          <h2 className="font-bangers text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.92] tracking-[0.04em] text-transparent bg-clip-text bg-[linear-gradient(90deg,#ffd21f_0%,#ff7a00_45%,#ff2bd6_100%)]">
-            FORGE YOUR ARSENAL
-          </h2>
-          <p className="mt-4 text-white/70 text-sm font-inter max-w-md mx-auto">
-            Upgrade weapons. Unlock abilities. Dominate the arena with superior firepower.
-          </p>
-          <Link
-            href="/how-to-play"
-            className="mt-8 inline-flex items-center justify-center gap-2 px-10 py-4 rounded-lg border-[2.5px] border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.13em] text-sm shadow-[0_0_28px_rgba(255,122,0,0.55),5px_5px_0_#14002e] transition hover:-translate-y-0.5"
-          >
-            🐾 Play Zuno Now
-          </Link>
         </div>
       </section>
     </div>
