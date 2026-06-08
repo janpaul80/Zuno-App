@@ -64,6 +64,17 @@ export default function ImprintPage() {
               <p>
                 <strong className="text-white">EIN:</strong> 42-2367575
               </p>
+              <p>
+                <strong className="text-white">Website:</strong>{" "}
+                <a
+                  href="https://paulhartmann.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-electric-blue hover:text-white transition-colors"
+                >
+                  https://paulhartmann.dev
+                </a>
+              </p>
             </div>
           </section>
 
