@@ -48,7 +48,7 @@ export default function AboutPage() {
           {/* Graphical Frame */}
           <div className="glass-panel rounded-3xl p-4 glow-border-orange relative overflow-hidden group">
             <img
-              src="/images/character-showcase.png"
+              src="/aboutus.png"
               alt="ZUNO Combat Lore"
               className="w-full h-auto object-cover rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
             />
