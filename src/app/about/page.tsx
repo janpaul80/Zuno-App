@@ -1,111 +1,209 @@
 import Link from "next/link";
-import { Sparkles, Sword, Globe, Users } from "lucide-react";
+import { PawPrint, Swords, Package, Zap, Globe, Users, ArrowRight, ChevronRight } from "lucide-react";
+import styles from "./about.module.css";
 
 export default function AboutPage() {
+  const pillars = [
+    {
+      icon: Swords,
+      title: "Competitive &\nStrategic",
+      copy: "Outsmart opponents in skill-based battles. Strategy and timing determine victory.",
+      color: "blue",
+    },
+    {
+      icon: PawPrint,
+      title: "Collect &\nEvolve",
+      copy: "Collect unique animals, upgrade their abilities, and evolve them into unstoppable legends.",
+      color: "purple",
+    },
+    {
+      icon: Zap,
+      title: "Skill &\nMastery",
+      copy: "Master your heroes, refine your strategy, and rise through the ranks to prove your dominance.",
+      color: "orange",
+    },
+    {
+      icon: Globe,
+      title: "Explore &\nAdventure",
+      copy: "Explore breathtaking worlds, uncover hidden secrets, and take on epic challenges.",
+      color: "green",
+    },
+    {
+      icon: Users,
+      title: "Community &\nTogetherness",
+      copy: "Join a global community of players, form alliances, and conquer together in real-time.",
+      color: "magenta",
+    },
+  ];
+
+  const worlds = [
+    { img: "/levels-assets/card-grasslands.png", label: "Grasslands" },
+    { img: "/levels-assets/card-ember-volcano.png", label: "Ember Volcano" },
+    { img: "/levels-assets/card-shadow-temple.png", label: "Shadow Temple" },
+    { img: "/levels-assets/card-crystal-river.png", label: "Crystal River" },
+    { img: "/levels-assets/card-sky-canyon.png", label: "Sky Canyon" },
+  ];
+
+  const heroes = [
+    { img: "/weapons-assets/wolf.png", name: "Jean", title: "The Shadow Wolf", color: "#00d2ff", icon: "❄" },
+    { img: "/weapons-assets/marjorie.png", name: "Marjorie", title: "The Night Stalker", color: "#bd00ff", icon: "✦" },
+    { img: "/weapons-assets/jean.png", name: "Kael", title: "The Blaze Fury", color: "#ff7a00", icon: "☀" },
+    { img: "/weapons-assets/onyx.png", name: "Pando", title: "The Iron Fist", color: "#7cff00", icon: "⚡" },
+    { img: "/weapons-assets/rayo.png", name: "Aelis", title: "The Flame Archer", color: "#ff2bd6", icon: "🔥" },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 font-inter">
-      <div className="space-y-16">
-        
-        {/* Header Section */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10">
-            <Globe className="h-4 w-4 text-neon-orange" />
-            <span className="text-xs font-orbitron font-extrabold uppercase tracking-widest text-neon-orange glow-text-orange">
-              The Legend
-            </span>
+    <div className={styles.page}>
+
+      {/* ── HERO ── */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <div className={styles.heroBadge}>
+            <PawPrint className="h-3.5 w-3.5" />
+            <span>About ZUNO</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-orbitron font-extrabold uppercase text-white tracking-wide leading-none">
-            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-orange via-neon-purple to-electric-blue">ZUNO</span>
+          <h1 className={styles.heroH1}>
+            More than a game.<br />
+            <span className={styles.heroAccent}>A Universe.</span>
           </h1>
-          <p className="text-gray-400 font-medium sm:text-lg">
-            Step into a vibrant adventure world where mystical animal champions clash in spectacular fantasy arenas, collecting upgrades and rewriting lore.
+          <p className={styles.heroPara}>
+            ZUNO is a next-gen animal battle adventure where strategy, skill, and teamwork create legends.
           </p>
-        </div>
-
-        {/* Narrative Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-wider glow-text-blue">
-              The World of Zunoverse
-            </h2>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-medium">
-              Centuries ago, the Zunoverse was forged from pure elemental neon energy. Across its glowing valleys, Meadows, and Deep Rift craters, distinct animal clans emerged, each wielding elemental spells and defensive armor configurations.
-            </p>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-medium">
-              Today, these animal champions participate in epic, friendly battles to harness rare glowing coins. These coins act as key catalysts for tier upgrades, enabling champions to evolve their combat abilities, trigger custom skins, and explore uncharted territories.
-            </p>
-            <div className="pt-4 flex items-center gap-4">
-              <div className="flex items-center gap-2 text-neon-orange font-orbitron font-bold uppercase tracking-wider text-xs">
-                <Sword className="h-4 w-4" /> Elemental Combat
-              </div>
-              <span className="text-gray-600">|</span>
-              <div className="flex items-center gap-2 text-electric-blue font-orbitron font-bold uppercase tracking-wider text-xs">
-                <Sparkles className="h-4 w-4" /> AI Operations
-              </div>
-            </div>
-          </div>
-
-          {/* Graphical Frame */}
-          <div className="glass-panel rounded-3xl p-4 glow-border-orange relative overflow-hidden group">
-            <img
-              src="/aboutus.png"
-              alt="ZUNO Combat Lore"
-              className="w-full h-auto object-cover rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020514] via-transparent to-transparent opacity-85" />
-          </div>
-        </div>
-
-        {/* Core Principles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-          <div className="glass-panel p-8 rounded-2xl glow-border-blue space-y-4">
-            <div className="h-10 w-10 bg-electric-blue/15 flex items-center justify-center rounded-xl text-electric-blue">
-              <Sword className="h-5 w-5" />
-            </div>
-            <h3 className="text-lg font-orbitron font-bold text-white uppercase">Dynamic Combat</h3>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-              Equip elemental upgrades, summon mystical items, and trigger combat skills inside responsive battles that challenge every layout tactic.
-            </p>
-          </div>
-
-          <div className="glass-panel p-8 rounded-2xl glow-border-purple space-y-4">
-            <div className="h-10 w-10 bg-neon-purple/15 flex items-center justify-center rounded-xl text-neon-purple">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <h3 className="text-lg font-orbitron font-bold text-white uppercase">Vibrant Aesthetics</h3>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-              Every arena radiates glowing visual details, vibrant animations, fluid particles, and game-studio grade responsive UI formatting.
-            </p>
-          </div>
-
-          <div className="glass-panel p-8 rounded-2xl glow-border-green space-y-4">
-            <div className="h-10 w-10 bg-neon-green/15 flex items-center justify-center rounded-xl text-neon-green">
-              <Users className="h-5 w-5" />
-            </div>
-            <h3 className="text-lg font-orbitron font-bold text-white uppercase">Fair Gameplay</h3>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-              With integrated AI Economy Monitors and Balancers, ZUNO blocks exploits, secures player profiles, and maintains stable progression.
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom CTA credit */}
-        <div className="glass-panel p-8 rounded-3xl glow-border-blue text-center max-w-4xl mx-auto space-y-4">
-          <h3 className="text-2xl font-orbitron font-bold text-white uppercase">A Vision by Paul Hartmann</h3>
-          <p className="text-gray-400 text-sm font-medium leading-relaxed max-w-xl mx-auto">
-            ZUNO is built upon the visual foundation of our high-impact art direction, designed from day one to deliver true mobile-game quality presentation on modern devices.
+          <p className={styles.heroPara}>
+            Step into a vibrant world filled with powerful heroes, epic battles, and endless adventure.
           </p>
-          <div className="pt-2">
-            <Link
-              href="/how-to-play"
-              className="px-6 py-3 bg-gradient-to-r from-neon-orange to-neon-purple rounded-full text-white font-orbitron font-bold uppercase tracking-widest text-xs transition-transform duration-300 hover:scale-105 inline-block"
-            >
-              How to Play ZUNO
-            </Link>
-          </div>
+          <Link href="#our-story" className={styles.heroBtn}>
+            <PawPrint className="h-4 w-4" />
+            Our Story
+          </Link>
         </div>
+        <div className={styles.heroArt}>
+          <img src="/characters.png" alt="ZUNO Heroes" className={styles.heroImg} />
+        </div>
+      </section>
 
-      </div>
+      {/* ── OUR STORY ── */}
+      <section id="our-story" className={styles.storySection}>
+        <div className={styles.storyLeft}>
+          <img src="/images/gameplay-preview.png" alt="Zunoverse world" className={styles.storyImg} />
+        </div>
+        <div className={styles.storyRight}>
+          <div className={styles.sectionBadge}>
+            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
+            <span style={{ color: "#00d2ff" }}>Our Story</span>
+          </div>
+          <p className={styles.storyPara}>
+            In a world where animals once lived in harmony, ancient guardians known as ZUNO protected the balance.
+          </p>
+          <p className={styles.storyPara}>But darkness has awakened, threatening to consume everything.</p>
+          <p className={styles.storyPara}>
+            You are a new hero, chosen to rise, fight, and protect what matters most.
+          </p>
+          <p className={styles.storyPara}>
+            Build your team, unlock your powers, and become the legend the ZUNO universe needs.
+          </p>
+          <Link href="/how-to-play" className={styles.outlineBtn}>
+            Discover The World <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── OUR PILLARS ── */}
+      <section className={styles.pillarsSection}>
+        <div className={styles.sectionBadgeCentered}>
+          <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
+          <span>Our Pillars</span>
+        </div>
+        <div className={styles.pillarsGrid}>
+          {pillars.map((p) => {
+            const Icon = p.icon;
+            return (
+              <div key={p.title} className={`${styles.pillarCard} ${styles[`pillar_${p.color}`]}`}>
+                <div className={`${styles.pillarIcon} ${styles[`pillarIcon_${p.color}`]}`}>
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className={styles.pillarTitle}>{p.title}</h3>
+                <p className={styles.pillarCopy}>{p.copy}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── THE ZUNO UNIVERSE ── */}
+      <section className={styles.universeSection}>
+        <div className={styles.universeLeft}>
+          <div className={styles.sectionBadge}>
+            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
+            <span style={{ color: "#00d2ff" }}>The ZUNO Universe</span>
+          </div>
+          <p className={styles.universePara}>
+            From lush forests to frozen caverns, from fiery volcanoes to mystical skies—every world in ZUNO is crafted with detail, life, and adventure.
+          </p>
+          <p className={styles.universePara}>
+            Each environment holds unique enemies, powerful loot, and legendary stories waiting to be discovered.
+          </p>
+          <Link href="/levels" className={styles.outlineBtn}>
+            Explore Worlds <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className={styles.worldsStrip}>
+          {worlds.map((w) => (
+            <div key={w.label} className={styles.worldSlice}>
+              <img src={w.img} alt={w.label} />
+              <span className={styles.worldLabel}>{w.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── MEET THE HEROES ── */}
+      <section className={styles.heroesSection}>
+        <div className={styles.heroesTitleRow}>
+          <div className={styles.sectionBadge}>
+            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
+            <span style={{ color: "#00d2ff" }}>Meet The Heroes</span>
+          </div>
+          <Link href="/weapons" className={styles.allHeroesLink}>
+            All Heroes <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className={styles.heroesGrid}>
+          {heroes.map((h) => (
+            <div key={h.name} className={styles.heroCard} style={{ "--hero-color": h.color } as React.CSSProperties}>
+              <div className={styles.heroCardImg}>
+                <img src={h.img} alt={h.name} />
+              </div>
+              <div className={styles.heroCardInfo}>
+                <div className={styles.heroName}>{h.name}</div>
+                <div className={styles.heroTitle}>{h.title}</div>
+                <div className={styles.heroElement} style={{ color: h.color }}>{h.icon}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── BOTTOM CTA ── */}
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaLeft} aria-hidden="true">
+          <img src="/weapons-assets/wolf.png" alt="" />
+        </div>
+        <div className={styles.ctaCenter}>
+          <h2 className={styles.ctaH2}>
+            Your <span className={styles.ctaAccent}>Legend</span> Starts Now
+          </h2>
+          <p className={styles.ctaSub}>Assemble your team. Sharpen your skills. Conquer the universe.</p>
+          <Link href="/how-to-play" className={styles.ctaBtn}>
+            <PawPrint className="h-4 w-4" />
+            Play Zuno Now
+          </Link>
+        </div>
+        <div className={styles.ctaRight} aria-hidden="true">
+          <img src="/weapons-assets/jean.png" alt="" />
+        </div>
+      </section>
+
     </div>
   );
 }
