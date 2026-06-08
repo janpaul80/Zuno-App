@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Russo_One, Luckiest_Guy, Bangers } from "next/font/google";
+import { Inter, Russo_One, Luckiest_Guy, Bangers, Orbitron } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -31,6 +31,12 @@ const bangers = Bangers({
   display: "swap",
 });
 
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ZUNO — AI-Powered Animal Battle Adventure",
   description: "Explore the colorful, adventurous fantasy battle world of ZUNO. Level up your animal champions, earn coins, unlock upgrades, and explore an AI-balanced world created by Paul Hartmann.",
@@ -57,7 +63,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${russo.variable} ${luckiest.variable} ${bangers.variable}`}>
+    <html lang="en" className={`${inter.variable} ${russo.variable} ${luckiest.variable} ${bangers.variable} ${orbitron.variable}`}>
+
       <body className="bg-[#020617] text-white flex flex-col min-h-screen relative antialiased selection:bg-[#ffd21f] selection:text-black font-inter overflow-x-hidden">
         {/* Cosmic background — deep navy base */}
         <div className="fixed inset-0 z-0 pointer-events-none">
