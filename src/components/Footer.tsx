@@ -58,11 +58,13 @@ export default function Footer() {
 
   const siteLinks = [
     { name: "Home", href: "/" },
-    { name: "About ZUNO", href: "/about" },
+    { name: "About", href: "/about" },
+    { name: "Rewards", href: "/rewards-coins" },
+    { name: "Weapons", href: "/weapons" },
+    { name: "Levels", href: "/levels" },
+    { name: "Support", href: "/support" },
     { name: "How To Play", href: "/how-to-play" },
-    { name: "Rewards & Coins", href: "/rewards" },
     { name: "AI Operations", href: "/ai-operations" },
-    { name: "Support & FAQ", href: "/support" },
     { name: "Credits", href: "/credits" },
     { name: "Contact Us", href: "/contact" },
   ];
@@ -217,9 +219,12 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <span className="text-electric-blue text-shadow-blue hover:text-white transition-colors duration-200 cursor-pointer">
-              Powered by AI operations
-            </span>
+            <Link
+              href="/imprint"
+              className="text-electric-blue text-shadow-blue hover:text-white transition-colors duration-200"
+            >
+              Imprint
+            </Link>
             <span className="h-3 w-px bg-white/10" />
             <span className="text-gray-600">v1.0.0 (Production Build)</span>
           </div>

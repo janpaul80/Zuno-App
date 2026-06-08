@@ -1,202 +1,164 @@
 "use client";
 
-import Link from "next/link";
-import { useRef, useState, type CSSProperties } from "react";
+/* eslint-disable @next/next/no-img-element */
 
-type CharacterKey = "jean" | "bambo" | "wolf" | "marjorie" | "onyx";
+import Link from "next/link";
+import { useState, type CSSProperties } from "react";
+import styles from "./page.module.css";
+
+type CharacterKey = "rayo" | "bambo" | "jean" | "marjorie" | "onyx";
 type WeaponKey = "frost" | "thunder" | "solar" | "armor" | "void";
 type CategoryKey = "all" | "melee" | "ranged" | "elemental" | "legendary" | "loadout";
 
-type Hotspot = {
-  key: string;
-  label: string;
-  className: string;
-  ring: string;
+type Character = {
+  key: CharacterKey;
+  name: string;
+  level: number;
+  xp: string;
+  image: string;
+  accent: string;
 };
 
-const characters: Array<{
-  key: CharacterKey;
-  label: string;
-  box: string;
-  color: string;
-  aura: string;
-  sound: "fire" | "grunt" | "howl" | "void" | "shadow";
-}> = [
-  {
-    key: "jean",
-    label: "Select Jean",
-    box: "left-[7.15%] top-[22.75%] h-[7.25%] w-[10.2%]",
-    color: "#ff7a00",
-    aura: "rgba(255,122,0,0.42)",
-    sound: "fire",
-  },
-  {
-    key: "bambo",
-    label: "Select Bambo",
-    box: "left-[20.75%] top-[22.75%] h-[7.25%] w-[10.15%]",
-    color: "#ffd21f",
-    aura: "rgba(255,210,31,0.36)",
-    sound: "grunt",
-  },
-  {
-    key: "wolf",
-    label: "Select Wolf",
-    box: "left-[34.15%] top-[22.75%] h-[7.25%] w-[10.15%]",
-    color: "#00c8ff",
-    aura: "rgba(0,200,255,0.38)",
-    sound: "howl",
-  },
-  {
-    key: "marjorie",
-    label: "Select Marjorie",
-    box: "left-[47.75%] top-[22.75%] h-[7.25%] w-[10.15%]",
-    color: "#ff2bd6",
-    aura: "rgba(255,43,214,0.36)",
-    sound: "void",
-  },
-  {
-    key: "onyx",
-    label: "Select Onyx",
-    box: "left-[61.25%] top-[22.75%] h-[7.25%] w-[10.15%]",
-    color: "#bd00ff",
-    aura: "rgba(189,0,255,0.38)",
-    sound: "shadow",
-  },
+type Weapon = {
+  key: WeaponKey;
+  name: string;
+  tag: string;
+  element: string;
+  image: string;
+  loadoutImage: string;
+  accent: string;
+  categories: CategoryKey[];
+  stats: Array<{ label: string; value: string }>;
+};
+
+type Tier = {
+  key: string;
+  name: string;
+  title: string;
+  description: string;
+  bonus: string;
+  locked?: boolean;
+};
+
+const characters: Character[] = [
+  { key: "rayo", name: "Rayo", level: 38, xp: "10,420 / 18,000 XP", image: "/weapons-assets/rayo.png", accent: "#ff7a00" },
+  { key: "bambo", name: "Bambo", level: 40, xp: "11,880 / 19,000 XP", image: "/weapons-assets/bambo.png", accent: "#ffd21f" },
+  { key: "jean", name: "Jean", level: 42, xp: "12,450 / 20,000 XP", image: "/weapons-assets/jean.png", accent: "#00d2ff" },
+  { key: "marjorie", name: "Marjorie", level: 36, xp: "9,820 / 17,000 XP", image: "/weapons-assets/marjorie.png", accent: "#ff2bd6" },
+  { key: "onyx", name: "Onyx", level: 41, xp: "12,080 / 19,500 XP", image: "/weapons-assets/onyx.png", accent: "#bd00ff" },
 ];
 
-const weaponCards: Array<{
-  key: WeaponKey;
-  label: string;
-  box: string;
-  color: string;
-  className: string;
-  sound: "ice" | "electric" | "fire" | "frost" | "void";
-  categories: CategoryKey[];
-  tier: string;
-  details: string;
-}> = [
+const categories: Array<{ key: CategoryKey; label: string }> = [
+  { key: "all", label: "All weapons" },
+  { key: "melee", label: "Melee" },
+  { key: "ranged", label: "Ranged" },
+  { key: "elemental", label: "Elemental" },
+  { key: "legendary", label: "Legendary" },
+  { key: "loadout", label: "My loadout" },
+];
+
+const weapons: Weapon[] = [
   {
     key: "frost",
-    label: "Frost Blade weapon card",
-    box: "left-[3.1%] top-[35.2%] h-[20.0%] w-[24.2%]",
-    color: "#66e7ff",
-    className: "weapon-fx weapon-fx--ice",
-    sound: "ice",
-    categories: ["all", "melee", "elemental", "loadout"],
-    tier: "tier-three",
-    details: "Melee elemental blade · freeze chain · arena-control finisher",
+    name: "Frost Blade",
+    tag: "Legendary",
+    element: "Ice",
+    image: "/weapons-assets/frost-card.png",
+    loadoutImage: "/weapons-assets/loadout-frost.png",
+    accent: "#00d2ff",
+    categories: ["all", "melee", "elemental", "legendary", "loadout"],
+    stats: [
+      { label: "Attack Power", value: "92" },
+      { label: "Chill Burst", value: "25" },
+      { label: "Critical Chance", value: "18%" },
+      { label: "Attack Speed", value: "1.35s" },
+      { label: "Element", value: "Ice" },
+      { label: "Rarity", value: "Legendary" },
+    ],
   },
   {
     key: "thunder",
-    label: "Thunder Claws weapon card",
-    box: "left-[29.0%] top-[35.2%] h-[20.0%] w-[17.6%]",
-    color: "#bd00ff",
-    className: "weapon-fx weapon-fx--thunder",
-    sound: "electric",
-    categories: ["all", "melee", "legendary", "loadout"],
-    tier: "tier-two",
-    details: "Legendary melee claws · burst dash · chain-lightning crits",
+    name: "Thunder Claws",
+    tag: "Epic",
+    element: "Shock",
+    image: "/weapons-assets/thunder-card.png",
+    loadoutImage: "/weapons-assets/loadout-thunder.png",
+    accent: "#bd00ff",
+    categories: ["all", "melee", "elemental", "loadout"],
+    stats: [
+      { label: "Combo", value: "81" },
+      { label: "Chain Shock", value: "40" },
+      { label: "Impact", value: "High" },
+      { label: "Speed", value: "Fast" },
+      { label: "Element", value: "Shock" },
+      { label: "Rarity", value: "Epic" },
+    ],
   },
   {
     key: "solar",
-    label: "Solar Spear weapon card",
-    box: "left-[47.5%] top-[35.2%] h-[20.0%] w-[17.6%]",
-    color: "#ff7a00",
-    className: "weapon-fx weapon-fx--solar",
-    sound: "fire",
-    categories: ["all", "ranged", "elemental"],
-    tier: "tier-four",
-    details: "Ranged solar spear · burn stacks · precision lane pressure",
+    name: "Solar Spear",
+    tag: "Legendary",
+    element: "Fire",
+    image: "/weapons-assets/solar-card.png",
+    loadoutImage: "/weapons-assets/loadout-solar.png",
+    accent: "#ff7a00",
+    categories: ["all", "ranged", "elemental", "legendary", "loadout"],
+    stats: [
+      { label: "Pierce", value: "110" },
+      { label: "Solar Impact", value: "35" },
+      { label: "Burn Chance", value: "22%" },
+      { label: "Range", value: "Long" },
+      { label: "Element", value: "Fire" },
+      { label: "Rarity", value: "Legendary" },
+    ],
   },
   {
     key: "armor",
-    label: "Ice Armor weapon card",
-    box: "left-[66.3%] top-[35.2%] h-[20.0%] w-[17.0%]",
-    color: "#00c8ff",
-    className: "weapon-fx weapon-fx--armor",
-    sound: "frost",
-    categories: ["all", "melee", "elemental", "loadout"],
-    tier: "tier-one",
-    details: "Defensive frost armor · shield pulse · slow-field counter",
+    name: "Ice Armor",
+    tag: "Rare",
+    element: "Defense",
+    image: "/weapons-assets/armor-card.png",
+    loadoutImage: "/weapons-assets/armor-card.png",
+    accent: "#20b8ff",
+    categories: ["all", "elemental"],
+    stats: [
+      { label: "Shield", value: "140" },
+      { label: "Freeze Reflect", value: "18" },
+      { label: "Guard", value: "Heavy" },
+      { label: "Recovery", value: "12%" },
+      { label: "Element", value: "Ice" },
+      { label: "Rarity", value: "Rare" },
+    ],
   },
   {
     key: "void",
-    label: "Void Lance weapon card",
-    box: "left-[84.0%] top-[35.2%] h-[20.0%] w-[15.5%]",
-    color: "#d42bff",
-    className: "weapon-fx weapon-fx--void",
-    sound: "void",
-    categories: ["all", "ranged", "legendary"],
-    tier: "tier-five",
-    details: "Legendary ranged lance · void pierce · gravity-well rupture",
+    name: "Void Lance",
+    tag: "Epic",
+    element: "Void",
+    image: "/weapons-assets/void-card.png",
+    loadoutImage: "/weapons-assets/void-card.png",
+    accent: "#d42bff",
+    categories: ["all", "ranged", "elemental"],
+    stats: [
+      { label: "Pierce", value: "90" },
+      { label: "Void Strike", value: "28" },
+      { label: "Rift Pull", value: "16%" },
+      { label: "Range", value: "Mid" },
+      { label: "Element", value: "Void" },
+      { label: "Rarity", value: "Epic" },
+    ],
   },
 ];
 
-const categoryTabs: Array<Hotspot & { key: CategoryKey }> = [
-  { key: "all", label: "All weapons", className: "left-[13.7%] top-[32.05%] h-[2.4%] w-[13.5%]", ring: "#00c8ff" },
-  { key: "melee", label: "Melee weapons", className: "left-[28.1%] top-[32.05%] h-[2.4%] w-[10.5%]", ring: "#ff2bd6" },
-  { key: "ranged", label: "Ranged weapons", className: "left-[39.6%] top-[32.05%] h-[2.4%] w-[10.7%]", ring: "#ff2bd6" },
-  { key: "elemental", label: "Elemental weapons", className: "left-[51.1%] top-[32.05%] h-[2.4%] w-[11.9%]", ring: "#ff2bd6" },
-  { key: "legendary", label: "Legendary weapons", className: "left-[63.7%] top-[32.05%] h-[2.4%] w-[11.6%]", ring: "#ff7a00" },
-  { key: "loadout", label: "My loadout", className: "left-[76.4%] top-[32.05%] h-[2.4%] w-[14.5%]", ring: "#ff2bd6" },
+const tiers: Tier[] = [
+  { key: "t1", name: "T1", title: "Shard Edge", description: "A fast starter edge with clean ice contact and low energy cost.", bonus: "+12 Slash, unlocks Frost Slash" },
+  { key: "t2", name: "T2", title: "Glacier Fang", description: "Adds a heavier bite and a stronger chill trail after each combo.", bonus: "+18 Chill Burst, +8% slow" },
+  { key: "t3", name: "T3", title: "Frost Blade", description: "The equipped legendary tier. Balanced damage, crowd control, and visual impact.", bonus: "+92 Slash, Chill Burst active" },
+  { key: "t4", name: "T4", title: "Absolute Zero", description: "A locked mastery tier focused on area freeze and hard control.", bonus: "Locked: requires 5 Ice Cores", locked: true },
+  { key: "t5", name: "T5", title: "Winter Reign", description: "The final reign tier with battlefield-wide frost pressure.", bonus: "Locked: complete Absolute Zero", locked: true },
 ];
 
-
-const displaySlots = [
-  "left-[3.1%] top-[35.2%] h-[20.0%] w-[24.2%]",
-  "left-[29.0%] top-[35.2%] h-[20.0%] w-[17.6%]",
-  "left-[47.5%] top-[35.2%] h-[20.0%] w-[17.6%]",
-  "left-[66.3%] top-[35.2%] h-[20.0%] w-[17.0%]",
-  "left-[84.0%] top-[35.2%] h-[20.0%] w-[15.5%]",
-];
-
-const weaponTierBoxes: Record<WeaponKey, string> = {
-  frost: "left-[43.95%] top-[60.45%] h-[3.65%] w-[13.55%]",
-  thunder: "left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  solar: "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  armor: "left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  void: "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]",
-};
-
-const connectorSegments = [
-  "left-[19.6%] top-[61.63%] h-[0.36%] w-[6.6%]",
-  "left-[37.3%] top-[61.63%] h-[0.36%] w-[6.7%]",
-  "left-[57.8%] top-[61.63%] h-[0.36%] w-[4.8%]",
-  "left-[75.8%] top-[61.63%] h-[0.36%] w-[4.4%]",
-];
-
-const upgradeButtons: Hotspot[] = [
-  { key: "thunder-up", label: "Upgrade Thunder Claws", className: "left-[30.5%] top-[52.05%] h-[2.55%] w-[14.2%]", ring: "#00c8ff" },
-  { key: "solar-up", label: "Upgrade Solar Spear", className: "left-[49.0%] top-[52.05%] h-[2.55%] w-[14.2%]", ring: "#ff7a00" },
-  { key: "armor-up", label: "Upgrade Ice Armor", className: "left-[67.8%] top-[52.05%] h-[2.55%] w-[13.8%]", ring: "#00c8ff" },
-  { key: "void-up", label: "Upgrade Void Lance", className: "left-[85.3%] top-[52.05%] h-[2.55%] w-[12.8%]", ring: "#bd00ff" },
-];
-
-const upgradeTiers: Hotspot[] = [
-  { key: "tier-one", label: "Upgrade path tier one shard edge", className: "left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "#00c8ff" },
-  { key: "tier-two", label: "Upgrade path tier two glacier fang", className: "left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "#00c8ff" },
-  { key: "tier-three", label: "Upgrade path tier three frost blade", className: "left-[43.5%] top-[60.2%] h-[4.2%] w-[14.5%]", ring: "#ff7a00" },
-  { key: "tier-four", label: "Upgrade path tier four absolute zero", className: "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "rgba(255,255,255,0.55)" },
-  { key: "tier-five", label: "Upgrade path tier five winter reign", className: "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]", ring: "rgba(255,255,255,0.55)" },
-];
-
-const tierPowerBoxes: Record<string, string> = {
-  "tier-one": "left-[7.6%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  "tier-two": "left-[25.4%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  "tier-three": "left-[43.95%] top-[60.45%] h-[3.65%] w-[13.55%]",
-  "tier-four": "left-[62.3%] top-[60.7%] h-[3.65%] w-[13.4%]",
-  "tier-five": "left-[80.0%] top-[60.7%] h-[3.65%] w-[13.4%]",
-};
-
-const loadoutSlots: Hotspot[] = [
-  { key: "slot-one", label: "Loadout slot one", className: "left-[5.7%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "#00c8ff" },
-  { key: "slot-two", label: "Loadout slot two", className: "left-[16.0%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "#ff7a00" },
-  { key: "slot-three", label: "Loadout slot three", className: "left-[25.5%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "#bd00ff" },
-  { key: "slot-four", label: "Locked loadout slot four", className: "left-[35.1%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "rgba(255,255,255,0.55)" },
-  { key: "slot-five", label: "Locked loadout slot five", className: "left-[44.7%] top-[83.2%] h-[6.3%] w-[8.8%]", ring: "rgba(255,255,255,0.55)" },
-];
-
-function playTone(kind: "fire" | "grunt" | "howl" | "void" | "shadow" | "ice" | "electric" | "frost") {
+function playTone(kind: "ice" | "fire" | "shock" | "void" | "tap") {
   if (typeof window === "undefined") return;
 
   const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -204,832 +166,391 @@ function playTone(kind: "fire" | "grunt" | "howl" | "void" | "shadow" | "ice" | 
 
   const context = new AudioContextClass();
   const now = context.currentTime;
-  const output = context.createGain();
-  output.connect(context.destination);
-  output.gain.setValueAtTime(0.0001, now);
-  output.gain.exponentialRampToValueAtTime(0.11, now + 0.018);
-  output.gain.exponentialRampToValueAtTime(0.0001, now + 0.74);
-
+  const gain = context.createGain();
   const osc = context.createOscillator();
   const filter = context.createBiquadFilter();
-  const growl = context.createOscillator();
-  const growlGain = context.createGain();
-
-  osc.connect(filter);
-  filter.connect(output);
-  growl.connect(growlGain);
-  growlGain.connect(output);
-
   const settings = {
-    fire: { type: "sawtooth" as OscillatorType, start: 128, end: 42, filter: 640, growl: 38 },
-    grunt: { type: "triangle" as OscillatorType, start: 92, end: 36, filter: 320, growl: 28 },
-    howl: { type: "sine" as OscillatorType, start: 250, end: 520, filter: 1150, growl: 64 },
-    void: { type: "sine" as OscillatorType, start: 210, end: 58, filter: 520, growl: 44 },
-    shadow: { type: "sawtooth" as OscillatorType, start: 116, end: 38, filter: 410, growl: 34 },
-    ice: { type: "sine" as OscillatorType, start: 680, end: 1180, filter: 2200, growl: 96 },
-    electric: { type: "square" as OscillatorType, start: 380, end: 920, filter: 2800, growl: 140 },
-    frost: { type: "triangle" as OscillatorType, start: 520, end: 860, filter: 1900, growl: 86 },
+    ice: { start: 640, end: 1040, type: "sine" as OscillatorType, filter: 2100 },
+    fire: { start: 190, end: 72, type: "sawtooth" as OscillatorType, filter: 720 },
+    shock: { start: 420, end: 980, type: "square" as OscillatorType, filter: 2600 },
+    void: { start: 220, end: 58, type: "triangle" as OscillatorType, filter: 540 },
+    tap: { start: 360, end: 520, type: "sine" as OscillatorType, filter: 1800 },
   }[kind];
 
   osc.type = settings.type;
   osc.frequency.setValueAtTime(settings.start, now);
-  osc.frequency.exponentialRampToValueAtTime(settings.end, now + 0.36);
+  osc.frequency.exponentialRampToValueAtTime(settings.end, now + 0.22);
   filter.type = "lowpass";
   filter.frequency.setValueAtTime(settings.filter, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.07, now + 0.014);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
 
-  growl.type = "sawtooth";
-  growl.frequency.setValueAtTime(settings.growl, now);
-  growl.frequency.exponentialRampToValueAtTime(Math.max(22, settings.growl * 0.72), now + 0.5);
-  growlGain.gain.setValueAtTime(0.0001, now);
-  growlGain.gain.exponentialRampToValueAtTime(0.035, now + 0.03);
-  growlGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.62);
-
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(context.destination);
   osc.start(now);
-  growl.start(now);
-  osc.stop(now + 0.78);
-  growl.stop(now + 0.78);
-
-  window.setTimeout(() => context.close().catch(() => undefined), 900);
+  osc.stop(now + 0.36);
+  window.setTimeout(() => context.close().catch(() => undefined), 460);
 }
 
-function HotspotButton({
-  label,
-  className,
-  ring,
-  active = false,
-  round = "rounded-md",
-  onClick,
+function CharacterSelector({
+  selectedCharacter,
+  onSelect,
 }: {
-  label: string;
-  className: string;
-  ring: string;
-  active?: boolean;
-  round?: string;
-  onClick?: () => void;
+  selectedCharacter: CharacterKey;
+  onSelect: (character: Character) => void;
+}) {
+  const activeCharacter = characters.find((character) => character.key === selectedCharacter) ?? characters[2];
+
+  return (
+    <section className={styles.characterPanel} aria-label="Choose your warrior">
+      <div className={styles.sectionLabel}>Choose your warrior</div>
+      <div className={styles.characterGrid}>
+        {characters.map((character) => {
+          const selected = character.key === selectedCharacter;
+
+          return (
+            <button
+              key={character.key}
+              className={`${styles.characterCard} ${selected ? styles.selectedCharacter : ""}`}
+              style={{ "--accent": character.accent } as CSSProperties}
+              aria-label={character.name}
+              aria-pressed={selected}
+              onClick={() => onSelect(character)}
+            >
+              <img src={character.image} alt="" className={styles.characterImage} />
+              <span className={styles.characterName}>{character.name}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className={styles.characterStats} style={{ "--accent": activeCharacter.accent } as CSSProperties}>
+        <div>
+          <strong>{activeCharacter.name}</strong>
+          <span>Level {activeCharacter.level}</span>
+          <small>{activeCharacter.xp}</small>
+        </div>
+        <div className={styles.pawBadge}>◆</div>
+      </div>
+    </section>
+  );
+}
+
+function WeaponCard({
+  weapon,
+  selected,
+  onSelect,
+}: {
+  weapon: Weapon;
+  selected: boolean;
+  onSelect: (weapon: Weapon, openInfo?: boolean) => void;
 }) {
   return (
     <button
-      aria-label={label}
-      aria-pressed={active}
-      className={`absolute ${className} ${round} z-20 cursor-pointer focus:outline-none transition-transform duration-300 hover:scale-[1.018] active:scale-[0.985] hotspot-real ${active ? "is-active" : ""}`}
-      style={{ "--hotspot": ring } as CSSProperties}
-      onClick={onClick}
-    />
+      className={`${styles.weaponCard} ${selected ? styles.selectedWeapon : ""}`}
+      style={{ "--accent": weapon.accent } as CSSProperties}
+      aria-pressed={selected}
+      aria-label={weapon.name}
+      onClick={() => onSelect(weapon, true)}
+    >
+      <img src={weapon.image} alt={weapon.name} className={styles.weaponCardImage} />
+      <span className={styles.shimmer} />
+    </button>
+  );
+}
+
+function WeaponCarousel({
+  activeWeapon,
+  activeCategory,
+  onSelect,
+  onCategorySelect,
+}: {
+  activeWeapon: WeaponKey;
+  activeCategory: CategoryKey;
+  onSelect: (weapon: Weapon, openInfo?: boolean) => void;
+  onCategorySelect: (category: CategoryKey) => void;
+}) {
+  const filteredWeapons = weapons.filter((weapon) => weapon.categories.includes(activeCategory));
+  const activeIndex = Math.max(0, filteredWeapons.findIndex((weapon) => weapon.key === activeWeapon));
+  const selected = filteredWeapons[activeIndex] ?? filteredWeapons[0] ?? weapons[0];
+  const orderedWeapons = filteredWeapons.map((_, index) => filteredWeapons[(activeIndex + index) % filteredWeapons.length]);
+
+  const move = (direction: 1 | -1) => {
+    const next = filteredWeapons[(activeIndex + direction + filteredWeapons.length) % filteredWeapons.length];
+    onSelect(next, false);
+  };
+
+  return (
+    <section className={styles.carouselSection} aria-label="Weapon carousel">
+      <div className={styles.tabRow}>
+        {categories.map((category) => (
+          <button
+            key={category.key}
+            className={`${styles.filterTab} ${activeCategory === category.key ? styles.activeFilter : ""}`}
+            aria-pressed={activeCategory === category.key}
+            onClick={() => onCategorySelect(category.key)}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
+      <div className={styles.carouselShell}>
+        <button className={`${styles.carouselArrow} ${styles.prevArrow}`} aria-label="Previous weapon" onClick={() => move(-1)}>
+          ‹
+        </button>
+        <div className={styles.carouselViewport}>
+          <div className={styles.carouselTrack} key={`${activeCategory}-${selected.key}`}>
+            {orderedWeapons.map((weapon) => (
+              <WeaponCard key={weapon.key} weapon={weapon} selected={weapon.key === selected.key} onSelect={onSelect} />
+            ))}
+          </div>
+        </div>
+        <button className={`${styles.carouselArrow} ${styles.nextArrow}`} aria-label="Next weapon" onClick={() => move(1)}>
+          ›
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function UpgradePath({
+  activeTier,
+  onSelect,
+  openTier,
+}: {
+  activeTier: string;
+  onSelect: (tier: Tier) => void;
+  openTier: Tier | null;
+}) {
+  return (
+    <section className={styles.upgradePanel} aria-label="Upgrade path">
+      <div className={styles.panelHeading}>
+        <h2>Upgrade Path</h2>
+        <p>Evolve your weapon through powerful tiers</p>
+      </div>
+      <div className={styles.tierTrack}>
+        {tiers.map((tier, index) => {
+          const active = tier.key === activeTier;
+
+          return (
+            <div key={tier.key} className={styles.tierGroup}>
+              <button
+                className={`${styles.tierButton} ${active ? styles.activeTier : ""} ${tier.locked ? styles.lockedTier : ""}`}
+                aria-pressed={active}
+                style={{ "--tier-index": index } as CSSProperties}
+                onClick={() => onSelect(tier)}
+              >
+                <strong>{tier.name}</strong>
+                <span>{tier.title}</span>
+              </button>
+              {index < tiers.length - 1 && <span className={styles.energyConnector} />}
+            </div>
+          );
+        })}
+      </div>
+      {openTier && (
+        <aside className={styles.tierInfoPanel} style={{ "--accent": openTier.locked ? "rgba(255,255,255,0.55)" : "#00d2ff" } as CSSProperties}>
+          <small>{openTier.name}</small>
+          <h3>{openTier.title}</h3>
+          <p>{openTier.description}</p>
+          <strong>{openTier.bonus}</strong>
+        </aside>
+      )}
+    </section>
+  );
+}
+
+function VideoFrame() {
+  return (
+    <div className={styles.videoFrame} aria-label="Frost Blade gameplay preview">
+      <video className={styles.weaponVideo} autoPlay muted loop playsInline poster="/weapons-assets/video-preview.png">
+        <source src="/battle.mp4" type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
+function WeaponInfoModal({ weapon, onClose }: { weapon: Weapon; onClose: () => void }) {
+  return (
+    <div className={styles.modalLayer} role="dialog" aria-modal="true" aria-label={`${weapon.name} information`}>
+      <div className={styles.weaponModal} style={{ "--accent": weapon.accent } as CSSProperties}>
+        <button className={styles.modalClose} aria-label="Close weapon information" onClick={onClose}>
+          X
+        </button>
+        <img src={weapon.image} alt="" />
+        <div>
+          <small>{weapon.tag} {weapon.element}</small>
+          <h2>{weapon.name}</h2>
+          <p>
+            {weapon.name} is tuned for {weapon.element.toLowerCase()} pressure with a premium forge path,
+            clean combo feedback, and battle-ready stat growth.
+          </p>
+          <div className={styles.modalStats}>
+            {weapon.stats.slice(0, 4).map((stat) => (
+              <span key={stat.label}>
+                {stat.label}
+                <strong>{stat.value}</strong>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WeaponDetail({ weapon }: { weapon: Weapon }) {
+  return (
+    <section className={styles.detailGrid} style={{ "--accent": weapon.accent } as CSSProperties}>
+      <div className={styles.detailFeature}>
+        <div className={styles.detailTitle}>
+          <h2>{weapon.name}</h2>
+          <div>
+            <span>{weapon.tag}</span>
+            <span>{weapon.element}</span>
+            <span>Equipped</span>
+          </div>
+        </div>
+        <div className={styles.detailArt}>
+          <img src={weapon.key === "frost" ? "/weapons-assets/detail-art.png" : weapon.image} alt="" />
+        </div>
+      </div>
+      <div className={styles.statsPanel}>
+        <h3>Weapon Stats</h3>
+        {weapon.stats.map((stat) => (
+          <div key={stat.label} className={styles.statLine}>
+            <span>{stat.label}</span>
+            <strong>{stat.value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className={styles.abilityPanel}>
+        <h3>Special Abilities</h3>
+        {["Frost Slash", "Chill Burst", "Glacial Strike"].map((ability) => (
+          <div key={ability} className={styles.abilityItem}>
+            <span />
+            <div>
+              <strong>{ability}</strong>
+              <small>{ability === "Frost Slash" ? "Deal massive ice damage." : ability === "Chill Burst" ? "Slow enemies by 40%." : "Area freeze on impact."}</small>
+            </div>
+          </div>
+        ))}
+      </div>
+      <VideoFrame />
+    </section>
+  );
+}
+
+function Loadout({
+  activeWeapon,
+  selectedSlot,
+  onSelect,
+}: {
+  activeWeapon: WeaponKey;
+  selectedSlot: number;
+  onSelect: (slot: number) => void;
+}) {
+  return (
+    <section className={styles.loadoutPanel} aria-label="My loadout">
+      <div className={styles.loadoutSlots}>
+        {[0, 1, 2, 3, 4].map((slot) => {
+          const weapon = [weapons[0], weapons[2], weapons[1]][slot];
+          const active = selectedSlot === slot;
+
+          return (
+            <button
+              key={slot}
+              className={`${styles.loadoutSlot} ${active ? styles.activeLoadout : ""} ${!weapon ? styles.lockedLoadout : ""}`}
+              style={{ "--accent": weapon?.accent ?? "rgba(255,255,255,0.45)" } as CSSProperties}
+              aria-pressed={active}
+              onClick={() => onSelect(slot)}
+            >
+              <span className={styles.loadoutReader}>{weapon?.name ?? `Locked slot ${slot + 1}`}</span>
+              {weapon?.key === activeWeapon && <i />}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ForgePanel() {
+  return (
+    <section className={styles.forgePanel} aria-label="Weapon forge">
+      <img src="/weapons-assets/forge-panel.png" alt="" />
+      <div className={styles.emberField}>
+        {Array.from({ length: 14 }).map((_, index) => (
+          <span key={index} style={{ "--ember": index } as CSSProperties} />
+        ))}
+      </div>
+    </section>
   );
 }
 
 export default function WeaponsPage() {
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterKey>("bambo");
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterKey>("jean");
   const [activeWeapon, setActiveWeapon] = useState<WeaponKey>("frost");
-  const [burstWeapon, setBurstWeapon] = useState<WeaponKey | null>(null);
-  const [burstCharacter, setBurstCharacter] = useState<CharacterKey | null>(null);
-  const [activeTab, setActiveTab] = useState<CategoryKey>("all");
-  const [carouselOffset, setCarouselOffset] = useState(0);
-  const [activeTier, setActiveTier] = useState("tier-three");
-  const [activeLoadout, setActiveLoadout] = useState("slot-one");
-  const [previewPlaying, setPreviewPlaying] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const filteredWeapons = weaponCards.filter((weapon) => weapon.categories.includes(activeTab));
-  const carouselWeapons = filteredWeapons.map((_, index) => filteredWeapons[(index + carouselOffset) % filteredWeapons.length]);
-  const selectedWeapon = weaponCards.find((weapon) => weapon.key === activeWeapon) ?? weaponCards[0];
-  const burstTimer = useRef<number | null>(null);
-  const characterTimer = useRef<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>("all");
+  const [activeTier, setActiveTier] = useState("t3");
+  const [openTier, setOpenTier] = useState<Tier | null>(null);
+  const [infoWeapon, setInfoWeapon] = useState<Weapon | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState(0);
+  const selectedWeapon = weapons.find((weapon) => weapon.key === activeWeapon) ?? weapons[0];
 
-  const chooseCharacter = (character: (typeof characters)[number]) => {
+  const selectCharacter = (character: Character) => {
     setSelectedCharacter(character.key);
-    setBurstCharacter(character.key);
-    playTone(character.sound);
-
-    if (characterTimer.current) window.clearTimeout(characterTimer.current);
-    characterTimer.current = window.setTimeout(() => setBurstCharacter(null), 760);
+    playTone(character.key === "rayo" ? "fire" : character.key === "onyx" ? "void" : "tap");
   };
 
-  const energizeWeapon = (weapon: (typeof weaponCards)[number]) => {
+  const selectWeapon = (weapon: Weapon, openInfo = true) => {
     setActiveWeapon(weapon.key);
-    setActiveTier(weapon.tier);
-    setBurstWeapon(weapon.key);
-    playTone(weapon.sound);
-
-    if (burstTimer.current) window.clearTimeout(burstTimer.current);
-    burstTimer.current = window.setTimeout(() => setBurstWeapon(null), 760);
+    if (openInfo) setInfoWeapon(weapon);
+    playTone(weapon.key === "solar" ? "fire" : weapon.key === "thunder" ? "shock" : weapon.key === "void" ? "void" : "ice");
   };
 
-  const cycleWeapon = (direction: 1 | -1) => {
-    if (!filteredWeapons.length) return;
-    const currentIndex = filteredWeapons.findIndex((weapon) => weapon.key === activeWeapon);
-    const safeIndex = currentIndex >= 0 ? currentIndex : 0;
-    const nextIndex = (safeIndex + direction + filteredWeapons.length) % filteredWeapons.length;
-    setCarouselOffset((offset) => (offset + direction + filteredWeapons.length) % filteredWeapons.length);
-    energizeWeapon(filteredWeapons[nextIndex]);
-  };
-
-  const togglePreviewVideo = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (video.paused) {
-      void video.play();
-      setPreviewPlaying(true);
-      playTone("ice");
-      return;
-    }
-
-    video.pause();
-    setPreviewPlaying(false);
-    playTone("frost");
+  const selectCategory = (category: CategoryKey) => {
+    const firstWeapon = weapons.find((weapon) => weapon.categories.includes(category));
+    setActiveCategory(category);
+    if (firstWeapon) setActiveWeapon(firstWeapon.key);
+    playTone(category === "legendary" ? "fire" : category === "elemental" ? "ice" : "tap");
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-[#020617]">
-      {/*
-        Weapons target direction:
-        - The artwork composition carries the full page.
-        - The baked navbar was cropped out of /weapons-composition.png.
-        - Real navbar remains from layout.tsx only.
-        - No dashboard rebuild, no generic card system, no invented sections.
-        - Motion layers are polish only: transparent, aligned, and non-destructive.
-      */}
+    <main className={styles.page}>
+      <div className={styles.backgroundLayer} />
 
-      <section className="relative z-10 pt-24 sm:pt-24 md:pt-24 pb-10">
-        <div className="relative mx-auto w-full max-w-[1365px] px-0 sm:px-4">
-          <div
-            role="img"
-            aria-label="ZUNO Weapons Arsenal complete armory screen"
-            className="relative mx-auto aspect-[1024/1476] overflow-hidden bg-[#050816] bg-[length:100%_100%] bg-top bg-no-repeat shadow-[0_0_80px_rgba(0,0,0,0.45)]"
-            style={{ backgroundImage: "url('/weapons-composition.png')" }}
-          >
-            <div className="pointer-events-none absolute inset-0 ambient-armory-life" />
-
-            {/* Character rename overlays — keep visual identity, only replace labels. */}
-            <div className="absolute left-[7.85%] top-[28.45%] h-[1.9%] w-[8.8%] bg-[#16080a]/95 rounded-sm pointer-events-none" />
-            <div className="absolute left-[7.85%] top-[28.25%] w-[8.8%] text-center font-bangers text-[clamp(7px,1.05vw,14px)] italic tracking-[0.06em] text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] pointer-events-none">
-              JEAN
-            </div>
-
-            <div className="absolute left-[45.7%] top-[28.45%] h-[1.9%] w-[12.8%] bg-[#16051f]/95 rounded-sm pointer-events-none" />
-            <div className="absolute left-[45.7%] top-[28.25%] w-[12.8%] text-center font-bangers text-[clamp(7px,0.95vw,13px)] italic tracking-[0.03em] text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] pointer-events-none">
-              MARJORIE
-            </div>
-
-            {/* Character selection — corrected to portrait/card bounds so borders no longer cut into neighbors. */}
-            {characters.map((character) => {
-              const isSelected = selectedCharacter === character.key;
-
-              return (
-                <div key={character.key} className={`absolute ${character.box} rounded-[10%] z-20 character-card-shell ${isSelected ? "is-selected" : ""} ${burstCharacter === character.key ? "is-burst" : ""}`}>
-                  <div
-                    className={`pointer-events-none absolute inset-0 rounded-[10%] character-life ${isSelected ? "is-selected" : ""} ${burstCharacter === character.key ? "is-burst" : ""}`}
-                    style={{
-                      color: character.color,
-                      borderColor: character.color,
-                      boxShadow: isSelected
-                        ? `0 0 0 2px ${character.color}, 0 0 30px ${character.aura}, inset 0 0 28px ${character.aura}`
-                        : `0 0 0 1px color-mix(in srgb, ${character.color} 42%, transparent), inset 0 0 16px rgba(255,255,255,0.025)`,
-                    }}
-                  />
-                  <div
-                    className={`pointer-events-none absolute inset-[-8%] rounded-[14%] character-breath ${isSelected ? "is-selected" : ""}`}
-                    style={{ background: `radial-gradient(circle at 50% 35%, ${character.aura}, transparent 58%)` }}
-                  />
-                  <div className={`pointer-events-none absolute inset-[18%] rounded-full character-eye-glow ${isSelected ? "is-selected" : ""}`} style={{ background: character.aura }} />
-                  <button
-                    aria-label={character.label}
-                    aria-pressed={isSelected}
-                    className="absolute inset-0 rounded-[10%] cursor-pointer focus:outline-none focus-visible:ring-2 transition-transform duration-300 hover:scale-[1.018] active:scale-[0.965]"
-                    style={{ outlineColor: character.color }}
-                    onMouseEnter={() => setSelectedCharacter(character.key)}
-                    onClick={() => chooseCharacter(character)}
-                  />
-                </div>
-              );
-            })}
-
-            {/* Weapon category tabs */}
-            {categoryTabs.map((tab) => (
-              <HotspotButton
-                key={tab.key}
-                label={tab.label}
-                className={tab.className}
-                ring={tab.ring}
-                active={activeTab === tab.key}
-                onClick={() => {
-                  const nextWeapons = weaponCards.filter((weapon) => weapon.categories.includes(tab.key));
-                  setActiveTab(tab.key);
-                  setCarouselOffset(0);
-                  if (nextWeapons[0]) energizeWeapon(nextWeapons[0]);
-                  playTone(tab.key === "legendary" ? "fire" : "electric");
-                }}
-              />
-            ))}
-
-            {/* Weapon cards — real selectable/filterable carousel aligned to the existing baked card slots. */}
-            {carouselWeapons.map((weapon, index) => {
-              const isActive = activeWeapon === weapon.key;
-              const isBurst = burstWeapon === weapon.key;
-
-              return (
-                <div
-                  key={`${activeTab}-${weapon.key}`}
-                  className={`absolute ${displaySlots[index]} rounded-xl overflow-hidden weapon-card-shell ${isActive ? "is-selected" : ""}`}
-                  style={{ "--weapon-color": weapon.color } as CSSProperties}
-                >
-                  <div className="pointer-events-none absolute inset-0 weapon-card-mask" />
-                  <div
-                    className={`${weapon.className} pointer-events-none absolute inset-0 rounded-xl ${isActive ? "is-active" : ""} ${isBurst ? "is-burst" : ""}`}
-                    style={{ borderColor: weapon.color }}
-                  />
-                  <div className="pointer-events-none absolute left-[7%] right-[7%] bottom-[6%] z-10 font-russo text-[clamp(5px,0.62vw,9px)] uppercase tracking-[0.12em] text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
-                    {weapon.label.replace(" weapon card", "")}
-                  </div>
-                  <button
-                    aria-label={weapon.label}
-                    aria-pressed={isActive}
-                    className="absolute inset-0 rounded-xl cursor-pointer focus:outline-none focus-visible:ring-2 transition-transform duration-300 hover:scale-[1.006]"
-                    style={{ outlineColor: weapon.color }}
-                    onClick={() => energizeWeapon(weapon)}
-                  />
-                </div>
-              );
-            })}
-
-            {/* Upgrade buttons on cards */}
-            {upgradeButtons.map((button) => {
-              const weapon = weaponCards.find((card) => button.key.startsWith(card.key === "armor" ? "armor" : card.key));
-
-              return (
-                <HotspotButton
-                  key={button.key}
-                  label={button.label}
-                  className={button.className}
-                  ring={button.ring}
-                  active={weapon?.key === activeWeapon}
-                  onClick={() => {
-                    if (weapon) energizeWeapon(weapon);
-                    else playTone("electric");
-                  }}
-                />
-              );
-            })}
-
-            {/* Carousel arrows */}
-            <HotspotButton label="Previous weapons" className="left-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%]" round="rounded-full" ring="#00c8ff" onClick={() => cycleWeapon(-1)} />
-            <HotspotButton label="Next weapons" className="right-[0.65%] top-[43.1%] h-[4.0%] w-[3.0%]" round="rounded-full" ring="#00c8ff" onClick={() => cycleWeapon(1)} />
-
-            {/* Upgrade path energy — segmented only on the baked connector lines, no rectangle overlay. */}
-            {connectorSegments.map((segment) => (
-              <div key={segment} className={`pointer-events-none absolute ${segment} connector-energy`} />
-            ))}
-            <div className={`pointer-events-none absolute ${tierPowerBoxes[activeTier]} rounded-full active-tier-power`} />
-            <div className={`pointer-events-none absolute ${weaponTierBoxes[selectedWeapon.key]} rounded-full selected-weapon-tier`} style={{ "--weapon-color": selectedWeapon.color } as CSSProperties} />
-            <div className="pointer-events-none absolute left-[58.7%] top-[57.2%] z-10 w-[34.2%] rounded-md border border-white/10 bg-[#020617]/36 px-[1.2%] py-[0.55%] font-russo text-[clamp(5px,0.62vw,9px)] uppercase tracking-[0.11em] text-white/85 shadow-[0_0_18px_rgba(0,0,0,0.34)] backdrop-blur-[2px] selected-weapon-details" style={{ "--weapon-color": selectedWeapon.color } as CSSProperties}>
-              {selectedWeapon.details}
-            </div>
-            {upgradeTiers.map((tier) => (
-              <HotspotButton
-                key={tier.key}
-                label={tier.label}
-                className={tier.className}
-                round="rounded-full"
-                ring={tier.ring}
-                active={activeTier === tier.key}
-                onClick={() => {
-                  setActiveTier(tier.key);
-                  playTone(tier.key === "tier-three" ? "fire" : "ice");
-                }}
-              />
-            ))}
-
-            {/* Live gameplay video: placed inside the baked gameplay preview frame only. */}
-            <div className="absolute left-[72.72%] top-[66.82%] h-[11.18%] w-[22.42%] overflow-hidden rounded-[2.8%] bg-[#020617] video-frame-shell">
-              <video
-                ref={videoRef}
-                className="absolute inset-0 h-full w-full scale-[1.045] object-cover opacity-[0.86]"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Live ZUNO battle gameplay preview"
-                onPlay={() => setPreviewPlaying(true)}
-                onPause={() => setPreviewPlaying(false)}
-              >
-                <source src="/battle.mp4" type="video/mp4" />
-              </video>
-              <div className="pointer-events-none absolute inset-[-1px] video-frame-polish" />
-            </div>
-            <button
-              aria-label="Toggle Frost Blade preview video"
-              aria-pressed={previewPlaying}
-              className="absolute left-[72.72%] top-[66.82%] h-[11.18%] w-[22.42%] z-20 rounded-[2.8%] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00c8ff]/80"
-              style={{ "--hotspot": "#00c8ff" } as CSSProperties}
-              onClick={togglePreviewVideo}
-            />
-
-            {/* Loadout slots */}
-            {loadoutSlots.slice(0, 3).map((slot, index) => (
-              <div key={`loadout-glow-${slot.key}`} className={`pointer-events-none absolute ${slot.className} rounded-full loadout-slot-life delay-${index}`} />
-            ))}
-            <div className="pointer-events-none absolute left-[58.4%] top-[82.1%] h-[8.2%] w-[35.8%] forge-ember-field" />
-            {loadoutSlots.map((slot) => (
-              <HotspotButton
-                key={slot.key}
-                label={slot.label}
-                className={slot.className}
-                round="rounded-full"
-                ring={slot.ring}
-                active={activeLoadout === slot.key}
-                onClick={() => {
-                  setActiveLoadout(slot.key);
-                  playTone(slot.key.includes("four") || slot.key.includes("five") ? "void" : "ice");
-                }}
-              />
-            ))}
-
-            {/* Final CTA */}
-            <Link
-              href="/how-to-play"
-              aria-label="Play ZUNO now"
-              className="absolute left-[64.2%] top-[93.0%] h-[4.3%] w-[25.4%] rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd21f]/80 cta-life"
-              onClick={() => playTone("fire")}
-            />
-          </div>
-        </div>
+      <section className={styles.hero}>
+        <video className={styles.heroVideo} autoPlay muted loop playsInline>
+          <source src="/trailer.mp4" type="video/mp4" />
+        </video>
       </section>
 
-      <style jsx>{`
-        .ambient-armory-life {
-          background:
-            radial-gradient(circle at 15% 27%, rgba(255, 122, 0, 0.045), transparent 14%),
-            radial-gradient(circle at 51% 27%, rgba(255, 43, 214, 0.035), transparent 15%),
-            radial-gradient(circle at 87% 47%, rgba(189, 0, 255, 0.032), transparent 18%),
-            linear-gradient(115deg, transparent 0%, rgba(0, 200, 255, 0.035) 42%, transparent 58%);
-          mix-blend-mode: screen;
-          opacity: 0.75;
-          animation: armoryAmbient 8s ease-in-out infinite alternate;
-        }
-
-        .hotspot-real {
-          --hotspot: #00c8ff;
-          background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--hotspot) 10%, transparent), transparent 62%);
-          border: 1px solid color-mix(in srgb, var(--hotspot) 24%, transparent);
-          box-shadow: inset 0 0 16px color-mix(in srgb, var(--hotspot) 8%, transparent);
-          opacity: 0.42;
-        }
-
-        .hotspot-real:hover,
-        .hotspot-real:focus-visible,
-        .hotspot-real.is-active {
-          opacity: 1;
-          background:
-            linear-gradient(115deg, transparent 16%, color-mix(in srgb, var(--hotspot) 24%, transparent) 48%, transparent 74%),
-            radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--hotspot) 20%, transparent), transparent 66%);
-          border-color: color-mix(in srgb, var(--hotspot) 70%, transparent);
-          box-shadow: 0 0 18px color-mix(in srgb, var(--hotspot) 38%, transparent), inset 0 0 18px color-mix(in srgb, var(--hotspot) 18%, transparent);
-          animation: hotspotPowered 2.1s ease-in-out infinite;
-        }
-
-        .character-card-shell {
-          transform-origin: center;
-          transition: transform 260ms ease, filter 260ms ease;
-        }
-
-        .character-card-shell:hover,
-        .character-card-shell.is-selected {
-          transform: translateY(-1.6%) scale(1.018);
-          filter: brightness(1.08) saturate(1.08);
-        }
-
-        .character-card-shell.is-burst {
-          animation: characterClickMove 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        }
-
-        .character-life {
-          border: 1px solid;
-          opacity: 0.58;
-          transform-origin: center;
-          transition: opacity 260ms ease, transform 260ms ease, box-shadow 260ms ease;
-        }
-
-        .character-life.is-selected {
-          opacity: 1;
-          animation: characterArmorPulse 2.9s ease-in-out infinite;
-        }
-
-        .character-breath {
-          opacity: 0;
-          filter: blur(5px);
-          mix-blend-mode: screen;
-          transition: opacity 260ms ease, transform 260ms ease;
-        }
-
-        .character-breath.is-selected {
-          opacity: 0.82;
-          animation: characterBreath 3.0s ease-in-out infinite;
-        }
-
-        .character-eye-glow {
-          opacity: 0;
-          filter: blur(9px);
-          mix-blend-mode: screen;
-          transform: scale(0.46);
-          transition: opacity 240ms ease, transform 240ms ease;
-        }
-
-        .character-eye-glow.is-selected {
-          opacity: 0.74;
-          transform: scale(0.74);
-          animation: eyesAlive 1.8s ease-in-out infinite;
-        }
-
-        .character-life.is-burst::after {
-          content: "";
-          position: absolute;
-          inset: -7%;
-          border-radius: inherit;
-          border: 1px solid currentColor;
-          opacity: 0;
-          animation: roarRipple 760ms ease-out both;
-        }
-
-        .weapon-card-shell {
-          transform-origin: center;
-          transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 260ms ease;
-        }
-
-        .weapon-card-shell:hover,
-        .weapon-card-shell.is-selected {
-          transform: translateY(-1.4%) scale(1.018);
-          filter: saturate(1.14) brightness(1.08);
-        }
-
-        .weapon-card-mask {
-          background: linear-gradient(180deg, rgba(2, 6, 23, 0.02), rgba(2, 6, 23, 0.22));
-          box-shadow: inset 0 0 34px color-mix(in srgb, var(--weapon-color) 16%, transparent);
-          opacity: 0.54;
-          mix-blend-mode: multiply;
-        }
-
-        .weapon-card-shell.is-selected .weapon-card-mask {
-          opacity: 0.12;
-          mix-blend-mode: screen;
-        }
-
-        .weapon-fx {
-          border: 1px solid transparent;
-          opacity: 0.18;
-          mix-blend-mode: screen;
-          background-blend-mode: screen;
-          transition: opacity 220ms ease, box-shadow 220ms ease, transform 220ms ease;
-        }
-
-        .weapon-fx.is-active,
-        .weapon-fx:hover {
-          opacity: 1;
-          border-color: currentColor;
-          box-shadow: inset 0 0 36px color-mix(in srgb, currentColor 22%, transparent), 0 0 34px color-mix(in srgb, currentColor 50%, transparent);
-          animation: weaponCardBreath 2.4s ease-in-out infinite;
-        }
-
-        .weapon-fx::before,
-        .weapon-fx::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        .weapon-fx.is-active::before,
-        .weapon-fx.is-burst::before {
-          opacity: 1;
-        }
-
-        .weapon-fx.is-burst::after {
-          opacity: 1;
-          animation: energyClickBurst 680ms ease-out both;
-        }
-
-        .weapon-fx--ice {
-          color: #66e7ff;
-          background: radial-gradient(circle at 38% 44%, rgba(102, 231, 255, 0.16), transparent 48%);
-        }
-
-        .weapon-fx--ice::before {
-          background: linear-gradient(115deg, transparent 18%, rgba(202, 247, 255, 0.22) 42%, transparent 58%);
-          animation: shimmerSweep 3.2s ease-in-out infinite;
-        }
-
-        .weapon-fx--thunder {
-          color: #bd00ff;
-          background: radial-gradient(circle at 46% 43%, rgba(189, 0, 255, 0.16), transparent 52%);
-        }
-
-        .weapon-fx--thunder::before {
-          background: linear-gradient(135deg, transparent 20%, rgba(255, 255, 255, 0.22) 23%, transparent 28%, transparent 55%, rgba(189, 0, 255, 0.25) 58%, transparent 63%);
-          animation: electricPulse 1.8s steps(2, end) infinite;
-        }
-
-        .weapon-fx--solar {
-          color: #ff7a00;
-          background: radial-gradient(circle at 50% 46%, rgba(255, 122, 0, 0.16), transparent 54%);
-        }
-
-        .weapon-fx--solar::before {
-          background: radial-gradient(circle at 48% 45%, rgba(255, 210, 31, 0.18), transparent 32%);
-          animation: solarRadiate 2.4s ease-in-out infinite;
-        }
-
-        .weapon-fx--armor {
-          color: #00c8ff;
-          background: radial-gradient(circle at 52% 43%, rgba(0, 200, 255, 0.14), transparent 52%);
-        }
-
-        .weapon-fx--armor::before {
-          background-image:
-            radial-gradient(circle, rgba(196, 244, 255, 0.24) 0 1px, transparent 2px),
-            radial-gradient(circle, rgba(0, 200, 255, 0.16) 0 1px, transparent 2px);
-          background-size: 28px 28px, 46px 46px;
-          animation: frostParticles 5s linear infinite;
-        }
-
-        .weapon-fx--void {
-          color: #d42bff;
-          background: radial-gradient(circle at 50% 46%, rgba(212, 43, 255, 0.18), transparent 54%);
-        }
-
-        .weapon-fx--void::before {
-          background: radial-gradient(circle at 50% 48%, rgba(212, 43, 255, 0.22), transparent 30%);
-          animation: voidPulse 2.6s ease-in-out infinite;
-        }
-
-        .weapon-fx::after {
-          border-radius: inherit;
-          border: 1px solid currentColor;
-          box-shadow: 0 0 28px currentColor, inset 0 0 20px currentColor;
-        }
-
-        .connector-energy {
-          overflow: hidden;
-          border-radius: 999px;
-          background: transparent;
-          mix-blend-mode: screen;
-        }
-
-        .connector-energy::before {
-          content: "";
-          position: absolute;
-          inset: -80% -140%;
-          background: linear-gradient(90deg, transparent 0%, rgba(0, 200, 255, 0.0) 18%, rgba(0, 200, 255, 0.55) 34%, rgba(255, 255, 255, 0.9) 49%, rgba(255, 122, 0, 0.58) 63%, transparent 82%);
-          filter: blur(0.3px);
-          animation: tierFlow 2.6s linear infinite;
-        }
-
-        .active-tier-power,
-        .selected-tier-power {
-          border: 1px solid rgba(255, 122, 0, 0.72);
-          box-shadow: 0 0 24px rgba(255, 122, 0, 0.34), inset 0 0 22px rgba(255, 122, 0, 0.15);
-          mix-blend-mode: screen;
-          animation: activeTierShine 2.2s ease-in-out infinite;
-        }
-
-        .active-tier-power::before {
-          content: "";
-          position: absolute;
-          inset: -20%;
-          background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.35) 48%, transparent 61%);
-          animation: activeTierSweep 2.9s ease-in-out infinite;
-        }
-
-        .unlocked-tier-pulse {
-          border: 1px solid rgba(0, 200, 255, 0.45);
-          box-shadow: 0 0 18px rgba(0, 200, 255, 0.22), inset 0 0 18px rgba(0, 200, 255, 0.08);
-          mix-blend-mode: screen;
-          animation: unlockedPulse 3s ease-in-out infinite;
-        }
-
-        .unlocked-tier-pulse.delay-one {
-          animation-delay: 0.6s;
-        }
-
-        .selected-weapon-tier {
-          border: 1px solid color-mix(in srgb, var(--weapon-color) 75%, transparent);
-          box-shadow: 0 0 28px color-mix(in srgb, var(--weapon-color) 42%, transparent), inset 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent);
-          mix-blend-mode: screen;
-          animation: activeTierShine 1.9s ease-in-out infinite;
-        }
-
-        .selected-weapon-details {
-          box-shadow: 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent), inset 0 0 14px rgba(255,255,255,0.035);
-        }
-
-        .video-frame-shell {
-          clip-path: inset(0 round 9px);
-          box-shadow: inset 0 0 0 1px rgba(0, 200, 255, 0.18), inset 0 0 26px rgba(2, 6, 23, 0.75), 0 0 18px rgba(0, 200, 255, 0.08);
-          mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.96) 78%, rgba(0,0,0,0.74) 100%);
-        }
-
-        .video-frame-polish {
-          background:
-            linear-gradient(90deg, rgba(2, 6, 23, 0.22), transparent 14%, transparent 86%, rgba(2, 6, 23, 0.22)),
-            linear-gradient(180deg, rgba(0, 200, 255, 0.13), transparent 24%, transparent 76%, rgba(189, 0, 255, 0.1));
-          border: 1px solid rgba(0, 200, 255, 0.16);
-          box-shadow: inset 0 0 22px rgba(2, 6, 23, 0.7), inset 0 0 18px rgba(0, 200, 255, 0.12);
-          animation: videoScan 4s ease-in-out infinite;
-        }
-
-        .loadout-slot-life {
-          border: 1px solid rgba(0, 200, 255, 0.36);
-          box-shadow: 0 0 18px rgba(0, 200, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
-          mix-blend-mode: screen;
-          animation: loadoutGlow 3.1s ease-in-out infinite;
-        }
-
-        .loadout-slot-life.delay-1 { animation-delay: 0.45s; border-color: rgba(255, 122, 0, 0.34); box-shadow: 0 0 18px rgba(255, 122, 0, 0.2), inset 0 0 20px rgba(255,255,255,0.05); }
-        .loadout-slot-life.delay-2 { animation-delay: 0.9s; border-color: rgba(189, 0, 255, 0.34); box-shadow: 0 0 18px rgba(189, 0, 255, 0.22), inset 0 0 20px rgba(255,255,255,0.05); }
-
-        .forge-ember-field {
-          overflow: hidden;
-          border-radius: 18px;
-          mix-blend-mode: screen;
-          opacity: 0.62;
-        }
-
-        .forge-ember-field::before,
-        .forge-ember-field::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(circle, rgba(255, 210, 31, 0.4) 0 1px, transparent 2px), radial-gradient(circle, rgba(255, 122, 0, 0.28) 0 1px, transparent 2px);
-          background-size: 34px 34px, 58px 58px;
-          animation: forgeEmbers 4.2s linear infinite;
-        }
-
-        .forge-ember-field::after {
-          filter: blur(5px);
-          opacity: 0.42;
-          animation-duration: 6.4s;
-        }
-
-        .cta-life {
-          box-shadow: 0 0 0 transparent;
-          transition: box-shadow 260ms ease, background-color 260ms ease;
-        }
-
-        .cta-life:hover {
-          background-color: rgba(255, 210, 31, 0.04);
-          box-shadow: 0 0 28px rgba(255, 122, 0, 0.24);
-        }
-
-        @keyframes hotspotPowered {
-          0%, 100% { filter: brightness(1); }
-          50% { filter: brightness(1.28); }
-        }
-
-        @keyframes characterClickMove {
-          0% { transform: translateY(0) scale(1); }
-          28% { transform: translateY(-3.4%) scale(1.04) rotate(-0.4deg); }
-          62% { transform: translateY(1.1%) scale(0.992) rotate(0.25deg); }
-          100% { transform: translateY(-1.6%) scale(1.018); }
-        }
-
-        @keyframes eyesAlive {
-          0%, 100% { opacity: 0.42; filter: blur(10px) brightness(1); }
-          50% { opacity: 0.86; filter: blur(7px) brightness(1.55); }
-        }
-
-        @keyframes roarRipple {
-          0% { transform: scale(0.92); opacity: 0.78; box-shadow: 0 0 22px currentColor; }
-          100% { transform: scale(1.22); opacity: 0; box-shadow: 0 0 40px currentColor; }
-        }
-
-        @keyframes weaponCardBreath {
-          0%, 100% { filter: brightness(1); }
-          50% { filter: brightness(1.34); }
-        }
-
-        @keyframes armoryAmbient {
-          0% { opacity: 0.45; transform: translate3d(-0.2%, -0.1%, 0); }
-          100% { opacity: 0.82; transform: translate3d(0.25%, 0.15%, 0); }
-        }
-
-        @keyframes characterArmorPulse {
-          0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); }
-          45% { transform: translateY(-0.8%) scale(1.006); filter: brightness(1.12); }
-        }
-
-        @keyframes characterBreath {
-          0%, 100% { transform: scale(0.96); opacity: 0.38; }
-          50% { transform: scale(1.08); opacity: 0.72; }
-        }
-
-        @keyframes shimmerSweep {
-          0% { transform: translateX(-120%); opacity: 0; }
-          35% { opacity: 0.62; }
-          70%, 100% { transform: translateX(120%); opacity: 0; }
-        }
-
-        @keyframes electricPulse {
-          0%, 100% { opacity: 0.08; filter: brightness(1); }
-          45% { opacity: 0.72; filter: brightness(1.4); }
-          55% { opacity: 0.18; }
-        }
-
-        @keyframes solarRadiate {
-          0%, 100% { transform: scale(0.85); opacity: 0.18; }
-          50% { transform: scale(1.18); opacity: 0.48; }
-        }
-
-        @keyframes frostParticles {
-          0% { background-position: 0 0, 0 0; opacity: 0.2; }
-          50% { opacity: 0.48; }
-          100% { background-position: 28px -56px, -46px -92px; opacity: 0.2; }
-        }
-
-        @keyframes voidPulse {
-          0%, 100% { transform: scale(0.72) rotate(0deg); opacity: 0.2; }
-          50% { transform: scale(1.18) rotate(3deg); opacity: 0.5; }
-        }
-
-        @keyframes loadoutGlow {
-          0%, 100% { opacity: 0.38; transform: scale(0.985); }
-          50% { opacity: 0.82; transform: scale(1.025); }
-        }
-
-        @keyframes forgeEmbers {
-          0% { transform: translateY(24%) translateX(0); opacity: 0; }
-          18% { opacity: 0.5; }
-          100% { transform: translateY(-34%) translateX(2%); opacity: 0; }
-        }
-
-        @keyframes energyClickBurst {
-          0% { transform: scale(0.96); opacity: 0.95; }
-          100% { transform: scale(1.08); opacity: 0; }
-        }
-
-        @keyframes tierFlow {
-          0% { transform: translateX(-55%); }
-          100% { transform: translateX(55%); }
-        }
-
-        @keyframes activeTierShine {
-          0%, 100% { opacity: 0.58; }
-          50% { opacity: 1; }
-        }
-
-        @keyframes activeTierSweep {
-          0%, 15% { transform: translateX(-120%); opacity: 0; }
-          45% { opacity: 0.55; }
-          80%, 100% { transform: translateX(120%); opacity: 0; }
-        }
-
-        @keyframes unlockedPulse {
-          0%, 100% { opacity: 0.44; }
-          50% { opacity: 0.82; }
-        }
-
-        @keyframes videoScan {
-          0%, 100% { opacity: 0.72; }
-          50% { opacity: 0.94; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .hotspot-real,
-          .ambient-armory-life,
-          .character-card-shell,
-          .character-life,
-          .character-breath,
-          .character-eye-glow,
-          .weapon-card-shell,
-          .weapon-fx,
-          .weapon-fx::before,
-          .weapon-fx::after,
-          .connector-energy::before,
-          .active-tier-power,
-          .active-tier-power::before,
-          .selected-tier-power,
-          .unlocked-tier-pulse,
-          .selected-weapon-tier {
-          border: 1px solid color-mix(in srgb, var(--weapon-color) 75%, transparent);
-          box-shadow: 0 0 28px color-mix(in srgb, var(--weapon-color) 42%, transparent), inset 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent);
-          mix-blend-mode: screen;
-          animation: activeTierShine 1.9s ease-in-out infinite;
-        }
-
-        .selected-weapon-details {
-          box-shadow: 0 0 22px color-mix(in srgb, var(--weapon-color) 18%, transparent), inset 0 0 14px rgba(255,255,255,0.035);
-        }
-
-        .video-frame-shell {
-          clip-path: inset(0 round 9px);
-          box-shadow: inset 0 0 0 1px rgba(0, 200, 255, 0.18), inset 0 0 26px rgba(2, 6, 23, 0.75), 0 0 18px rgba(0, 200, 255, 0.08);
-          mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.96) 78%, rgba(0,0,0,0.74) 100%);
-        }
-
-        .video-frame-polish {
-            animation: none !important;
-          }
-        }
-      `}</style>
-    </div>
+      <div className={styles.content}>
+        <CharacterSelector selectedCharacter={selectedCharacter} onSelect={selectCharacter} />
+        <WeaponCarousel activeWeapon={activeWeapon} activeCategory={activeCategory} onSelect={selectWeapon} onCategorySelect={selectCategory} />
+        <UpgradePath
+          activeTier={activeTier}
+          openTier={openTier}
+          onSelect={(tier) => {
+            setActiveTier(tier.key);
+            setOpenTier(tier);
+            playTone(tier.locked ? "void" : tier.key === "t3" ? "fire" : "ice");
+          }}
+        />
+        <WeaponDetail weapon={selectedWeapon} />
+        <div className={styles.lowerGrid}>
+          <Loadout activeWeapon={activeWeapon} selectedSlot={selectedSlot} onSelect={setSelectedSlot} />
+          <ForgePanel />
+        </div>
+        <section className={styles.footerCta}>
+          <img src="/weapons-assets/footer-art.png" alt="" />
+          <Link href="/how-to-play" aria-label="Play ZUNO now" onClick={() => playTone("fire")}>Play ZUNO Now</Link>
+        </section>
+      </div>
+      {infoWeapon && <WeaponInfoModal weapon={infoWeapon} onClose={() => setInfoWeapon(null)} />}
+    </main>
   );
 }
+

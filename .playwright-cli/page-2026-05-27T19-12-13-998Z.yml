@@ -1,0 +1,319 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "ZUNO" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "ZUNO" [ref=e7]
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "About" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - link "Rewards" [ref=e11] [cursor=pointer]:
+          - /url: /rewards-coins
+        - link "Weapons" [ref=e12] [cursor=pointer]:
+          - /url: /weapons
+        - link "Levels" [ref=e13] [cursor=pointer]:
+          - /url: /levels
+          - text: Levels
+        - link "Support" [ref=e15] [cursor=pointer]:
+          - /url: /support
+      - link "Play Now" [ref=e16] [cursor=pointer]:
+        - /url: /how-to-play
+        - generic [ref=e17]: Play Now
+  - main [ref=e18]:
+    - main [ref=e19]:
+      - img "ZUNO Levels and Worlds world map" [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - generic [ref=e25]: "1"
+            - generic [ref=e26]:
+              - heading "Beginner Tier" [level=2] [ref=e27]
+              - paragraph [ref=e28]: 3 Worlds - Increasing Difficulty
+            - generic [ref=e29]:
+              - button "Previous Beginner world" [ref=e30] [cursor=pointer]: <
+              - button "Next Beginner world" [ref=e31] [cursor=pointer]: ">"
+          - generic [ref=e32]:
+            - article [ref=e33]:
+              - button "* Grasslands of Origin Rolling green fields where rookies learn the basics. Low danger, high lessons. Enemies Snarling Pups, Vine Crawlers Reward 200 Coins Beginner Enter World" [pressed] [ref=e34] [cursor=pointer]:
+                - generic [ref=e36]: "*"
+                - generic [ref=e37]:
+                  - heading "Grasslands of Origin" [level=3] [ref=e38]
+                  - paragraph [ref=e39]: Rolling green fields where rookies learn the basics. Low danger, high lessons.
+                  - generic [ref=e40]:
+                    - generic [ref=e41]:
+                      - strong [ref=e42]: Enemies
+                      - generic [ref=e43]: Snarling Pups, Vine Crawlers
+                    - generic [ref=e44]:
+                      - strong [ref=e45]: Reward
+                      - generic [ref=e46]: 200 Coins
+                  - generic [ref=e47]:
+                    - generic [ref=e48]: Beginner
+                    - emphasis [ref=e49]: Enter World
+            - article [ref=e50]:
+              - button "D Crystal River Canyon Glittering blue waterways carve through crystal formations. Watch for ambushes at the falls. Enemies River Sprites, Crystal Bats Reward 350 Coins + Shard Beginner Enter World" [ref=e51] [cursor=pointer]:
+                - generic [ref=e53]: D
+                - generic [ref=e54]:
+                  - heading "Crystal River Canyon" [level=3] [ref=e55]
+                  - paragraph [ref=e56]: Glittering blue waterways carve through crystal formations. Watch for ambushes at the falls.
+                  - generic [ref=e57]:
+                    - generic [ref=e58]:
+                      - strong [ref=e59]: Enemies
+                      - generic [ref=e60]: River Sprites, Crystal Bats
+                    - generic [ref=e61]:
+                      - strong [ref=e62]: Reward
+                      - generic [ref=e63]: 350 Coins + Shard
+                  - generic [ref=e64]:
+                    - generic [ref=e65]: Beginner
+                    - emphasis [ref=e66]: Enter World
+            - article [ref=e67]:
+              - button "+ Sky Canyon Bridges Narrow bridges over endless sky. One wrong step and you fall, but the loot is worth it. Enemies Wind Hawks, Cloud Golems Reward 500 Coins + Bronze Chest Beginner Enter World" [ref=e68] [cursor=pointer]:
+                - generic [ref=e70]: +
+                - generic [ref=e71]:
+                  - heading "Sky Canyon Bridges" [level=3] [ref=e72]
+                  - paragraph [ref=e73]: Narrow bridges over endless sky. One wrong step and you fall, but the loot is worth it.
+                  - generic [ref=e74]:
+                    - generic [ref=e75]:
+                      - strong [ref=e76]: Enemies
+                      - generic [ref=e77]: Wind Hawks, Cloud Golems
+                    - generic [ref=e78]:
+                      - strong [ref=e79]: Reward
+                      - generic [ref=e80]: 500 Coins + Bronze Chest
+                  - generic [ref=e81]:
+                    - generic [ref=e82]: Beginner
+                    - emphasis [ref=e83]: Enter World
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: "2"
+            - generic [ref=e87]:
+              - heading "Medium Tier" [level=2] [ref=e88]
+              - paragraph [ref=e89]: 3 Worlds - Increasing Difficulty
+            - generic [ref=e90]:
+              - button "Previous Medium world" [ref=e91] [cursor=pointer]: <
+              - button "Next Medium world" [ref=e92] [cursor=pointer]: ">"
+          - generic [ref=e93]:
+            - article [ref=e94]:
+              - button "A Ember Volcano Rivers of lava and fire spirits test your timing and skill. The heat never takes a break. Enemies Magma Hounds, Fire Wraiths Reward 800 Coins + Rift Crystal x20 Medium Enter World" [pressed] [ref=e95] [cursor=pointer]:
+                - generic [ref=e97]: A
+                - generic [ref=e98]:
+                  - heading "Ember Volcano" [level=3] [ref=e99]
+                  - paragraph [ref=e100]: Rivers of lava and fire spirits test your timing and skill. The heat never takes a break.
+                  - generic [ref=e101]:
+                    - generic [ref=e102]:
+                      - strong [ref=e103]: Enemies
+                      - generic [ref=e104]: Magma Hounds, Fire Wraiths
+                    - generic [ref=e105]:
+                      - strong [ref=e106]: Reward
+                      - generic [ref=e107]: 800 Coins + Rift Crystal x20
+                  - generic [ref=e108]:
+                    - generic [ref=e109]: Medium
+                    - emphasis [ref=e110]: Enter World
+            - article [ref=e111]:
+              - button "* Shadow Temple Ruins Ancient temple consumed by darkness. Enemies phase through walls. Trust nothing you see. Enemies Phantom Guards, Void Spiders Reward 1000 Coins + Prism Chest Medium Enter World" [ref=e112] [cursor=pointer]:
+                - generic [ref=e114]: "*"
+                - generic [ref=e115]:
+                  - heading "Shadow Temple Ruins" [level=3] [ref=e116]
+                  - paragraph [ref=e117]: Ancient temple consumed by darkness. Enemies phase through walls. Trust nothing you see.
+                  - generic [ref=e118]:
+                    - generic [ref=e119]:
+                      - strong [ref=e120]: Enemies
+                      - generic [ref=e121]: Phantom Guards, Void Spiders
+                    - generic [ref=e122]:
+                      - strong [ref=e123]: Reward
+                      - generic [ref=e124]: 1000 Coins + Prism Chest
+                  - generic [ref=e125]:
+                    - generic [ref=e126]: Medium
+                    - emphasis [ref=e127]: Enter World
+            - article [ref=e128]:
+              - button "+ Frozen Rift Caverns Sub-zero caverns where the rift bleeds cold. Freeze resistance is mandatory equipment. Enemies Frost Giants, Ice Wraiths Reward 1200 Coins + Epic Weapon Token Medium Enter World" [ref=e129] [cursor=pointer]:
+                - generic [ref=e131]: +
+                - generic [ref=e132]:
+                  - heading "Frozen Rift Caverns" [level=3] [ref=e133]
+                  - paragraph [ref=e134]: Sub-zero caverns where the rift bleeds cold. Freeze resistance is mandatory equipment.
+                  - generic [ref=e135]:
+                    - generic [ref=e136]:
+                      - strong [ref=e137]: Enemies
+                      - generic [ref=e138]: Frost Giants, Ice Wraiths
+                    - generic [ref=e139]:
+                      - strong [ref=e140]: Reward
+                      - generic [ref=e141]: 1200 Coins + Epic Weapon Token
+                  - generic [ref=e142]:
+                    - generic [ref=e143]: Medium
+                    - emphasis [ref=e144]: Enter World
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: "3"
+            - generic [ref=e148]:
+              - heading "Hard Tier" [level=2] [ref=e149]
+              - paragraph [ref=e150]: 3 Worlds - Increasing Difficulty
+            - generic [ref=e151]:
+              - button "Previous Hard world" [ref=e152] [cursor=pointer]: <
+              - button "Next Hard world" [ref=e153] [cursor=pointer]: ">"
+          - generic [ref=e154]:
+            - article [ref=e155]:
+              - button "* Chaos Dimension Reality fractures here. Gravity shifts, time warps, enemies multiply. Only legends survive. Enemies Chaos Beasts, Reality Shards Reward 2000 Coins + Legendary Token Hard Enter World" [pressed] [ref=e156] [cursor=pointer]:
+                - generic [ref=e158]: "*"
+                - generic [ref=e159]:
+                  - heading "Chaos Dimension" [level=3] [ref=e160]
+                  - paragraph [ref=e161]: Reality fractures here. Gravity shifts, time warps, enemies multiply. Only legends survive.
+                  - generic [ref=e162]:
+                    - generic [ref=e163]:
+                      - strong [ref=e164]: Enemies
+                      - generic [ref=e165]: Chaos Beasts, Reality Shards
+                    - generic [ref=e166]:
+                      - strong [ref=e167]: Reward
+                      - generic [ref=e168]: 2000 Coins + Legendary Token
+                  - generic [ref=e169]:
+                    - generic [ref=e170]: Hard
+                    - emphasis [ref=e171]: Enter World
+            - article [ref=e172]:
+              - button "* Neon Abyss A digital nightmare of corrupted code made physical. Every surface pulses with lethal energy. Enemies Neon Predators, Glitch Horrors Reward 2500 Coins + Nova Chest Hard Enter World" [ref=e173] [cursor=pointer]:
+                - generic [ref=e175]: "*"
+                - generic [ref=e176]:
+                  - heading "Neon Abyss" [level=3] [ref=e177]
+                  - paragraph [ref=e178]: A digital nightmare of corrupted code made physical. Every surface pulses with lethal energy.
+                  - generic [ref=e179]:
+                    - generic [ref=e180]:
+                      - strong [ref=e181]: Enemies
+                      - generic [ref=e182]: Neon Predators, Glitch Horrors
+                    - generic [ref=e183]:
+                      - strong [ref=e184]: Reward
+                      - generic [ref=e185]: 2500 Coins + Nova Chest
+                  - generic [ref=e186]:
+                    - generic [ref=e187]: Hard
+                    - emphasis [ref=e188]: Enter World
+            - article [ref=e189]:
+              - 'button "V Titan Arena The final arena. One boss. One chance. Defeat the Titan Overlord to prove you are ZUNO. Enemies World Boss: TITAN OVERLORD Reward 5000 Coins + Apex Vault + Title Hard Enter World" [ref=e190] [cursor=pointer]':
+                - generic [ref=e192]: V
+                - generic [ref=e193]:
+                  - heading "Titan Arena" [level=3] [ref=e194]
+                  - paragraph [ref=e195]: The final arena. One boss. One chance. Defeat the Titan Overlord to prove you are ZUNO.
+                  - generic [ref=e196]:
+                    - generic [ref=e197]:
+                      - strong [ref=e198]: Enemies
+                      - generic [ref=e199]: "World Boss: TITAN OVERLORD"
+                    - generic [ref=e200]:
+                      - strong [ref=e201]: Reward
+                      - generic [ref=e202]: 5000 Coins + Apex Vault + Title
+                  - generic [ref=e203]:
+                    - generic [ref=e204]: Hard
+                    - emphasis [ref=e205]: Enter World
+      - generic [ref=e207]:
+        - heading "Conquer Every World" [level=2] [ref=e208]:
+          - text: Conquer
+          - strong [ref=e209]: Every World
+        - paragraph [ref=e210]: From rolling grasslands to the Titan Arena. Your journey through the ZUNO universe starts now.
+        - link "Play ZUNO Now" [ref=e211] [cursor=pointer]:
+          - /url: /how-to-play
+  - contentinfo [ref=e212]:
+    - generic [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215]:
+          - link "ZUNO" [ref=e216] [cursor=pointer]:
+            - /url: /
+            - img "ZUNO" [ref=e217]
+          - paragraph [ref=e218]: ZUNO is a colorful animal battle adventure game where players progress through exciting levels, earn coins, unlock upgrades, and explore an adventurous fantasy world.
+          - generic [ref=e219]:
+            - link "Discord" [ref=e220] [cursor=pointer]:
+              - /url: https://discord.gg/zuno
+              - img [ref=e221]
+            - link "GitHub" [ref=e223] [cursor=pointer]:
+              - /url: https://github.com/janpaul80/Zuno-App
+              - img [ref=e224]
+            - link "X (Twitter)" [ref=e226] [cursor=pointer]:
+              - /url: https://x.com/zunogame
+              - img [ref=e227]
+            - link "LinkedIn" [ref=e229] [cursor=pointer]:
+              - /url: https://linkedin.com/company/zuno-game
+              - img [ref=e230]
+            - link "Instagram" [ref=e232] [cursor=pointer]:
+              - /url: https://instagram.com/zunogame
+              - img [ref=e233]
+        - generic [ref=e235]:
+          - heading "Game Guide" [level=3] [ref=e236]
+          - list [ref=e237]:
+            - listitem [ref=e238]:
+              - link "Home" [ref=e239] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e240]:
+              - link "About" [ref=e241] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e242]:
+              - link "Rewards" [ref=e243] [cursor=pointer]:
+                - /url: /rewards-coins
+            - listitem [ref=e244]:
+              - link "Weapons" [ref=e245] [cursor=pointer]:
+                - /url: /weapons
+            - listitem [ref=e246]:
+              - link "Levels" [ref=e247] [cursor=pointer]:
+                - /url: /levels
+            - listitem [ref=e248]:
+              - link "Support" [ref=e249] [cursor=pointer]:
+                - /url: /support
+            - listitem [ref=e250]:
+              - link "How To Play" [ref=e251] [cursor=pointer]:
+                - /url: /how-to-play
+            - listitem [ref=e252]:
+              - link "AI Operations" [ref=e253] [cursor=pointer]:
+                - /url: /ai-operations
+            - listitem [ref=e254]:
+              - link "Credits" [ref=e255] [cursor=pointer]:
+                - /url: /credits
+            - listitem [ref=e256]:
+              - link "Contact Us" [ref=e257] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e258]:
+          - heading "Player Safeguard" [level=3] [ref=e259]
+          - list [ref=e260]:
+            - listitem [ref=e261]:
+              - link "Legal Hub" [ref=e262] [cursor=pointer]:
+                - /url: /legal
+            - listitem [ref=e263]:
+              - link "Terms of Use" [ref=e264] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e265]:
+              - link "Privacy Policy" [ref=e266] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e267]:
+              - link "Cookie Policy" [ref=e268] [cursor=pointer]:
+                - /url: /cookie-policy
+            - listitem [ref=e269]:
+              - link "Code of Conduct" [ref=e270] [cursor=pointer]:
+                - /url: /code-of-conduct
+            - listitem [ref=e271]:
+              - link "Imprint" [ref=e272] [cursor=pointer]:
+                - /url: /imprint
+        - generic [ref=e273]:
+          - generic [ref=e274]:
+            - heading "Download Now" [level=3] [ref=e275]
+            - generic [ref=e276]:
+              - generic [ref=e277]:
+                - img [ref=e279]
+                - generic [ref=e281]:
+                  - generic [ref=e282]: Get it on
+                  - generic [ref=e283]: Android APK (Coming Soon)
+              - generic [ref=e284]:
+                - img [ref=e286]
+                - generic [ref=e288]:
+                  - generic [ref=e289]: Download on the
+                  - generic [ref=e290]: App Store (Coming Soon)
+          - generic [ref=e292]:
+            - generic [ref=e293]: E
+            - generic [ref=e294]:
+              - generic [ref=e295]: ESRB RATING
+              - generic [ref=e296]: Everyone
+              - generic [ref=e297]: Comic Mischief, Fantasy Violence
+      - generic [ref=e298]:
+        - generic [ref=e299]:
+          - generic [ref=e300]: © 2026 ZUNO Game Studio. All rights reserved.
+          - generic [ref=e301]:
+            - text: ZUNO was created by
+            - link "Paul-Hartmann GmbH" [ref=e302] [cursor=pointer]:
+              - /url: https://paulhartmann.dev
+        - generic [ref=e303]:
+          - link "Imprint" [ref=e304] [cursor=pointer]:
+            - /url: /imprint
+          - generic [ref=e306]: v1.0.0 (Production Build)
+  - button "Open Next.js Dev Tools" [ref=e312] [cursor=pointer]:
+    - img [ref=e313]

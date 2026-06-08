@@ -27,6 +27,12 @@ export default function LegalHubPage() {
       path: "/code-of-conduct",
       icon: <CheckSquare className="h-5 w-5 text-neon-green" />,
     },
+    {
+      name: "Imprint",
+      desc: "Company information, editorial responsibility, contact details, and dispute resolution disclosure.",
+      path: "/imprint",
+      icon: <FileText className="h-5 w-5 text-electric-blue" />,
+    },
   ];
 
   return (
