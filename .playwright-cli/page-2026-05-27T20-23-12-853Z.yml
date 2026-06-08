@@ -1,0 +1,202 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "ZUNO" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "ZUNO" [ref=e7]
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "About" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - link "Rewards" [ref=e11] [cursor=pointer]:
+          - /url: /rewards-coins
+        - link "Weapons" [ref=e12] [cursor=pointer]:
+          - /url: /weapons
+        - link "Levels" [ref=e13] [cursor=pointer]:
+          - /url: /levels
+          - text: Levels
+        - link "Support" [ref=e15] [cursor=pointer]:
+          - /url: /support
+      - link "Play Now" [ref=e16] [cursor=pointer]:
+        - /url: /how-to-play
+        - generic [ref=e17]: Play Now
+  - main [ref=e18]:
+    - main [ref=e19]:
+      - region "ZUNO Levels and Worlds" [ref=e20]:
+        - img "ZUNO Levels and Worlds world map" [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e25]:
+            - button "Previous beginner world" [ref=e26] [cursor=pointer]: <
+            - button "Next beginner world" [ref=e27] [cursor=pointer]: ">"
+          - generic [ref=e28]:
+            - article [ref=e29]:
+              - button [pressed] [ref=e30] [cursor=pointer]
+              - link "Enter world" [ref=e31] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e32]:
+              - button [ref=e33] [cursor=pointer]
+              - link "Enter world" [ref=e34] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e35]:
+              - button [ref=e36] [cursor=pointer]
+              - link "Enter world" [ref=e37] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+        - generic [ref=e38]:
+          - generic [ref=e40]:
+            - button "Previous medium world" [ref=e41] [cursor=pointer]: <
+            - button "Next medium world" [ref=e42] [cursor=pointer]: ">"
+          - generic [ref=e43]:
+            - article [ref=e44]:
+              - button [pressed] [ref=e45] [cursor=pointer]
+              - link "Enter world" [ref=e46] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e47]:
+              - button [ref=e48] [cursor=pointer]
+              - link "Enter world" [ref=e49] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e50]:
+              - button [ref=e51] [cursor=pointer]
+              - link "Enter world" [ref=e52] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+        - generic [ref=e53]:
+          - generic [ref=e55]:
+            - button "Previous hard world" [ref=e56] [cursor=pointer]: <
+            - button "Next hard world" [ref=e57] [cursor=pointer]: ">"
+          - generic [ref=e58]:
+            - article [ref=e59]:
+              - button [pressed] [ref=e60] [cursor=pointer]
+              - link "Enter world" [ref=e61] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e62]:
+              - button [ref=e63] [cursor=pointer]
+              - link "Enter world" [ref=e64] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+            - article [ref=e65]:
+              - button [ref=e66] [cursor=pointer]
+              - link "Enter world" [ref=e67] [cursor=pointer]:
+                - /url: /how-to-play
+                - text: Enter World
+      - link "Play ZUNO now" [ref=e69] [cursor=pointer]:
+        - /url: /how-to-play
+        - text: Play ZUNO Now
+  - contentinfo [ref=e70]:
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - link "ZUNO" [ref=e74] [cursor=pointer]:
+            - /url: /
+            - img "ZUNO" [ref=e75]
+          - paragraph [ref=e76]: ZUNO is a colorful animal battle adventure game where players progress through exciting levels, earn coins, unlock upgrades, and explore an adventurous fantasy world.
+          - generic [ref=e77]:
+            - link "Discord" [ref=e78] [cursor=pointer]:
+              - /url: https://discord.gg/zuno
+              - img [ref=e79]
+            - link "GitHub" [ref=e81] [cursor=pointer]:
+              - /url: https://github.com/janpaul80/Zuno-App
+              - img [ref=e82]
+            - link "X (Twitter)" [ref=e84] [cursor=pointer]:
+              - /url: https://x.com/zunogame
+              - img [ref=e85]
+            - link "LinkedIn" [ref=e87] [cursor=pointer]:
+              - /url: https://linkedin.com/company/zuno-game
+              - img [ref=e88]
+            - link "Instagram" [ref=e90] [cursor=pointer]:
+              - /url: https://instagram.com/zunogame
+              - img [ref=e91]
+        - generic [ref=e93]:
+          - heading "Game Guide" [level=3] [ref=e94]
+          - list [ref=e95]:
+            - listitem [ref=e96]:
+              - link "Home" [ref=e97] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e98]:
+              - link "About" [ref=e99] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e100]:
+              - link "Rewards" [ref=e101] [cursor=pointer]:
+                - /url: /rewards-coins
+            - listitem [ref=e102]:
+              - link "Weapons" [ref=e103] [cursor=pointer]:
+                - /url: /weapons
+            - listitem [ref=e104]:
+              - link "Levels" [ref=e105] [cursor=pointer]:
+                - /url: /levels
+            - listitem [ref=e106]:
+              - link "Support" [ref=e107] [cursor=pointer]:
+                - /url: /support
+            - listitem [ref=e108]:
+              - link "How To Play" [ref=e109] [cursor=pointer]:
+                - /url: /how-to-play
+            - listitem [ref=e110]:
+              - link "AI Operations" [ref=e111] [cursor=pointer]:
+                - /url: /ai-operations
+            - listitem [ref=e112]:
+              - link "Credits" [ref=e113] [cursor=pointer]:
+                - /url: /credits
+            - listitem [ref=e114]:
+              - link "Contact Us" [ref=e115] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e116]:
+          - heading "Player Safeguard" [level=3] [ref=e117]
+          - list [ref=e118]:
+            - listitem [ref=e119]:
+              - link "Legal Hub" [ref=e120] [cursor=pointer]:
+                - /url: /legal
+            - listitem [ref=e121]:
+              - link "Terms of Use" [ref=e122] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e123]:
+              - link "Privacy Policy" [ref=e124] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e125]:
+              - link "Cookie Policy" [ref=e126] [cursor=pointer]:
+                - /url: /cookie-policy
+            - listitem [ref=e127]:
+              - link "Code of Conduct" [ref=e128] [cursor=pointer]:
+                - /url: /code-of-conduct
+            - listitem [ref=e129]:
+              - link "Imprint" [ref=e130] [cursor=pointer]:
+                - /url: /imprint
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - heading "Download Now" [level=3] [ref=e133]
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - img [ref=e137]
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Get it on
+                  - generic [ref=e141]: Android APK (Coming Soon)
+              - generic [ref=e142]:
+                - img [ref=e144]
+                - generic [ref=e146]:
+                  - generic [ref=e147]: Download on the
+                  - generic [ref=e148]: App Store (Coming Soon)
+          - generic [ref=e150]:
+            - generic [ref=e151]: E
+            - generic [ref=e152]:
+              - generic [ref=e153]: ESRB RATING
+              - generic [ref=e154]: Everyone
+              - generic [ref=e155]: Comic Mischief, Fantasy Violence
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - generic [ref=e158]: © 2026 ZUNO Game Studio. All rights reserved.
+          - generic [ref=e159]:
+            - text: ZUNO was created by
+            - link "Paul-Hartmann GmbH" [ref=e160] [cursor=pointer]:
+              - /url: https://paulhartmann.dev
+        - generic [ref=e161]:
+          - link "Imprint" [ref=e162] [cursor=pointer]:
+            - /url: /imprint
+          - generic [ref=e164]: v1.0.0 (Production Build)
+  - button "Open Next.js Dev Tools" [ref=e170] [cursor=pointer]:
+    - img [ref=e171]

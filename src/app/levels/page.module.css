@@ -1,0 +1,360 @@
+.page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(0, 200, 255, 0.1), transparent 28rem),
+    radial-gradient(circle at 50% 64%, rgba(189, 0, 255, 0.12), transparent 30rem),
+    #020617;
+  color: #fff;
+}
+
+.hero,
+.tiers,
+.cta {
+  width: min(1024px, 100%);
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  padding-top: 74px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero img,
+.cta img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.portalPulse {
+  position: absolute;
+  left: 62.8%;
+  top: 35.5%;
+  width: 14%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), rgba(0, 200, 255, 0.12) 36%, transparent 68%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: portalBreath 4.4s ease-in-out infinite;
+}
+
+.heroFog {
+  position: absolute;
+  inset: 74px 0 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 18%, rgba(255, 255, 255, 0.05) 45%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  transform: translateX(-18%);
+  animation: heroFog 9s ease-in-out infinite;
+}
+
+.heroParticles {
+  position: absolute;
+  inset: 74px 0 0;
+  pointer-events: none;
+}
+
+.heroParticles i,
+.particles i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent, #00c8ff);
+  box-shadow: 0 0 10px currentColor;
+  opacity: 0;
+}
+
+.heroParticles i {
+  color: #00c8ff;
+  left: calc(36% + (var(--particle) * 4.2%));
+  top: calc(14% + ((var(--particle) % 5) * 13%));
+  animation: heroSpark 5.8s ease-in-out infinite;
+  animation-delay: calc(var(--particle) * -0.38s);
+}
+
+.tiers {
+  display: grid;
+  gap: 0;
+}
+
+.tier {
+  position: relative;
+  width: 94%;
+  margin: 0 auto;
+  padding: 10px 20px 15px;
+  border: 1px solid color-mix(in srgb, var(--tier) 38%, rgba(255, 255, 255, 0.08));
+  background:
+    radial-gradient(circle at 16% 0%, color-mix(in srgb, var(--tier) 12%, transparent), transparent 32%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.76), rgba(2, 6, 23, 0.58));
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--tier) 7%, transparent);
+  overflow: hidden;
+}
+
+.tier:first-child {
+  border-radius: 24px 24px 0 0;
+}
+
+.tier:last-child {
+  border-radius: 0 0 24px 24px;
+}
+
+.tierTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.tierTop img {
+  display: block;
+  width: min(330px, 70%);
+  height: auto;
+  user-select: none;
+}
+
+.arrows {
+  display: flex;
+  gap: 10px;
+}
+
+.arrows button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--tier) 70%, transparent);
+  border-radius: 7px;
+  background: rgba(2, 6, 23, 0.62);
+  color: var(--tier);
+  font-family: var(--font-russo), sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: inset 0 0 10px color-mix(in srgb, var(--tier) 10%, transparent);
+  transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.arrows button:hover {
+  border-color: var(--tier);
+  background: color-mix(in srgb, var(--tier) 12%, rgba(2, 6, 23, 0.75));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--tier) 30%, transparent), inset 0 0 12px color-mix(in srgb, var(--tier) 18%, transparent);
+}
+
+.arrows button:active {
+  transform: translateY(1px) scale(0.94);
+}
+
+.cardTrack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 5px;
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cardTrack.next {
+  animation: nudgeNext 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cardTrack.prev {
+  animation: nudgePrev 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card {
+  position: relative;
+  min-width: 0;
+  border-radius: 9px;
+  overflow: hidden;
+  transition: transform 220ms ease, filter 220ms ease, box-shadow 220ms ease;
+  box-shadow: 0 0 0 transparent;
+}
+
+.card:hover,
+.selected {
+  transform: translateY(-3px) scale(1.022);
+  filter: brightness(1.06) saturate(1.06);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+.selected {
+  animation: cardBreath 3s ease-in-out infinite;
+}
+
+.cardSurface {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cardSurface img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.cardSweep,
+.cardGlow,
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cardSweep {
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 22%, rgba(255, 255, 255, 0.2) 46%, transparent 68%);
+  transform: translateX(-120%);
+  mix-blend-mode: screen;
+}
+
+.card:hover .cardSweep,
+.selected .cardSweep {
+  animation: sweep 3.4s ease-in-out infinite;
+  opacity: 1;
+}
+
+.cardGlow {
+  opacity: 0;
+  box-shadow: inset 0 0 20px color-mix(in srgb, var(--accent) 22%, transparent);
+  transition: opacity 180ms ease;
+}
+
+.card:hover .cardGlow,
+.selected .cardGlow {
+  opacity: 1;
+}
+
+.particles i {
+  color: var(--accent);
+  left: calc(8% + var(--particle) * 11%);
+  top: calc(15% + (var(--particle) % 5) * 14%);
+}
+
+.card:hover .particles i,
+.selected .particles i {
+  animation: cardSpark 3.8s ease-in-out infinite;
+  animation-delay: calc(var(--particle) * -0.3s);
+}
+
+.cardCta {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  border-radius: 5px;
+  color: transparent;
+  transition: transform 170ms ease, box-shadow 170ms ease, background 170ms ease;
+}
+
+.card:hover .cardCta,
+.selected .cardCta {
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 34%, transparent), inset 0 0 10px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.cardCta:hover {
+  transform: translateY(-1px);
+}
+
+.cardCta:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.cta {
+  position: relative;
+  margin-top: 44px;
+  overflow: visible;
+  padding-bottom: 28px;
+}
+
+.cta a {
+  position: absolute;
+  left: 40%;
+  bottom: 19%;
+  width: 24%;
+  height: 34%;
+  overflow: hidden;
+  border-radius: 8px;
+  color: transparent;
+  transition: box-shadow 170ms ease, transform 170ms ease;
+}
+
+.cta a:hover {
+  box-shadow: 0 0 24px rgba(255, 122, 0, 0.42);
+}
+
+.cta a:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+@keyframes portalBreath {
+  0%, 100% { opacity: 0.34; transform: scale(0.94); }
+  50% { opacity: 0.78; transform: scale(1.06); }
+}
+
+@keyframes heroFog {
+  0%, 100% { opacity: 0.18; transform: translateX(-18%); }
+  50% { opacity: 0.38; transform: translateX(12%); }
+}
+
+@keyframes heroSpark {
+  0% { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.65); }
+  20% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate3d(18px, -32px, 0) scale(1); }
+}
+
+@keyframes sweep {
+  0%, 18% { opacity: 0; transform: translateX(-120%); }
+  42% { opacity: 0.86; }
+  76%, 100% { opacity: 0; transform: translateX(120%); }
+}
+
+@keyframes cardSpark {
+  0% { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.7); }
+  22% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate3d(12px, -24px, 0) scale(1); }
+}
+
+@keyframes cardBreath {
+  0%, 100% { box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 20%, transparent); }
+  50% { box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 34%, transparent); }
+}
+
+@keyframes nudgeNext {
+  0% { transform: translateX(0); }
+  48% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes nudgePrev {
+  0% { transform: translateX(0); }
+  48% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding-top: 86px;
+  }
+
+  .tier {
+    width: min(94%, 520px);
+  }
+
+  .cardTrack {
+    grid-template-columns: 1fr;
+  }
+}
