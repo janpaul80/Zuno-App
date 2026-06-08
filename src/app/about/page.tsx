@@ -101,7 +101,6 @@ export default function AboutPage() {
   // Adjust translation for responsiveness when activeHeroIndex changes
   useEffect(() => {
     if (!trackRef.current) return;
-    const containerWidth = trackRef.current.parentElement?.clientWidth || 0;
     const isMobile = window.innerWidth <= 640;
     const isTablet = window.innerWidth <= 1100 && window.innerWidth > 640;
 
@@ -144,14 +143,14 @@ export default function AboutPage() {
           </a>
         </div>
         <div className={styles.heroArt}>
-          <img src="/characters.png" alt="ZUNO Heroes on Floating Platform" className={styles.heroImg} />
+          <img src="/about_hero_group.png" alt="ZUNO Heroes on Floating Platform" className={styles.heroImg} />
         </div>
       </section>
 
       {/* ── OUR STORY SECTION ── */}
       <section id="our-story" className={styles.storySection}>
         <div className={styles.storyLeft}>
-          <img src="/images/gameplay-preview.png" alt="Zunoverse landscapes and battles" className={styles.storyImg} />
+          <img src="/about_story_scene.png" alt="Zunoverse landscapes and battles" className={styles.storyImg} />
         </div>
         <div className={styles.storyRight}>
           <div className={styles.sectionBadge}>

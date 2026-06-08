@@ -10,7 +10,7 @@
   padding-bottom: 5rem;
 }
 
-/* Cosmic background elements built into the page wrapper */
+/* Cosmic background glows */
 .page::before {
   content: "";
   position: absolute;
@@ -28,7 +28,7 @@
   z-index: -1;
 }
 
-/* ── SHARED BADGE ── */
+/* ── BADGES ── */
 .sectionBadge {
   display: inline-flex;
   align-items: center;
@@ -45,7 +45,6 @@
   letter-spacing: 0.12em;
   color: #00d2ff;
   text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
-  box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.05);
 }
 
 .sectionBadgeCentered {
@@ -54,7 +53,7 @@
   margin: 0 auto 2.5rem auto;
 }
 
-/* ── BUTTONS & INTERACTIVES ── */
+/* ── BUTTONS ── */
 .storyBtn {
   display: inline-flex;
   align-items: center;
@@ -83,7 +82,7 @@
   left: -150%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transform: skewX(-20deg);
   transition: none;
 }
@@ -103,11 +102,6 @@
 .outlineBtn {
   composes: storyBtn;
   border-color: rgba(0, 210, 255, 0.3);
-}
-
-.outlineBtn:hover {
-  border-color: rgba(0, 210, 255, 0.85);
-  box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
 }
 
 /* ── HERO SECTION ── */
@@ -235,7 +229,7 @@
 
 .storyRight {
   display: flex;
-  flex-col: column;
+  flex-direction: column;
   align-items: flex-start;
 }
 
@@ -290,21 +284,21 @@
   height: 100%;
 }
 
-/* Light sweeps on cards */
-.pillarCard::after, .heroCard::after, .worldSlice::after {
+/* Hover shine effect */
+.pillarCard::after, .heroCard::after {
   content: "";
   position: absolute;
   top: 0;
   left: -150%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transform: skewX(-20deg);
   transition: none;
   pointer-events: none;
 }
 
-.pillarCard:hover::after, .heroCard:hover::after, .worldSlice:hover::after {
+.pillarCard:hover::after, .heroCard:hover::after {
   left: 150%;
   transition: all 0.8s ease-in-out;
 }
@@ -351,7 +345,7 @@
   line-height: 1.55;
 }
 
-/* ── THE ZUNO UNIVERSE ── */
+/* ── ZUNO UNIVERSE ── */
 .universeSection {
   padding: 5rem 5vw;
   max-width: 1200px;
@@ -391,7 +385,6 @@
   }
 }
 
-/* Premium Skewed Slanted Panels */
 .worldSlice {
   flex: 1;
   position: relative;
@@ -416,15 +409,15 @@
   width: 100%;
   height: 100%;
   position: relative;
-  /* Unskew child elements to prevent distortion */
   transform: skewX(10deg) scale(1.25);
   transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .worldSlice img {
   width: 100%;
-  height: 100%;
+  height: 115%;
   object-fit: cover;
+  object-position: top;
   display: block;
 }
 
@@ -451,7 +444,6 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
-/* Hover effects for slanted world panels */
 .worldSlice:hover {
   flex: 1.4;
   border-color: rgba(0, 210, 255, 0.6);
@@ -467,7 +459,7 @@
   text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
 }
 
-/* ── MEET THE HEROES ── */
+/* ── HEROES CAROUSEL ── */
 .heroesSection {
   padding: 5rem 5vw;
   max-width: 1200px;
@@ -499,7 +491,6 @@
   text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
 }
 
-/* Carousel layout structure */
 .carouselWrapper {
   display: flex;
   align-items: center;
@@ -546,17 +537,8 @@
   transform: scale(1.1);
 }
 
-.carouselBtn:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-  border-color: rgba(255,255,255,0.05);
-}
-
-/* Hero card design */
 .heroCard {
-  flex: 0 0 calc(20% - 1rem); /* 5 cards visible default */
+  flex: 0 0 calc(20% - 1rem);
   min-width: 190px;
   border-radius: 16px;
   border: 1.5px solid rgba(255, 255, 255, 0.06);
@@ -589,7 +571,6 @@
   transition: all 0.3s;
 }
 
-/* Background elements radial glows for different elements inside the img card */
 .heroCardImgContainer::before {
   content: "";
   position: absolute;
@@ -651,7 +632,6 @@
   font-size: 0.85rem;
 }
 
-/* Active Highlight Glow */
 .heroCardActive {
   border-color: var(--hero-glow);
   box-shadow: 0 0 30px color-mix(in srgb, var(--hero-glow) 25%, transparent);
@@ -696,7 +676,6 @@
   pointer-events: none;
 }
 
-/* Left & Right Character artworks floating inside bottom CTA section */
 .ctaArtLeft, .ctaArtRight {
   position: absolute;
   bottom: 0;
@@ -795,9 +774,4 @@
 .ctaBtn:hover::after {
   left: 150%;
   transition: all 0.8s ease-in-out;
-}
-
-.ctaBtn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 40px rgba(255, 122, 0, 0.65);
 }
