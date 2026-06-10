@@ -130,7 +130,6 @@ export default function HomePage() {
             src="/images/zuno-game.png"
             alt="ZUNO animal battle adventure"
             className={`block w-full h-auto object-cover object-[center_top] ${styles.heroArt}`}
-            style={{ maxHeight: "104vh", minHeight: "650px" }}
           />
 
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(2,6,23,0.24)_0%,rgba(2,6,23,0.02)_28%,rgba(2,6,23,0.15)_58%,rgba(2,6,23,0.9)_100%)]" />
@@ -166,7 +165,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className={`absolute bottom-[118px] left-0 right-0 z-10 flex flex-col items-center px-4 ${styles.heroCta}`}>
+        <div className={`z-10 flex flex-col items-center px-4 ${styles.heroCta}`}>
           <Link
             href="/how-to-play"
             className={`inline-flex items-center justify-center gap-2 px-9 py-3.5 rounded-md border-2 border-black bg-[linear-gradient(180deg,#ffd21f_0%,#ff7a00_100%)] text-black font-russo font-black uppercase tracking-[0.11em] text-sm shadow-[0_0_28px_rgba(255,122,0,0.58),4px_4px_0_#14002e] transition hover:-translate-y-0.5 ${styles.ctaPrimary}`}
@@ -179,7 +178,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className={`absolute bottom-6 left-1/2 z-10 w-[min(84rem,calc(100%-2rem))] -translate-x-1/2 ${styles.heroStats}`}>
+        <div className={`z-10 ${styles.heroStats}`}>
           <div className={styles.statRail}>
             {stats.map((item) => {
               const Icon = item.icon;

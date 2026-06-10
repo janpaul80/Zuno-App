@@ -12,22 +12,22 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
-    { name: "Rewards", path: "/rewards-coins" },
+    { name: "Rewards", path: "/rewards" },
     { name: "Weapons", path: "/weapons" },
     { name: "Levels", path: "/levels" },
     { name: "Support", path: "/support" },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-[#030214]/80 to-transparent backdrop-blur-sm transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-20 sm:h-24 w-full max-w-full overflow-x-hidden bg-[#030214]/80 backdrop-blur-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-20 sm:h-24">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="group flex items-center">
+        <div className="relative flex items-center justify-between h-20 sm:h-24 min-w-0">
+          <div className="flex-shrink-0 flex items-center min-w-0">
+            <Link href="/" className="group flex items-center min-w-0">
               <img
                 src="/logo-zuno.png"
                 alt="ZUNO"
-                className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(255,107,0,0.4)] group-hover:scale-105 transition-transform duration-200"
+                className="h-10 sm:h-12 w-auto max-w-[8rem] object-contain drop-shadow-[0_0_12px_rgba(255,107,0,0.4)] group-hover:scale-105 transition-transform duration-200"
               />
             </Link>
           </div>
@@ -55,11 +55,12 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="lg:hidden">
+          <div className="lg:hidden flex-shrink-0">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md border-2 border-zuno-blue bg-[#030214]/90 text-white shadow-[0_0_10px_rgba(0,210,255,0.3)] hover:bg-[#0c0824] focus:outline-none"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md border-2 border-zuno-blue bg-[#030214]/90 text-white shadow-[0_0_10px_rgba(0,210,255,0.3)] hover:bg-[#0c0824] focus:outline-none focus:ring-2 focus:ring-zuno-blue/60"
               aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -68,8 +69,8 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden bg-[#030214]/95 border-b-2 border-zuno-blue backdrop-blur-md relative z-20">
-          <div className="px-2 pt-4 pb-6 space-y-2 sm:px-3">
+        <div className="lg:hidden fixed left-0 right-0 top-20 sm:top-24 z-20 max-h-[calc(100vh-5rem)] sm:max-h-[calc(100vh-6rem)] max-w-full overflow-y-auto overflow-x-hidden bg-[#030214]/95 border-b-2 border-zuno-blue backdrop-blur-md">
+          <div className="px-3 pt-4 pb-6 space-y-2 sm:px-4">
             {navLinks.map((link) => {
               const isActive = pathname === link.path;
 

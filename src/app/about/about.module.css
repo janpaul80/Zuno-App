@@ -1,777 +1,244 @@
-/* ── PAGE WRAPPER ── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   ABOUT PAGE — ARTWORK FIRST
+   The artwork IS the page. Every rule here is an additive overlay.
+   Nothing below reconstructs or replaces the artwork.
+───────────────────────────────────────────────────────────────────────────── */
+
 .page {
-  width: 100%;
-  position: relative;
-  z-index: 10;
-  font-family: var(--font-inter);
   background: #020514;
-  color: #ffffff;
-  overflow: hidden;
-  padding-bottom: 5rem;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Cosmic background glows */
-.page::before {
-  content: "";
+/* Artwork root — scrollable container that sizes to the image */
+.artworkRoot {
+  position: relative;
+  width: min(100%, 1024px);
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* The artwork image — full width, natural height, never cropped */
+.artwork {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ── Scroll anchors — invisible position markers ── */
+.scrollAnchor {
   position: absolute;
-  top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 10% 15%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(189, 0, 255, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 65%, rgba(255, 122, 0, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 30% 85%, rgba(124, 255, 0, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 90% 90%, rgba(255, 43, 214, 0.08) 0%, transparent 35%);
+  width: 1px;
+  height: 1px;
   pointer-events: none;
-  z-index: -1;
 }
 
-/* ── BADGES ── */
-.sectionBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  background: rgba(0, 210, 255, 0.08);
-  border: 1px solid rgba(0, 210, 255, 0.15);
-  margin-bottom: 1.25rem;
-  font-family: var(--font-orbitron);
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #00d2ff;
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
-}
+/* ─── Ambient Layer ────────────────────────────────────────────────────────── */
 
-.sectionBadgeCentered {
-  composes: sectionBadge;
-  display: inline-flex;
-  margin: 0 auto 2.5rem auto;
-}
-
-/* ── BUTTONS ── */
-.storyBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
-  border-radius: 999px;
-  background: rgba(2, 6, 23, 0.7);
-  border: 1.5px solid rgba(0, 210, 255, 0.35);
-  font-family: var(--font-orbitron);
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.storyBtn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transform: skewX(-20deg);
-  transition: none;
-}
-
-.storyBtn:hover::after {
-  left: 150%;
-  transition: all 0.75s ease-in-out;
-}
-
-.storyBtn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0, 210, 255, 0.8);
-  box-shadow: 0 0 25px rgba(0, 210, 255, 0.35);
-  color: #00d2ff;
-}
-
-.outlineBtn {
-  composes: storyBtn;
-  border-color: rgba(0, 210, 255, 0.3);
-}
-
-/* ── HERO SECTION ── */
-.hero {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3rem;
-  align-items: center;
-  padding: 6rem 5vw 4rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 3rem 1.5rem 2rem;
-    gap: 2rem;
-  }
-}
-
-.heroContent {
-  position: relative;
-  z-index: 5;
-}
-
-.heroH1 {
-  font-family: var(--font-russo);
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  font-weight: 800;
-  text-transform: uppercase;
-  color: #ffffff;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  margin-bottom: 1.5rem;
-}
-
-.heroAccent {
-  background: linear-gradient(to right, #00d2ff, #ff2bd6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  position: relative;
-}
-
-.heroPara {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.65;
-  max-width: 540px;
-  margin-bottom: 1.25rem;
-}
-
-.heroArt {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.heroImg {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 30px rgba(0, 210, 255, 0.25));
-  animation: gameFloat 6s ease-in-out infinite;
-}
-
-@keyframes gameFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-/* ── OUR STORY ── */
-.storySection {
-  padding: 5rem 5vw;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-@media (max-width: 900px) {
-  .storySection {
-    grid-template-columns: 1fr;
-    padding: 3rem 1.5rem;
-    gap: 2.5rem;
-  }
-}
-
-.storyLeft {
-  position: relative;
-  border-radius: 24px;
-  border: 1px solid rgba(0, 210, 255, 0.2);
-  overflow: hidden;
-  box-shadow: 0 0 35px rgba(0, 210, 255, 0.15);
-}
-
-.storyLeft::before {
-  content: "";
+.ambient {
   position: absolute;
   inset: 0;
-  border-radius: 24px;
-  box-shadow: inset 0 0 20px rgba(0, 210, 255, 0.3);
   pointer-events: none;
   z-index: 2;
-}
-
-.storyImg {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.storyLeft:hover .storyImg {
-  transform: scale(1.04);
-}
-
-.storyRight {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.storyPara {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.7;
-  margin-bottom: 1.2rem;
-}
-
-/* ── OUR PILLARS ── */
-.pillarsSection {
-  padding: 5rem 5vw;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.pillarsGrid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  width: 100%;
-}
-
-@media (max-width: 1024px) {
-  .pillarsGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .pillarsGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.pillarCard {
-  background: rgba(2, 6, 23, 0.6);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
   overflow: hidden;
-  height: 100%;
 }
 
-/* Hover shine effect */
-.pillarCard::after, .heroCard::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transform: skewX(-20deg);
-  transition: none;
+/* Floating orb particles */
+.particle {
   pointer-events: none;
-}
-
-.pillarCard:hover::after, .heroCard:hover::after {
-  left: 150%;
-  transition: all 0.8s ease-in-out;
-}
-
-.pillarCard:hover {
-  transform: translateY(-5px);
-  border-color: var(--card-glow);
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--card-glow) 20%, transparent);
-}
-
-.pillarIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--card-glow);
-  box-shadow: 0 0 15px color-mix(in srgb, var(--card-glow) 15%, transparent);
-  transition: all 0.3s;
-}
-
-.pillarCard:hover .pillarIcon {
-  transform: scale(1.08);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--card-glow) 40%, transparent);
-}
-
-.pillarTitle {
-  font-family: var(--font-orbitron);
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  line-height: 1.4;
-  white-space: pre-line;
-}
-
-.pillarCopy {
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.55;
-}
-
-/* ── ZUNO UNIVERSE ── */
-.universeSection {
-  padding: 5rem 5vw;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 3.5rem;
-  align-items: center;
-}
-
-@media (max-width: 960px) {
-  .universeSection {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-}
-
-.universePara {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.7;
-  margin-bottom: 1.2rem;
-}
-
-.worldsContainer {
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
-  height: 380px;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .worldsContainer {
-    height: 240px;
-  }
-}
-
-.worldSlice {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  transform: skewX(-10deg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-}
-
-.worldSlice:first-child {
-  margin-left: -15px;
-}
-
-.worldSlice:last-child {
-  margin-right: -15px;
-}
-
-.worldSliceInner {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform: skewX(10deg) scale(1.25);
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.worldSlice img {
-  width: 100%;
-  height: 115%;
-  object-fit: cover;
-  object-position: top;
-  display: block;
-}
-
-.worldOverlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 60%, rgba(2, 5, 20, 0.95));
-  z-index: 1;
-}
-
-.worldLabel {
-  position: absolute;
-  bottom: 1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-orbitron);
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #ffffff;
-  white-space: nowrap;
-  z-index: 2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-.worldSlice:hover {
-  flex: 1.4;
-  border-color: rgba(0, 210, 255, 0.6);
-  box-shadow: 0 0 30px rgba(0, 210, 255, 0.25);
-}
-
-.worldSlice:hover .worldSliceInner {
-  transform: skewX(10deg) scale(1.15);
-}
-
-.worldSlice:hover .worldLabel {
-  color: #00d2ff;
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
-}
-
-/* ── HEROES CAROUSEL ── */
-.heroesSection {
-  padding: 5rem 5vw;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.heroesHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2.5rem;
-}
-
-.allHeroesLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-family: var(--font-orbitron);
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.55);
-  transition: all 0.3s;
-}
-
-.allHeroesLink:hover {
-  color: #00d2ff;
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
-}
-
-.carouselWrapper {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  width: 100%;
-  position: relative;
-}
-
-.carouselTrackContainer {
-  overflow: hidden;
-  width: 100%;
-  padding: 1.5rem 0;
-}
-
-.carouselTrack {
-  display: flex;
-  gap: 1.25rem;
-  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  width: 100%;
-}
-
-.carouselBtn {
-  width: 48px;
-  height: 48px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: rgba(2, 6, 23, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: radial-gradient(circle, #fff 0%, rgba(0, 210, 255, 0.6) 40%, transparent 70%);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.45);
+  opacity: 0;
+  animation: drift 9s ease-in-out infinite;
+}
+
+/* Single slow light sweep across the full artwork */
+.sweep {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    118deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(0, 210, 255, 0.07) 50%,
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+  animation: sweep 14s ease-in-out infinite;
+}
+
+/* ─── Button hotspots ──────────────────────────────────────────────────────── */
+
+/* Invisible clickable zones laid exactly over the artwork's buttons.
+   No text, no background, no border — artwork remains visually unchanged. */
+.hotspot {
+  position: absolute;
+  min-width: 34px;
+  min-height: 34px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  flex-shrink: 0;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  border-radius: 6px;
   z-index: 10;
+  transition: background 0.25s ease;
 }
 
-.carouselBtn:hover {
-  background: rgba(0, 210, 255, 0.12);
-  border-color: #00d2ff;
-  color: #00d2ff;
-  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-  transform: scale(1.1);
+.hotspot:hover,
+.hotspot:focus-visible {
+  background: rgba(0, 210, 255, 0.08);
+  outline: none;
+  box-shadow: 0 0 18px rgba(0, 210, 255, 0.18) inset;
 }
 
-.heroCard {
-  flex: 0 0 calc(20% - 1rem);
-  min-width: 190px;
-  border-radius: 16px;
-  border: 1.5px solid rgba(255, 255, 255, 0.06);
-  background: rgba(2, 6, 23, 0.7);
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: pointer;
-}
+/* ─── Pillar hover zones ───────────────────────────────────────────────────── */
 
-@media (max-width: 1100px) {
-  .heroCard {
-    flex: 0 0 calc(33.333% - 0.85rem);
-  }
-}
-
-@media (max-width: 640px) {
-  .heroCard {
-    flex: 0 0 100%;
-  }
-}
-
-.heroCardImgContainer {
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, rgba(2, 6, 23, 0.9) 85%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem 1rem 0.5rem;
-  height: 180px;
-  position: relative;
-  transition: all 0.3s;
-}
-
-.heroCardImgContainer::before {
-  content: "";
+.pillarZone {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, var(--hero-glow) 0%, transparent 65%);
-  opacity: 0.08;
-  transition: opacity 0.4s;
-  pointer-events: none;
-}
-
-.heroCard:hover .heroCardImgContainer::before,
-.heroCardActive .heroCardImgContainer::before {
-  opacity: 0.22;
-}
-
-.heroCardImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6));
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.heroCard:hover .heroCardImg {
-  transform: scale(1.08);
-}
-
-.heroCardInfo {
-  padding: 1rem;
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(2, 5, 18, 0.45);
-}
-
-.heroName {
-  font-family: var(--font-orbitron);
-  font-size: 0.85rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-}
-
-.heroTitle {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.45);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-top: 0.15rem;
-}
-
-.heroElementRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-}
-
-.heroCardActive {
-  border-color: var(--hero-glow);
-  box-shadow: 0 0 30px color-mix(in srgb, var(--hero-glow) 25%, transparent);
-  transform: translateY(-4px);
-}
-
-.heroCard:hover {
-  transform: translateY(-6px);
-  border-color: var(--hero-glow);
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--hero-glow) 20%, transparent);
-}
-
-/* ── BOTTOM CTA ── */
-.ctaSection {
-  padding: 6rem 5vw 4rem;
-  position: relative;
-  overflow: hidden;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.ctaBox {
-  background: radial-gradient(ellipse at bottom, rgba(255, 122, 0, 0.05) 0%, rgba(2, 6, 23, 0.85) 80%);
-  border: 1.5px solid rgba(0, 210, 255, 0.15);
-  border-radius: 32px;
-  padding: 4.5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
-}
-
-.ctaBox::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 32px;
-  box-shadow: inset 0 0 30px rgba(0, 210, 255, 0.05);
-  pointer-events: none;
-}
-
-.ctaArtLeft, .ctaArtRight {
-  position: absolute;
-  bottom: 0;
-  width: 250px;
-  height: auto;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.85;
-  transition: transform 0.5s ease;
-}
-
-.ctaArtLeft {
-  left: -20px;
-  transform: scaleX(-1);
-}
-
-.ctaArtRight {
-  right: -20px;
-}
-
-.ctaBox:hover .ctaArtLeft {
-  transform: scaleX(-1) translateY(-5px) scale(1.02);
-}
-
-.ctaBox:hover .ctaArtRight {
-  transform: translateY(-5px) scale(1.02);
-}
-
-@media (max-width: 900px) {
-  .ctaArtLeft, .ctaArtRight {
-    display: none;
-  }
-}
-
-.ctaCenter {
-  position: relative;
   z-index: 5;
-  max-width: 500px;
-}
-
-.ctaH2 {
-  font-family: var(--font-luckiest);
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  text-transform: uppercase;
-  color: #ffffff;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
-  margin-bottom: 0.75rem;
-}
-
-.ctaAccent {
-  color: #ffd21f;
-  text-shadow: 0 0 30px rgba(255, 210, 31, 0.4);
-}
-
-.ctaSub {
-  font-size: 0.92rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 2rem;
-  line-height: 1.5;
-}
-
-.ctaBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.95rem 2.5rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ff7a00, #ffd21f);
-  font-family: var(--font-orbitron);
-  font-size: 0.8rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #030214;
-  box-shadow: 0 0 25px rgba(255, 122, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 14px;
+  pointer-events: all;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  background: transparent;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-.ctaBtn::after {
+.pillarZone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: var(--pglow);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.pillarZone:hover::after {
+  opacity: 0.08;
+}
+
+.pillarZone:hover {
+  box-shadow: 0 0 28px color-mix(in srgb, var(--pglow) 30%, transparent);
+}
+
+/* Shine sweep on pillar hover */
+.pillarZone::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -150%;
-  width: 100%;
+  left: -120%;
+  width: 60%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-  transform: skewX(-20deg);
-  transition: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
 }
 
-.ctaBtn:hover::after {
-  left: 150%;
-  transition: all 0.8s ease-in-out;
+.pillarZone { position: absolute; overflow: hidden; }
+
+.pillarZone:hover::before {
+  animation: shine 0.65s ease forwards;
+}
+
+/* ─── World panel hover zones ──────────────────────────────────────────────── */
+
+.worldZone {
+  position: absolute;
+  z-index: 5;
+  border-radius: 10px;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.worldZone:hover {
+  background: rgba(0, 210, 255, 0.06);
+  box-shadow: 0 0 24px rgba(0, 210, 255, 0.22), inset 0 0 16px rgba(0, 210, 255, 0.08);
+}
+
+/* ─── Hero hotspots (invisible) ──────────────────────────────────────────────
+   Positioned over the existing baked hero cards in the artwork.
+   No visible UI — only soft glow + subtle shine on hover.
+   The artwork itself remains visually untouched.
+────────────────────────────────────────────────────────────────────────────── */
+
+.heroHotspot {
+  position: absolute;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Subtle shine sweep overlay — only visible on hover */
+.heroHotspot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    118deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 45%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  border-radius: 10px;
+}
+
+.heroHotspot:hover {
+  box-shadow: 0 0 28px rgba(0, 210, 255, 0.15), inset 0 0 18px rgba(0, 210, 255, 0.1);
+}
+
+.heroHotspot:hover::before {
+  opacity: 1;
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────────────────────── */
+
+@keyframes drift {
+  0%   { opacity: 0;    transform: translate(0, 0) scale(0.85); }
+  20%  { opacity: 0.6; }
+  50%  { opacity: 0.4;  transform: translate(0, -14px) scale(1.1); }
+  80%  { opacity: 0.6; }
+  100% { opacity: 0;    transform: translate(0, 0) scale(0.85); }
+}
+
+@keyframes sweep {
+  0%   { transform: translateX(-50%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateX(60%);  opacity: 0; }
+}
+
+@keyframes shine {
+  0%   { transform: translateX(-100%) skewX(-18deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 0.5; }
+  100% { transform: translateX(200%)  skewX(-18deg); opacity: 0; }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .particle,
+  .sweep {
+  pointer-events: none;
+    animation: none !important;
+  }
 }

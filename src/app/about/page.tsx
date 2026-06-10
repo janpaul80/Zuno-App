@@ -1,321 +1,185 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
-import { 
-  PawPrint, 
-  Swords, 
-  Sparkles, 
-  Zap, 
-  Globe, 
-  Users, 
-  ArrowRight, 
-  ChevronLeft, 
-  ChevronRight 
-} from "lucide-react";
 import styles from "./about.module.css";
 
+// ─── Pillar hover zones ──────────────────────────────────────────────────────
+// Positions expressed as percentages of the artwork image (1024 × 1456 px).
+// Each zone sits over the corresponding pillar card in the artwork.
+const pillars = [
+  { key: "competitive", glow: "#00d2ff",  left: "3.5%",  width: "17%", top: "60.5%", height: "12.5%" },
+  { key: "collect",     glow: "#ff2bd6",  left: "21.5%", width: "17%", top: "60.5%", height: "12.5%" },
+  { key: "skill",       glow: "#ff7a00",  left: "39.5%", width: "17%", top: "60.5%", height: "12.5%" },
+  { key: "explore",     glow: "#7cff00",  left: "57.5%", width: "17%", top: "60.5%", height: "12.5%" },
+  { key: "community",   glow: "#ff4f73",  left: "75.5%", width: "20%", top: "60.5%", height: "12.5%" },
+];
+
+// ─── World panel hover zones ─────────────────────────────────────────────────
+const worlds = [
+  { key: "world-1", left: "31%", width: "14%", top: "76%", height: "11%" },
+  { key: "world-2", left: "45%", width: "14%", top: "76%", height: "11%" },
+  { key: "world-3", left: "59%", width: "14%", top: "76%", height: "11%" },
+  { key: "world-4", left: "73%", width: "14%", top: "76%", height: "11%" },
+];
+
 export default function AboutPage() {
-  // Pillars data matching the artwork exactly
-  const pillars = [
-    {
-      icon: Swords,
-      title: "Competitive &\nStrategic",
-      copy: "Outsmart opponents in skill-based battles. Strategy and timing determine victory.",
-      color: "#00d2ff", // Blue
-    },
-    {
-      icon: Sparkles,
-      title: "Collect &\nEvolve",
-      copy: "Collect unique animals, upgrade their abilities, and evolve them into unstoppable legends.",
-      color: "#bd00ff", // Purple
-    },
-    {
-      icon: Zap,
-      title: "Skill &\nMastery",
-      copy: "Master your heroes, refine your strategy, and rise through the ranks to prove your dominance.",
-      color: "#ff7a00", // Orange
-    },
-    {
-      icon: Globe,
-      title: "Explore &\nAdventure",
-      copy: "Explore breathtaking worlds, uncover hidden secrets, and take on epic challenges.",
-      color: "#7cff00", // Green
-    },
-    {
-      icon: Users,
-      title: "Community &\nTogetherness",
-      copy: "Join a global community of players, form alliances, and conquer together in real-time.",
-      color: "#ff2bd6", // Magenta/Pink
-    },
-  ];
-
-  // Slanted universe worlds data
-  const worlds = [
-    { img: "/levels-assets/card-grasslands.png", label: "Grasslands" },
-    { img: "/levels-assets/card-ember-volcano.png", label: "Ember Volcano" },
-    { img: "/levels-assets/card-shadow-temple.png", label: "Shadow Temple" },
-    { img: "/levels-assets/card-crystal-river.png", label: "Crystal River" },
-    { img: "/levels-assets/card-sky-canyon.png", label: "Sky Canyon" },
-  ];
-
-  // Hero carousel data
-  const heroes = [
-    { img: "/weapons-assets/wolf.png", name: "Jean", title: "The Shadow Wolf", color: "#00d2ff", icon: "❄" },
-    { img: "/weapons-assets/marjorie.png", name: "Marjorie", title: "The Night Stalker", color: "#bd00ff", icon: "✦" },
-    { img: "/weapons-assets/rayo.png", name: "Kael", title: "The Blaze Fury", color: "#ff7a00", icon: "☀" },
-    { img: "/weapons-assets/bambo.png", name: "Pando", title: "The Iron Fist", color: "#7cff00", icon: "⚡" },
-    { img: "/weapons-assets/zira.png", name: "Aelis", title: "The Flame Archer", color: "#ff2bd6", icon: "🔥" },
-  ];
-
-  const [activeHeroIndex, setActiveHeroIndex] = useState(2); // Kael (index 2) is active by default
-  const [carouselTranslateX, setCarouselTranslateX] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  // Smooth scroll to Our Story section
-  const handleScrollToStory = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const target = document.getElementById("our-story");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  // Carousel navigation
-  const handlePrevHero = () => {
-    setActiveHeroIndex((prev) => {
-      const newIndex = prev === 0 ? heroes.length - 1 : prev - 1;
-      return newIndex;
-    });
-  };
-
-  const handleNextHero = () => {
-    setActiveHeroIndex((prev) => {
-      const newIndex = prev === heroes.length - 1 ? 0 : prev + 1;
-      return newIndex;
-    });
-  };
-
-  // Adjust translation for responsiveness when activeHeroIndex changes
-  useEffect(() => {
-    if (!trackRef.current) return;
-    const isMobile = window.innerWidth <= 640;
-    const isTablet = window.innerWidth <= 1100 && window.innerWidth > 640;
-
-    if (isMobile) {
-      // On mobile, show 1 card and center the active card
-      setCarouselTranslateX(-activeHeroIndex * 100);
-    } else if (isTablet) {
-      // On tablet, show 3 cards and shift so active card is visible / centered
-      const offsetIndex = Math.max(0, Math.min(activeHeroIndex - 1, heroes.length - 3));
-      setCarouselTranslateX(-offsetIndex * 33.333);
-    } else {
-      // On desktop, all cards are visible, no translations needed
-      setCarouselTranslateX(0);
-    }
-  }, [activeHeroIndex]);
-
   return (
-    <div className={styles.page}>
-      
-      {/* ── HERO SECTION ── */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <div className={styles.sectionBadge}>
-            <PawPrint className="h-3.5 w-3.5" />
-            <span>About ZUNO</span>
-          </div>
-          <h1 className={styles.heroH1}>
-            MORE THAN A GAME.<br />
-            <span className={styles.heroAccent}>A UNIVERSE.</span>
-          </h1>
-          <p className={styles.heroPara}>
-            ZUNO is a next-gen animal battle adventure where strategy, skill, and teamwork create legends.
-          </p>
-          <p className={styles.heroPara}>
-            Step into a vibrant world filled with powerful heroes, epic battles, and endless adventure.
-          </p>
-          <a href="#our-story" onClick={handleScrollToStory} className={styles.storyBtn}>
-            <PawPrint className="h-4 w-4" />
-            Our Story
-          </a>
-        </div>
-        <div className={styles.heroArt}>
-          <img src="/about_hero_group.png" alt="ZUNO Heroes on Floating Platform" className={styles.heroImg} />
-        </div>
-      </section>
+    <main className={styles.page}>
+      {/* ── Artwork — the page itself ── */}
+      <div className={styles.artworkRoot}>
+        <Image
+          src="/aboutus_clean.png"
+          alt="ZUNO About"
+          width={1024}
+          height={1456}
+          priority
+          className={styles.artwork}
+          sizes="100vw"
+        />
 
-      {/* ── OUR STORY SECTION ── */}
-      <section id="our-story" className={styles.storySection}>
-        <div className={styles.storyLeft}>
-          <img src="/about_story_scene.png" alt="Zunoverse landscapes and battles" className={styles.storyImg} />
-        </div>
-        <div className={styles.storyRight}>
-          <div className={styles.sectionBadge}>
-            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
-            <span style={{ color: "#00d2ff" }}>Our Story</span>
-          </div>
-          <p className={styles.storyPara}>
-            In a world where animals once lived in harmony, ancient guardians known as ZUNO protected the balance.
-          </p>
-          <p className={styles.storyPara}>
-            But darkness has awakened, threatening to consume everything.
-          </p>
-          <p className={styles.storyPara}>
-            You are a new hero, chosen to rise, fight, and protect what matters most.
-          </p>
-          <p className={styles.storyPara}>
-            Build your team, unlock your powers, and become the legend the ZUNO universe needs.
-          </p>
-          <Link href="/levels" className={styles.outlineBtn}>
-            Discover The World <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ── OUR PILLARS SECTION ── */}
-      <section className={styles.pillarsSection}>
-        <div className={styles.sectionBadgeCentered}>
-          <PawPrint className="h-4 w-4" />
-          <span>Our Pillars</span>
-        </div>
-        <div className={styles.pillarsGrid}>
-          {pillars.map((p) => {
-            const Icon = p.icon;
-            return (
-              <div 
-                key={p.title} 
-                className={styles.pillarCard} 
-                style={{ "--card-glow": p.color } as React.CSSProperties}
-              >
-                <div className={styles.pillarIcon}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className={styles.pillarTitle}>{p.title}</h3>
-                <p className={styles.pillarCopy}>{p.copy}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── THE ZUNO UNIVERSE SECTION ── */}
-      <section className={styles.universeSection}>
-        <div className={styles.universeLeft}>
-          <div className={styles.sectionBadge}>
-            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
-            <span style={{ color: "#00d2ff" }}>The ZUNO Universe</span>
-          </div>
-          <p className={styles.universePara}>
-            From lush forests to frozen caverns, from fiery volcanoes to mystical skies—every world in ZUNO is crafted with detail, life, and adventure.
-          </p>
-          <p className={styles.universePara}>
-            Each environment holds unique enemies, powerful loot, and legendary stories waiting to be discovered.
-          </p>
-          <Link href="/levels" className={styles.outlineBtn}>
-            Explore Worlds <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
-        </div>
-        
-        {/* Slanted dynamic panels */}
-        <div className={styles.worldsContainer}>
-          {worlds.map((w) => (
-            <div key={w.label} className={styles.worldSlice}>
-              <div className={styles.worldSliceInner}>
-                <img src={w.img} alt={w.label} />
-                <div className={styles.worldOverlay} />
-                <span className={styles.worldLabel}>{w.label}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── MEET THE HEROES SECTION ── */}
-      <section id="heroes" className={styles.heroesSection}>
-        <div className={styles.heroesHeader}>
-          <div className={styles.sectionBadge}>
-            <PawPrint className="h-4 w-4" style={{ color: "#00d2ff" }} />
-            <span style={{ color: "#00d2ff" }}>Meet The Heroes</span>
-          </div>
-          <Link href="/weapons" className={styles.allHeroesLink}>
-            All Heroes <ChevronRight className="h-4 w-4" />
-          </Link>
+        {/* ── Ambient layer ── */}
+        <div className={styles.ambient} aria-hidden="true">
+          <span className={styles.particle} style={{ top: "8%",  left: "12%", animationDelay: "0s" }} />
+          <span className={styles.particle} style={{ top: "22%", left: "72%", animationDelay: "-3.2s" }} />
+          <span className={styles.particle} style={{ top: "42%", left: "38%", animationDelay: "-6.1s" }} />
+          <span className={styles.particle} style={{ top: "58%", left: "85%", animationDelay: "-1.7s" }} />
+          <span className={styles.particle} style={{ top: "80%", left: "22%", animationDelay: "-4.9s" }} />
+          <span className={styles.sweep} />
         </div>
 
-        <div className={styles.carouselWrapper}>
-          <button 
-            onClick={handlePrevHero} 
-            className={styles.carouselBtn} 
-            aria-label="Previous Hero"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
+        {/* ── Button hotspots ── */}
 
-          <div className={styles.carouselTrackContainer}>
-            <div 
-              ref={trackRef}
-              className={styles.carouselTrack}
-              style={{
-                transform: `translate3d(${carouselTranslateX}%, 0px, 0px)`
-              }}
-            >
-              {heroes.map((h, index) => (
-                <div 
-                  key={h.name} 
-                  className={`${styles.heroCard} ${index === activeHeroIndex ? styles.heroCardActive : ""}`}
-                  style={{ "--hero-glow": h.color } as React.CSSProperties}
-                  onClick={() => setActiveHeroIndex(index)}
-                >
-                  <div className={styles.heroCardImgContainer}>
-                    <img src={h.img} alt={h.name} className={styles.heroCardImg} />
-                  </div>
-                  <div className={styles.heroCardInfo}>
-                    <div className={styles.heroName}>{h.name}</div>
-                    <div className={styles.heroTitle}>{h.title}</div>
-                    <div className={styles.heroElementRow} style={{ color: h.color }}>
-                      <span>{h.icon}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* "Our Story" — bottom-left of hero section */}
+        <button
+          type="button"
+          className={styles.hotspot}
+          style={{ top: "22.5%", left: "4%", width: "16%", height: "3%" }}
+          onClick={() => {
+            document.getElementById("story-anchor")?.scrollIntoView({ behavior: "smooth" });
+          }}
+          aria-label="Our Story"
+        />
 
-          <button 
-            onClick={handleNextHero} 
-            className={styles.carouselBtn} 
-            aria-label="Next Hero"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </div>
-      </section>
+        {/* Scroll anchor for story section */}
+        <div id="story-anchor" className={styles.scrollAnchor} style={{ top: "28%" }} />
 
-      {/* ── BOTTOM CTA SECTION ── */}
-      <section className={styles.ctaSection}>
-        <div className={styles.ctaBox}>
-          {/* Peeking Character Artworks */}
-          <img src="/weapons-assets/rayo.png" alt="" className={styles.ctaArtLeft} />
-          <img src="/weapons-assets/wolf.png" alt="" className={styles.ctaArtRight} />
-          
-          <div className={styles.ctaCenter}>
-            <h2 className={styles.ctaH2}>
-              YOUR <span className={styles.ctaAccent}>LEGEND</span> STARTS NOW
-            </h2>
-            <p className={styles.ctaSub}>
-              Assemble your team. Sharpen your skills. Conquer the universe.
-            </p>
-            <Link href="/how-to-play" className={styles.ctaBtn}>
-              <PawPrint className="h-4.5 w-4.5" />
-              Play ZUNO Now
-            </Link>
-          </div>
-        </div>
-      </section>
+        {/* "Discover The World" */}
+        <Link
+          href="#universe-anchor"
+          className={styles.hotspot}
+          style={{ top: "54.5%", left: "36%", width: "24%", height: "3%" }}
+          aria-label="Discover The World"
+        />
 
-    </div>
+        <div id="universe-anchor" className={styles.scrollAnchor} style={{ top: "73%" }} />
+
+        {/* "Explore Worlds" */}
+        <Link
+          href="/levels"
+          className={styles.hotspot}
+          style={{ top: "86.5%", left: "4%", width: "18%", height: "3%" }}
+          aria-label="Explore Worlds"
+        />
+
+        {/* "All Heroes →" */}
+        <Link
+          href="/heroes"
+          className={styles.hotspot}
+          style={{ top: "89%", left: "76%", width: "21%", height: "2.5%" }}
+          aria-label="All Heroes"
+        />
+
+        {/* "Play ZUNO Now" */}
+        <Link
+          href="/"
+          className={styles.hotspot}
+          style={{ top: "97.5%", left: "28%", width: "44%", height: "3%" }}
+          aria-label="Play ZUNO Now"
+        />
+
+        {/* ── Pillar hover glows ── */}
+        {pillars.map((p) => (
+          <div
+            key={p.key}
+            className={styles.pillarZone}
+            style={{
+              top: p.top,
+              left: p.left,
+              width: p.width,
+              height: p.height,
+              ["--pglow" as string]: p.glow,
+            }}
+            aria-hidden="true"
+          />
+        ))}
+
+        {/* ── World panel hover glows ── */}
+        {worlds.map((w) => (
+          <div
+            key={w.key}
+            className={styles.worldZone}
+            style={{ top: w.top, left: w.left, width: w.width, height: w.height }}
+            aria-hidden="true"
+          />
+        ))}
+
+        {/* ── Hero hotspots (invisible) — over baked artwork cards ── */}
+        {/* Jean */}
+        <button
+          type="button"
+          className={styles.heroHotspot}
+          style={{ top: "89.2%", left: "4%", width: "15%", height: "7.8%" }}
+          onClick={() => {
+            /* TODO: open hero modal for Jean */
+          }}
+          aria-label="Jean"
+        />
+
+        {/* Marjorie */}
+        <button
+          type="button"
+          className={styles.heroHotspot}
+          style={{ top: "89.2%", left: "20.2%", width: "15%", height: "7.8%" }}
+          onClick={() => {
+            /* TODO: open hero modal for Marjorie */
+          }}
+          aria-label="Marjorie"
+        />
+
+        {/* Kael */}
+        <button
+          type="button"
+          className={styles.heroHotspot}
+          style={{ top: "89.2%", left: "36.4%", width: "15%", height: "7.8%" }}
+          onClick={() => {
+            /* TODO: open hero modal for Kael */
+          }}
+          aria-label="Kael"
+        />
+
+        {/* Pando */}
+        <button
+          type="button"
+          className={styles.heroHotspot}
+          style={{ top: "89.2%", left: "52.6%", width: "15%", height: "7.8%" }}
+          onClick={() => {
+            /* TODO: open hero modal for Pando */
+          }}
+          aria-label="Pando"
+        />
+
+        {/* Aelis */}
+        <button
+          type="button"
+          className={styles.heroHotspot}
+          style={{ top: "89.2%", left: "68.8%", width: "15%", height: "7.8%" }}
+          onClick={() => {
+            /* TODO: open hero modal for Aelis */
+          }}
+          aria-label="Aelis"
+        />
+      </div>
+    </main>
   );
 }

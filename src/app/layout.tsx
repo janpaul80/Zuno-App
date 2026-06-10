@@ -65,9 +65,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${russo.variable} ${luckiest.variable} ${bangers.variable} ${orbitron.variable}`}>
 
-      <body className="bg-[#020617] text-white flex flex-col min-h-screen relative antialiased selection:bg-[#ffd21f] selection:text-black font-inter overflow-x-hidden">
+      <body className="bg-[#020617] text-white flex flex-col min-h-screen w-full max-w-full relative antialiased selection:bg-[#ffd21f] selection:text-black font-inter overflow-x-hidden">
         {/* Cosmic background — deep navy base */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="fixed inset-0 z-0 w-full max-w-full overflow-hidden pointer-events-none">
           <div className="absolute inset-0 bg-[#020617]" />
           {/* Magenta nebula right */}
           <div className="absolute top-0 right-0 w-[80%] h-[80%] bg-[radial-gradient(circle_at_top_right,rgba(255,43,214,0.12),transparent_70%)]" />
@@ -83,7 +83,7 @@ export default function RootLayout({
         <Navbar />
 
         {/* Dynamic page container */}
-        <main className="flex-grow relative z-10">
+        <main className="flex-grow relative z-10 w-full max-w-full overflow-x-hidden pt-24 sm:pt-28">
           {children}
         </main>
 

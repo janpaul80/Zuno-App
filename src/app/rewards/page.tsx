@@ -30,7 +30,7 @@ export default function RewardsPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 font-inter">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 relative z-10 font-inter overflow-x-hidden">
       <div className="space-y-16">
         
         {/* Header Section */}
@@ -41,7 +41,7 @@ export default function RewardsPage() {
               Economy Overview
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-orbitron font-extrabold uppercase text-white tracking-wide leading-none">
+          <h1 className="text-4xl sm:text-6xl font-orbitron font-extrabold uppercase text-white tracking-wide leading-tight sm:leading-none break-words">
             Rewards & <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-orange via-neon-purple to-electric-blue">Coins</span>
           </h1>
           <p className="text-gray-400 font-medium sm:text-lg">
@@ -84,7 +84,7 @@ export default function RewardsPage() {
           </div>
 
           {/* Secure Backend highlights */}
-          <div className="glass-panel p-8 rounded-3xl glow-border-blue bg-gradient-to-br from-[#060b26]/70 to-[#030712]/95 space-y-6">
+          <div className="glass-panel p-5 sm:p-8 rounded-3xl glow-border-blue bg-gradient-to-br from-[#060b26]/70 to-[#030712]/95 space-y-6 min-w-0">
             <h3 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wider flex items-center gap-3">
               <ShieldCheck className="h-6 w-6 text-electric-blue" /> Economy Security
             </h3>
@@ -105,9 +105,9 @@ export default function RewardsPage() {
             <ShoppingCart className="h-6 w-6 text-neon-purple" /> Shop Upgrades Preview
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {shopUpgrades.map((item) => (
-              <div key={item.name} className={`glass-panel p-6 rounded-2xl ${item.color} space-y-4`}>
+              <div key={item.name} className={`glass-panel p-5 sm:p-6 rounded-2xl ${item.color} space-y-4 min-w-0 w-full`}>
                 <div className="flex justify-between items-center">
                   <div className="p-2 bg-white/5 rounded-lg">
                     {item.icon}
@@ -131,7 +131,7 @@ export default function RewardsPage() {
         <div className="text-center pt-4">
           <Link
             href="/ai-operations"
-            className="px-8 py-3.5 rounded-full font-orbitron font-bold text-xs uppercase tracking-widest bg-medium-navy border border-white/10 text-gray-300 glow-border-purple transition-all duration-300 hover:scale-105"
+            className="inline-flex min-h-11 max-w-full items-center justify-center px-5 sm:px-8 py-3.5 rounded-full font-orbitron font-bold text-xs uppercase tracking-widest bg-medium-navy border border-white/10 text-gray-300 glow-border-purple transition-all duration-300 hover:scale-105 break-words text-center"
           >
             Explore AI balancing operations
           </Link>

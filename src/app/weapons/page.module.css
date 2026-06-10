@@ -1,6 +1,7 @@
 .page {
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   background:
     radial-gradient(circle at 50% 0%, rgba(189, 0, 255, 0.24), transparent 32rem),
     radial-gradient(circle at 85% 28%, rgba(255, 122, 0, 0.18), transparent 30rem),
@@ -89,6 +90,7 @@
 
 .content {
   width: min(1220px, calc(100% - 32px));
+  max-width: 100%;
   margin: -22px auto 40px;
 }
 
@@ -268,7 +270,7 @@
 }
 
 .filterTab {
-  min-height: 38px;
+  min-height: 44px;
   border: 1px solid rgba(189, 0, 255, 0.36);
   border-radius: 7px;
   background: rgba(18, 7, 43, 0.74);
@@ -304,6 +306,7 @@
   gap: clamp(14px, 1.6vw, 20px);
   justify-content: center;
   animation: carouselRotate 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-width: 0;
 }
 
 .weaponCard {
@@ -361,7 +364,8 @@
 
 .carouselArrow {
   display: grid;
-  width: 26px;
+  width: 32px;
+  min-width: 32px;
   height: 44px;
   place-items: center;
   border: 0;
@@ -1022,9 +1026,57 @@
   }
 }
 
+@media (max-width: 430px) {
+  .hero {
+    min-height: 280px;
+  }
+
+  .content {
+    width: min(100% - 16px, 1220px);
+  }
+
+  .characterPanel,
+  .upgradePanel,
+  .detailGrid,
+  .statsPanel,
+  .abilityPanel {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .tabRow,
+  .tierTrack {
+    grid-template-columns: 1fr;
+  }
+
+  .characterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .characterStats {
+    align-items: flex-start;
+    padding: 16px 14px;
+  }
+
+  .pawBadge {
+    width: 58px;
+    height: 58px;
+  }
+
+  .detailTitle div,
+  .statLine {
+    flex-wrap: wrap;
+  }
+
+  .loadoutPanel {
+    aspect-ratio: 950 / 340;
+  }
+}
+
 @media (max-width: 720px) {
   .content {
     width: min(100% - 20px, 1220px);
+    margin-top: 0;
   }
 
   .heroText {
@@ -1042,6 +1094,31 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .characterGrid {
+    gap: 10px;
+  }
+
+  .carouselViewport {
+    padding: 6px 4px 14px;
+  }
+
+  .carouselTrack {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 2px 8px;
+  }
+
+  .weaponCard {
+    height: 250px;
+    scroll-snap-align: center;
+  }
+
+  .weaponCardImage {
+    width: auto;
+    max-width: none;
+  }
+
   .carouselShell {
     grid-template-columns: 28px minmax(0, 1fr) 28px;
   }
@@ -1055,8 +1132,35 @@
     grid-template-columns: 1fr;
   }
 
+  .footerCta img {
+    min-height: 108px;
+    object-fit: contain;
+  }
+
   .footerCta a {
     right: 6%;
-    width: 34%;
+    width: 36%;
+    min-width: 118px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 430px) {
+  .tabRow,
+  .tierTrack {
+    grid-template-columns: 1fr;
+  }
+
+  .characterPanel,
+  .upgradePanel,
+  .detailGrid,
+  .statsPanel,
+  .abilityPanel {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .weaponCard {
+    height: 232px;
   }
 }

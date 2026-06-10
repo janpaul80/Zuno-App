@@ -63,7 +63,7 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 font-inter">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 relative z-10 font-inter overflow-x-hidden">
       <div className="space-y-16">
         
         {/* Header Section */}
@@ -74,7 +74,7 @@ export default function SupportPage() {
               Player Center
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-orbitron font-extrabold uppercase text-white tracking-wide leading-none">
+          <h1 className="text-4xl sm:text-6xl font-orbitron font-extrabold uppercase text-white tracking-wide leading-tight sm:leading-none break-words">
             Support & <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-orange via-neon-purple to-electric-blue">FAQ</span>
           </h1>
           <p className="text-gray-400 font-medium sm:text-lg">
@@ -86,7 +86,7 @@ export default function SupportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           
           {/* AI Support Chatbot Widget */}
-          <div className="glass-panel rounded-3xl p-6 glow-border-purple space-y-4 bg-gradient-to-b from-[#060b26]/80 to-[#030712]/95 backdrop-blur-md">
+          <div className="glass-panel rounded-3xl p-4 sm:p-6 glow-border-purple space-y-4 bg-gradient-to-b from-[#060b26]/80 to-[#030712]/95 backdrop-blur-md min-w-0">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 bg-neon-purple/15 flex items-center justify-center rounded-lg text-neon-purple">
@@ -101,7 +101,7 @@ export default function SupportPage() {
             </div>
 
             {/* Chat Messages Logs */}
-            <div className="h-80 overflow-y-auto space-y-4 p-3 bg-black/40 rounded-2xl scrollbar-thin scrollbar-thumb-neon-orange">
+            <div className="h-64 sm:h-80 max-h-[60vh] overflow-y-auto space-y-4 p-3 bg-black/40 rounded-2xl scrollbar-thin scrollbar-thumb-neon-orange">
               {messages.map((msg, i) => (
                 <div
                   key={i}
@@ -128,17 +128,17 @@ export default function SupportPage() {
             </div>
 
             {/* Chat Send Input Form */}
-            <form onSubmit={handleSendMessage} className="flex gap-2">
+            <form onSubmit={handleSendMessage} className="flex gap-2 min-w-0">
               <input
                 type="text"
                 placeholder="Ask about controls, coin validations, creator..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                className="flex-grow bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-500"
+                className="min-w-0 flex-grow bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-500"
               />
               <button
                 type="submit"
-                className="p-3 bg-neon-purple text-white rounded-xl shadow-[0_0_12px_rgba(189,0,255,0.4)] hover:scale-105 transition-transform duration-200"
+                className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-neon-purple text-white rounded-xl shadow-[0_0_12px_rgba(189,0,255,0.4)] hover:scale-105 transition-transform duration-200"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -161,7 +161,7 @@ export default function SupportPage() {
                   >
                     <button
                       onClick={() => setActiveFAQ(isOpen ? null : index)}
-                      className="w-full text-left px-6 py-5 flex items-center justify-between font-orbitron font-bold text-sm tracking-wider uppercase text-white hover:bg-white/5 transition-colors duration-200"
+                      className="w-full text-left px-4 sm:px-6 py-5 flex items-start justify-between gap-4 font-orbitron font-bold text-sm tracking-wider uppercase text-white hover:bg-white/5 transition-colors duration-200"
                     >
                       <span>{faq.q}</span>
                       <span className={`text-xl font-bold text-neon-orange transition-transform duration-200 ${isOpen ? "rotate-45" : ""}`}>+</span>
@@ -183,7 +183,7 @@ export default function SupportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-8">
           
           {/* General Contact Form */}
-          <div className="glass-panel p-8 rounded-3xl glow-border-blue space-y-6">
+          <div className="glass-panel p-5 sm:p-8 rounded-3xl glow-border-blue space-y-6 min-w-0">
             <div className="space-y-1">
               <h3 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <Mail className="h-6 w-6 text-electric-blue" /> Send Message
@@ -192,7 +192,7 @@ export default function SupportPage() {
             </div>
             
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Your Name"
@@ -225,7 +225,7 @@ export default function SupportPage() {
           </div>
 
           {/* Bug Report Form */}
-          <div className="glass-panel p-8 rounded-3xl glow-border-orange space-y-6">
+          <div className="glass-panel p-5 sm:p-8 rounded-3xl glow-border-orange space-y-6 min-w-0">
             <div className="space-y-1">
               <h3 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <AlertTriangle className="h-6 w-6 text-neon-orange" /> File Bug Report
@@ -234,7 +234,7 @@ export default function SupportPage() {
             </div>
             
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Player Username"

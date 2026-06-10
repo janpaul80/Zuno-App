@@ -53,9 +53,12 @@
 
 .heroViewport {
   position: relative;
+  min-height: 650px;
 }
 
 .heroArt {
+  min-height: 650px;
+  max-height: 104vh;
   transform: translate3d(0, 0, 0) scale(1.002);
   transform-origin: center top;
   animation: heroParallax 18s ease-in-out infinite;
@@ -97,6 +100,13 @@
   filter: blur(16px);
   opacity: 0.7;
   animation: fogBreath 9s ease-in-out infinite;
+}
+
+.heroCta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 118px;
 }
 
 .particleField,
@@ -303,6 +313,14 @@
 .accentGreen {
   --accent: var(--zuno-lime);
   --accent-soft: rgba(124, 255, 0, 0.18);
+}
+
+.heroStats {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  width: min(84rem, calc(100% - 2rem));
+  transform: translateX(-50%);
 }
 
 .statRail {
@@ -1104,8 +1122,9 @@
 
 @media (max-width: 640px) {
   .heroViewport {
-    height: 620px;
-    min-height: 620px;
+    height: auto;
+    min-height: 0;
+    padding-bottom: 1.5rem;
   }
 
   .heroViewport::after {
@@ -1120,20 +1139,34 @@
   }
 
   .heroArt {
-    height: 100% !important;
+    height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center top;
   }
 
   .heroCta {
-    bottom: 13rem !important;
+    position: relative !important;
+    inset: auto !important;
+    margin-top: -4.5rem;
+    padding-inline: 1rem;
+  }
+
+  .heroCta :global(a) {
+    min-height: 46px;
+    width: min(100%, 20rem);
+    padding-inline: 1rem;
+    text-align: center;
   }
 
   .heroStats {
-    bottom: 1rem !important;
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
     width: min(100% - 1.5rem, 26rem) !important;
+    margin: 1rem auto 0;
+    transform: none !important;
   }
 
   .statRail {

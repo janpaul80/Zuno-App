@@ -59,7 +59,7 @@ export default function Footer() {
   const siteLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Rewards", href: "/rewards-coins" },
+    { name: "Rewards", href: "/rewards" },
     { name: "Weapons", href: "/weapons" },
     { name: "Levels", href: "/levels" },
     { name: "Support", href: "/support" },
@@ -78,33 +78,33 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative bg-[#020514] border-t border-white/10 text-gray-400 font-inter pt-16 pb-12 z-10 overflow-hidden">
+    <footer className="relative bg-[#020514] border-t border-white/10 text-gray-400 font-inter pt-12 sm:pt-16 pb-10 sm:pb-12 z-10 max-w-full overflow-x-hidden">
       {/* Decorative floating grids */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#060b26_1px,transparent_1px),linear-gradient(to_bottom,#060b26_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-10 sm:pb-12 border-b border-white/5">
           {/* Brand Presentation */}
           <div className="space-y-6">
             <Link href="/" className="inline-block">
               <img
                 src="/logo-zuno.png"
                 alt="ZUNO"
-                className="h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,107,0,0.3)] hover:scale-105 transition-transform duration-300"
+                className="h-16 w-auto max-w-[10rem] object-contain drop-shadow-[0_0_8px_rgba(255,107,0,0.3)] hover:scale-105 transition-transform duration-300"
               />
             </Link>
             <p className="text-sm leading-relaxed text-gray-400 font-medium">
               ZUNO is a colorful animal battle adventure game where players progress through exciting levels, earn coins, unlock upgrades, and explore an adventurous fantasy world.
             </p>
             {/* Social Icons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`text-gray-500 transition-all duration-300 ${social.color}`}
+                  className={`inline-flex h-10 w-10 items-center justify-center text-gray-500 transition-all duration-300 ${social.color}`}
                   aria-label={social.name}
                 >
                   {social.svg}
@@ -123,7 +123,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm font-semibold hover:text-electric-blue transition-colors duration-200"
+                    className="inline-block py-1.5 text-sm font-semibold hover:text-electric-blue transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -142,7 +142,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm font-semibold hover:text-neon-purple transition-colors duration-200"
+                    className="inline-block py-1.5 text-sm font-semibold hover:text-neon-purple transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -188,7 +188,7 @@ export default function Footer() {
 
             {/* ESRB Ratings Placeholder */}
             <div>
-              <div className="flex items-center gap-4 bg-black/40 border border-white/5 rounded-lg p-3 w-max">
+              <div className="flex max-w-full items-center gap-4 bg-black/40 border border-white/5 rounded-lg p-3 sm:w-max">
                 <div className="h-10 w-8 bg-white text-black font-black font-orbitron text-xl flex items-center justify-center rounded shadow-[0_0_8px_rgba(255,255,255,0.4)]">
                   E
                 </div>
@@ -207,14 +207,14 @@ export default function Footer() {
           <div className="text-center md:text-left space-y-1">
             <div>&copy; {currentYear} ZUNO Game Studio. All rights reserved.</div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
               href="/imprint"
-              className="text-electric-blue text-shadow-blue hover:text-white transition-colors duration-200"
+              className="inline-flex min-h-9 items-center text-electric-blue text-shadow-blue hover:text-white transition-colors duration-200"
             >
               Imprint
             </Link>
-            <span className="h-3 w-px bg-white/10" />
+            <span className="hidden h-3 w-px bg-white/10 sm:inline-block" />
             <span className="text-gray-600">v1.0.0 (Production Build)</span>
           </div>
         </div>

@@ -12,6 +12,7 @@
 .tiers,
 .cta {
   width: min(1024px, 100%);
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -126,15 +127,16 @@
 
 .arrows button {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--tier) 70%, transparent);
   border-radius: 7px;
   background: rgba(2, 6, 23, 0.62);
   color: var(--tier);
   font-family: var(--font-russo), sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   cursor: pointer;
   box-shadow: inset 0 0 10px color-mix(in srgb, var(--tier) 10%, transparent);
@@ -253,6 +255,8 @@
 .cardCta {
   position: absolute;
   display: block;
+  min-width: 44px;
+  min-height: 32px;
   overflow: hidden;
   border-radius: 5px;
   color: transparent;
@@ -347,14 +351,35 @@
 
 @media (max-width: 760px) {
   .hero {
-    padding-top: 86px;
+    padding-top: 24px;
   }
 
   .tier {
     width: min(94%, 520px);
+    padding: 10px 12px 15px;
   }
 
   .cardTrack {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .tierTop {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tierTop img {
+    width: min(260px, 68%);
+  }
+
+  .cta {
+    margin-top: 28px;
+    padding: 0 10px 24px;
+  }
+
+  .cta a {
+    min-width: 104px;
+    min-height: 44px;
   }
 }

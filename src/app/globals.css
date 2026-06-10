@@ -26,10 +26,27 @@
   --font-bangers: "Bangers", cursive;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter);
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+.no-x-overflow {
+  max-width: 100%;
   overflow-x: hidden;
 }
 
