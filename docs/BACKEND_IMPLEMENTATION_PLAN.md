@@ -686,7 +686,7 @@ Do not add these until Phase 2 implementation starts:
 
 ## 8. Step-by-Step Implementation Order
 
-Each step should be its own small PR/commit where practical.
+Each step should be its own small PR/commit where practical. Phase 2 implementation should start with shared API utilities and folder scaffolding before any database migrations, Supabase clients, or API routes are added. This keeps response formats, error shapes, and future route conventions consistent before the backend begins handling real player data.
 
 ### Step 1: Add backend contract documentation
 
