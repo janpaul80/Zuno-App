@@ -62,6 +62,7 @@ export default function Footer() {
     { name: "Rewards", href: "/rewards" },
     { name: "Weapons", href: "/weapons" },
     { name: "Levels", href: "/levels" },
+    { name: "Architecture", href: "/architecture" },
     { name: "Support", href: "/support" },
     { name: "How To Play", href: "/how-to-play" },
     { name: "AI Operations", href: "/ai-operations" },
@@ -94,7 +95,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm leading-relaxed text-gray-400 font-medium">
-              ZUNO is a colorful animal battle adventure game where players progress through exciting levels, earn coins, unlock upgrades, and explore an adventurous fantasy world.
+              ZUNO is a stylized 3D mobile platformer where players run through fantasy levels, earn coins and gems, unlock upgrades, and sync progress through an online backend.
             </p>
             {/* Social Icons */}
             <div className="flex flex-wrap items-center gap-3">

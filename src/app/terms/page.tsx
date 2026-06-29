@@ -43,7 +43,7 @@ export default function TermsPage() {
             </p>
             <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-xs text-gray-400 leading-relaxed space-y-2">
               <strong className="font-orbitron text-neon-orange uppercase block">⚠️ Server Validation Clause:</strong>
-              All virtual currency balances must be securely validated by ZUNO's backend systems on VPS `217.154.11.234`. Any attempt to hack, duplicate, or inject coin drops using cheat tools violates this agreement.
+              All virtual currency balances must be securely validated by ZUNO&apos;s backend systems on VPS `217.154.11.234`. Any attempt to hack, duplicate, or inject coin drops using cheat tools violates this agreement.
             </div>
           </div>
 

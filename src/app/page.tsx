@@ -52,21 +52,21 @@ const stats = [
   { label: "Universe", value: "1", detail: "Amazing world", icon: PawPrint, accent: "green" },
   { label: "Challenge", value: "3", detail: "Difficulty tiers", icon: Brain, accent: "magenta" },
   { label: "Rewards", value: "Legendary", detail: "Epic loot awaits", icon: Box, accent: "orange" },
-  { label: "Battle", value: "3v3", detail: "Real-time action", icon: Swords, accent: "cyan" },
+  { label: "Backend", value: "Online", detail: "Cloud synced", icon: Swords, accent: "cyan" },
 ] as const;
 
 const features: FeatureCard[] = [
   {
-    title: "Strategic Battles",
-    copy: "Outsmart your enemies with tactical gameplay and team synergy.",
+    title: "3D Platforming",
+    copy: "Run, jump, slide, dodge, and smash crates through guided-camera fantasy levels.",
     icon: PawPrint,
     accent: "cyan",
     crop: "center",
     art: "/swipe-strike.png",
   },
   {
-    title: "AI Powered",
-    copy: "Advanced AI adapts to your moves in real time.",
+    title: "Online Progression",
+    copy: "Login, sync your profile, and protect inventory, coins, gems, and purchases server-side.",
     icon: Brain,
     accent: "magenta",
     crop: "center",
@@ -82,7 +82,7 @@ const features: FeatureCard[] = [
   },
   {
     title: "Compete & Rank",
-    copy: "Climb the leaderboards and prove you are the top champion.",
+    copy: "Climb leaderboards and prepare for multiplayer-ready progression.",
     icon: Trophy,
     accent: "orange",
     crop: "center",
@@ -99,18 +99,18 @@ const features: FeatureCard[] = [
 ];
 
 const modes: Array<{ title: string; copy: string; accent: Accent; crop: string; art: string }> = [
-  { title: "Arena Clash", copy: "3v3 Team Battles", accent: "cyan", crop: "center", art: "/levels-assets/card-neon-abyss.png" },
-  { title: "Ranked Mode", copy: "Climb the Leaderboard", accent: "magenta", crop: "center", art: "/weapons-assets/armor-card.png" },
-  { title: "Adventure", copy: "PvE Story Quests", accent: "green", crop: "center", art: "/levels-assets/card-grasslands.png" },
-  { title: "Events", copy: "Limited Time Challenges", accent: "orange", crop: "center", art: "/rewards-coins.png" },
-  { title: "Training", copy: "Hone Your Skills", accent: "cyan", crop: "center", art: "/levels-assets/card-crystal-river.png" },
+  { title: "Easy Runs", copy: "Short levels and simple traps", accent: "cyan", crop: "center", art: "/levels-assets/card-grasslands.png" },
+  { title: "Medium Routes", copy: "Hazards, side paths, timed obstacles", accent: "magenta", crop: "center", art: "/levels-assets/card-ember-volcano.png" },
+  { title: "Hard Trials", copy: "Precision jumps and boss encounters", accent: "green", crop: "center", art: "/levels-assets/card-titan-arena.png" },
+  { title: "Online Shop", copy: "Server-validated gear and upgrades", accent: "orange", crop: "center", art: "/rewards-coins.png" },
+  { title: "Multiplayer", copy: "Identity, matchmaking, stats, leaderboards", accent: "cyan", crop: "center", art: "/levels-assets/card-neon-abyss.png" },
 ];
 
 const featureList = [
-  { title: "Collect & Evolve", copy: "Collect unique animals and evolve them into legends.", icon: PawPrint },
-  { title: "Customize & Upgrade", copy: "Upgrade abilities, unlock skins, and build your strategy.", icon: Settings },
-  { title: "Real-time 3v3 Combat", copy: "Experience smooth, skill-based real-time battles.", icon: Gamepad2 },
-  { title: "Cross-platform Play", copy: "Play anytime, anywhere with players around the world.", icon: Users },
+  { title: "Collect & Upgrade", copy: "Gather coins, rare gems, chests, vault rewards, and level-end bonuses.", icon: PawPrint },
+  { title: "Customize Loadouts", copy: "Buy weapons, uniforms, armor, gadgets, health upgrades, and abilities.", icon: Settings },
+  { title: "Mobile Controls", copy: "Use a virtual joystick with punch, jump, slide, dodge, and gadget buttons.", icon: Gamepad2 },
+  { title: "Cloud-Backed Play", copy: "Sync login, profile, inventory, shop purchases, stats, and match results.", icon: Users },
 ];
 
 function motionStyle(values: Record<string, string | number>): CSSProperties {
@@ -237,13 +237,13 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <div className={`${styles.gameplayPanel} ${styles.reveal}`}>
             <div className={styles.gameplayCopy}>
-              <span>3v3 Action</span>
+              <span>3D Platformer</span>
               <h2>
-                Epic Animal
-                <strong>Battles</strong>
+                Run. Jump.
+                <strong>Adventure.</strong>
               </h2>
               <p>
-                Join fast-paced 3v3 battles in stunning arenas. Build your team, master your strategy, and crush your opponents.
+                Sprint through linear fantasy stages with hidden side paths, traps, rolling hazards, enemy encounters, treasure chests, and boss-ready progression.
               </p>
               <Link href="/how-to-play" className={`${styles.ctaSecondary} ${styles.panelButton}`}>
                 Explore Gameplay

@@ -15,6 +15,7 @@ export default function Navbar() {
     { name: "Rewards", path: "/rewards" },
     { name: "Weapons", path: "/weapons" },
     { name: "Levels", path: "/levels" },
+    { name: "Architecture", path: "/architecture" },
     { name: "Support", path: "/support" },
   ];
 
