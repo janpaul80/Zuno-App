@@ -63,6 +63,7 @@ export default function Footer() {
     { name: "Weapons", href: "/weapons" },
     { name: "Levels", href: "/levels" },
     { name: "Architecture", href: "/architecture" },
+    { name: "Roadmap", href: "/roadmap" },
     { name: "Support", href: "/support" },
     { name: "How To Play", href: "/how-to-play" },
     { name: "AI Operations", href: "/ai-operations" },
