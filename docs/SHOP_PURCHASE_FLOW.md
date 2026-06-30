@@ -41,6 +41,22 @@ POST /api/v1/shop/purchase
 * Repeated request with same ID → returns previous result (idempotent).
 * Database constraint (unique index) enforces consistency.
 
+**Current Implementation (2026‑06):**
+* Service supports an `idempotency_key` parameter on purchase creation.
+* A duplicate replay with the same key is detected before any deduction occurs, returning a `409 IDEMPOTENT_REPLAY` error.
+* This prevents double‑charges and duplicate inventory grants.
+
+### 6.1 Duplicate Non‑Consumable Protection
+* Non‑consumable items (`is_consumable = false`) are protected against re‑purchase.
+* Existing ownership is checked in `player_inventory` before currency deduction.
+* A second attempt yields `409 ALREADY_OWNED`.
+
+### 6.2 Atomicity Limitation
+* The current implementation issues multiple Supabase API calls sequentially.
+* This design is **not fully atomic**—a partial failure between updates could leave intermediate state.
+* Planned improvement: consolidate into a single Postgres RPC or **transaction block** ensuring full ACID integrity.
+* Until migration, the server strives for ordering safety and defensive checks to minimize partial‑write risk.
+
 ### 7. Failure Cases
 | Case | Behavior |
 |------|-----------|
