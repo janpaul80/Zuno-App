@@ -35,4 +35,20 @@ It can be run via Supabase SQL editor or the local CLI once review and RLS desig
 
 ---
 _Added alongside_ `supabase/migrations/0001_phase2_core_schema.sql`
-_Last updated_: phase 2.1 migration draft.
+_Last updated_: phase 2.2 RLS migration draft (adds table security policies).
+
+## Phase 2.2 – Row‑Level Security (RLS)
+This migration enables RLS for all core Phase 2 tables and defines baseline security policies:
+
+| Category | Tables | Policy |
+|-----------|---------|---------|
+| Player‑owned data | `players`, `player_profiles`, `player_currency`, `player_inventory`, `purchases`, `currency_ledger`, `inventory_events`, `cloud_saves` | Authenticated users can **read only their own records** (`player_id = auth.uid()`) |
+| Public data | `shop_items` | Readable by any authenticated user |
+| Sensitive write restrictions | `player_currency`, `purchases`, `inventory_events`, `currency_ledger` | Direct client writes are **revoked**; only the **service role** (server) may perform updates |
+
+### Deferred Items
+* Fine‑grained admin/GM roles
+* Public guest‑mode item previews (optional later)
+* Automated triggers for audit logging and ledger validation
+
+All other behaviors (like balance updates) remain server‑only until validated business logic is applied in API routes.
