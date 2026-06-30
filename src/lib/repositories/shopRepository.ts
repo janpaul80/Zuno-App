@@ -3,19 +3,21 @@ import { supabaseClient } from '../supabase/client';
 import { ApiError } from '../api/errors';
 
 export interface ShopRepository {
-  listItems(): Promise<ShopItem[]>;
+  listActiveItems(): Promise<ShopItem[]>;
   getItemById(itemId: string): Promise<ShopItem | null>;
 }
 
 export const shopRepository: ShopRepository = {
-  async listItems(): Promise<ShopItem[]> {
+  // Returns only active shop items
+  async listActiveItems(): Promise<ShopItem[]> {
     const { data, error } = await supabaseClient
       .from('shop_items')
       .select('*')
+      .eq('is_active', true)
       .order('created_at', { ascending: true });
 
     if (error) {
-      throw new ApiError('INTERNAL_ERROR', `Failed to list shop items: ${error.message}`, 500, error);
+      throw new ApiError('INTERNAL_ERROR', `Failed to list active shop items: ${error.message}`, 500, error);
     }
 
     return data as ShopItem[];
