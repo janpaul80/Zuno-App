@@ -17,9 +17,14 @@ export const shopPurchaseService = {
   async purchase(
     playerId: string,
     itemId: string,
-    currencyType: 'coins' | 'gems'
+    currencyType: 'coins' | 'gems',
+    idempotencyKey?: string
   ): Promise<PurchaseResult> {
     const client = supabaseServer;
+
+    // TECHNICAL NOTE:
+    // The current implementation performs multiple sequential Supabase calls and is therefore NOT fully atomic.
+    // A later revision will replace this logic with a single Postgres RPC or database transaction to ensure atomicity.
 
     // 1. Load item from shop_items
     const { data: item, error: itemErr } = await client
@@ -30,6 +35,32 @@ export const shopPurchaseService = {
       .maybeSingle();
     if (itemErr) throw new ApiError('INTERNAL_ERROR', itemErr.message, 500);
     if (!item) throw new ApiError('NOT_FOUND', 'Item not found or inactive', 404);
+
+    // Prevent duplicate non-consumable purchases
+    if (!item.is_consumable) {
+      const { data: owned, error: ownedErr } = await client
+        .from('player_inventory')
+        .select('item_id')
+        .eq('player_id', playerId)
+        .eq('item_id', itemId)
+        .maybeSingle();
+      if (ownedErr) throw new ApiError('INTERNAL_ERROR', ownedErr.message, 500);
+      if (owned) throw new ApiError('ALREADY_OWNED', 'Item already owned', 409);
+    }
+
+    // Idempotency check (duplicate transaction replay detection)
+    if (idempotencyKey) {
+      const { data: existingPurchase, error: existErr } = await client
+        .from('purchases')
+        .select('*')
+        .eq('player_id', playerId)
+        .eq('idempotency_key', idempotencyKey)
+        .maybeSingle();
+      if (existErr) throw new ApiError('INTERNAL_ERROR', existErr.message, 500);
+      if (existingPurchase) {
+        throw new ApiError('IDEMPOTENT_REPLAY', 'Duplicate request: purchase already processed', 409);
+      }
+    }
 
     const price = currencyType === 'coins' ? item.price_coins : item.price_gems;
     if (price <= 0) throw new ApiError('BAD_REQUEST', 'Item cannot be purchased with this currency', 400);
@@ -70,7 +101,13 @@ export const shopPurchaseService = {
     // 6. Record purchase
     const { data: purchaseData, error: purErr } = await client
       .from('purchases')
-      .insert({ player_id: playerId, item_id: itemId, currency_type: currencyType, price })
+      .insert({
+        player_id: playerId,
+        item_id: itemId,
+        currency_type: currencyType,
+        price,
+        idempotency_key: idempotencyKey ?? null,
+      })
       .select();
     if (purErr) throw new ApiError('INTERNAL_ERROR', purErr.message, 500);
 
