@@ -1,25 +1,28 @@
 # CHANGELOG.md
 
-## Version 1.1 — 2026‑07‑01
-
+## Version 1.1 — 2026‑07‑01
 ### Added
-- **Reward Engine Authority** — single reward pipeline controlling all XP, currency, inventory, unlock, and bundle grants.
-- **Economy Authority** — transaction ledger requirement for all balance changes.
-- **Canonical Architecture** — standardized backend flow:
-  ```
-  Gameplay Domain
+- **Reward Engine Authority Addendum** — designating the Reward Engine as the sole reward mutation system.
+- **Economy Authority Addendum** — requiring auditable transaction records for all balance changes.
+- **Cross‑References** — architecture flow (**02_ARCHITECTURE.md**), engineering rules (**03_ENGINEERING_STANDARDS.md**), and governance decision (**10_DECISION_LOG.md**).
+
+### Version 1.1‑R — 2026‑07‑02 Constitution Reconciliation
+- Merged Reward Engine and Economy Authority updates as addenda into existing Constitution without removing historical content.
+- Retained all prior architecture text and standards; new sections are cumulative extensions.
+- Confirmed canonical flow and binding rules across all documents:
+  ```text
+  Gameplay Domain
           ↓
-  Reward Engine
+  Reward Engine
           ↓
-  Economy / Inventory / Progression / Unlocks
+  Economy / Inventory / Progression / Unlocks
           ↓
   Repositories
           ↓
   Supabase
   ```
-- **Engineering Standards v1.1** — server‑authoritative rules enforcing Reward Engine and Economy Authority compliance.
-- **Decision Log Entry 2026‑07‑01** — adoption of centralized reward/economy control model.
-- **Backend Roadmap** — updated milestone order including Daily Rewards → Reward Engine → Economy v2.
+- Finalized cross‑document references for clarity and maintainability.
 
 ### Version History
-- **v1.0** — Original Constitution, Governance, and Server Authoritative Design Framework.
+- **v1.1** — Introduced centralized Reward Engine and Economy Authority architecture.
+- **v1.0** — Original Governance Framework and Server‑Authoritative Design.

@@ -1,32 +1,41 @@
 # 03_ENGINEERING_STANDARDS.md
 
-## Reward Engine Authority
-- The **Reward Engine** is the sole system permitted to grant or modify rewards across all domains.
-- Authorized reward types: XP, Currency, Inventory Items, Unlocks, Reward Bundles.
-- Gameplay domains must emit validated reward requests to the Reward Engine and may not directly perform grants.
-- Reward Engine then routes updates to:
-  - Economy Service (currency)
-  - Inventory Service (items)
-  - Progression Service (XP/level)
-  - Unlock Service (unlocks)
+## Existing Engineering Principles
+- Server-authoritative architecture must always be preserved.
+- All repositories, services, and API routes follow strict typing and validation.
+- Gameplay domains must respect domain boundaries and backend layering standards.
 
-## Economy Authority
-- The **Economy Domain v2** is the exclusive authority for modifying player balances.
-- Every currency adjustment requires creating a transaction record including:
-  - player ID
-  - source domain
-  - reason
-  - amount (+/‑)
-  - timestamp
+---
+
+## Addendum 2026‑07‑01 — Reward Engine & Economy Authority
+
+The following binding engineering rules extend the original standards and consolidate backend control under centralized reward and economy layers.
+
+### Reward Engine Authority
+- The **Reward Engine** is the single entrypoint for all reward mutations — XP, currency, inventory, unlocks, and bundles.
+- Gameplay domains must submit validated reward requests rather than performing direct modifications.
+- All backend contributors must follow the canonical flow defined in **02_ARCHITECTURE.md**.
+- Reward requests are validated, recorded, and dispatched to sub‑services:
+  - Economy Service → currency transactions
+  - Inventory Service → item grants
+  - Progression Service → XP/level updates
+  - Unlock Service → feature unlocks
+
+### Economy Authority
+- The **Economy Domain v2** is the sole authority authorized to adjust currency balances.
+- Each balance change must generate a verifiable transaction record containing:
+  - player ID  
+  - source domain  
+  - reason  
+  - amount (+/‑)  
+  - timestamp  
   - request ID
-- No other service may modify currency directly.
+- Transactions form an immutable audit ledger accessible to future reporting tools.
 
-## Enforcement Rules
-1. All reward or economy‑affecting actions must pass through server‑authoritative services.
-2. No direct Supabase write operations from gameplay domains.
-3. All balance‑affecting operations must be auditable.
-4. Game logic must not contain embedded reward/mutation logic — call the Reward Engine instead.
+### Enforcement and Compliance
+1. No domain may execute direct reward or economy writes outside the Reward Engine pathway.
+2. No Supabase queries may adjust currency or items except through authorized repository calls from the Reward Engine or Economy Domain.
+3. Violations constitute architecture breaches reviewed by the ZUNO Governance Council.
+4. Code review gates and CI policies must include architecture compliance checks.
 
-## Compliance
-- Code reviews must verify adherence to these standards.
-- Violations are considered architecture breaches and blocked from merge.
+Cross‑references: see **02_ARCHITECTURE.md** for structural flow and **10_DECISION_LOG.md** for the governance record of this change.
