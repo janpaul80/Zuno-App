@@ -1,6 +1,6 @@
 # ZUNO Project Status
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Last Updated:** 2026-07-01
 
 ---
@@ -17,6 +17,7 @@
 | **Progression Domain v1** | Player progression, XP tracking, and level computation. | ✅ Completed |
 | **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, and progress persistence. | ✅ Completed |
+| **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
 
 ---
 
@@ -24,7 +25,6 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Quests Domain v1** | Structured mission and task system connected to achievements and progression. | Next |
 | **Daily Rewards v1** | Recurring login/engagement reward system tied to player retention. | Upcoming |
 | **Leaderboards v1** | Competitive ranking system for achievements, XP, and scores. | Upcoming |
 | **LiveOps v1** | Remote configuration and limited-time event management. | Upcoming |
