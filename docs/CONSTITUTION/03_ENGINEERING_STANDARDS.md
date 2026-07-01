@@ -1,64 +1,32 @@
-# Engineering Standards
+# 03_ENGINEERING_STANDARDS.md
 
-Version: 1.0  
-Status: Active
+## Reward Engine Authority
+- The **Reward Engine** is the sole system permitted to grant or modify rewards across all domains.
+- Authorized reward types: XP, Currency, Inventory Items, Unlocks, Reward Bundles.
+- Gameplay domains must emit validated reward requests to the Reward Engine and may not directly perform grants.
+- Reward Engine then routes updates to:
+  - Economy Service (currency)
+  - Inventory Service (items)
+  - Progression Service (XP/level)
+  - Unlock Service (unlocks)
 
----
+## Economy Authority
+- The **Economy Domain v2** is the exclusive authority for modifying player balances.
+- Every currency adjustment requires creating a transaction record including:
+  - player ID
+  - source domain
+  - reason
+  - amount (+/‑)
+  - timestamp
+  - request ID
+- No other service may modify currency directly.
 
-## Architecture
-* Repository → Service → API structure is mandatory.  
-* Repositories handle persistence only.  
-* Services contain domain logic and validation.  
-* API routes serve as thin controllers calling services.  
+## Enforcement Rules
+1. All reward or economy‑affecting actions must pass through server‑authoritative services.
+2. No direct Supabase write operations from gameplay domains.
+3. All balance‑affecting operations must be auditable.
+4. Game logic must not contain embedded reward/mutation logic — call the Reward Engine instead.
 
-## TypeScript
-* Strict TypeScript mode must be enabled.  
-* No `any` types permitted.  
-* Shared domain types live in `src/lib/repositories/types.ts`.  
-
-## API Standards
-* Use `apiHandler` for consistent response wrapping.  
-* Response envelope: `{ ok, data, requestId }`.  
-* Validate requests with Zod schemas.  
-* Handle errors through `ApiError` with specific HTTP status codes.  
-
-## Database Rules
-* Data is server‑authoritative.  
-* Supabase RLS enabled by default.  
-* Use constraints, foreign keys, and check policies.  
-* All migrations are additive and version‑controlled.  
-
-## Security Principles
-* Never trust client input without validation.  
-* Secrets exist only in Vercel Environment Variables.  
-* No service‑role keys exposed to clients.  
-
-## Performance
-* Batch related queries to minimize round‑trips.  
-* Avoid N + 1 query patterns.  
-* Use transactions or RPCs for multi step writes.  
-
-## Testing
-* Unit tests for business logic.  
-* Integration tests for repository and API behaviors.  
-* Regression tests for bug fix validation.  
-
-## Observability
-* Every request gets a unique `requestId`.  
-* Log server errors, excluding PII or secrets.  
-
-## Documentation
-* Update API_CONTRACT.md and domain docs for each feature.  
-* Ensure Markdown renders on GitHub before commit.  
-
-## Git Workflow
-* Small, cohesive commits only.  
-* Naming format: `feat(domain): description`.  
-* Run `npm run lint && npm run build && npm test (if available)` before committing.  
-
-## AI Contributor Rules
-1. Read the Constitution before any change.  
-2. Follow existing patterns—no inventing new architectures.  
-3. Never fake tool output or successful builds.  
-4. Document all changes and verify before commit.  
-5. Ask for clarification if unsure instead of guessing.  
+## Compliance
+- Code reviews must verify adherence to these standards.
+- Violations are considered architecture breaches and blocked from merge.

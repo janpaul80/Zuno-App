@@ -1,38 +1,25 @@
-# Backend Roadmap
+# 05_BACKEND_ROADMAP.md
 
-Version: 1.0  
-Status: Active
+## Updated Backend Milestone Sequence
 
----
+| Phase | Milestone | Description |
+|--------|-----------|-------------|
+| 1 | Constitution v1 | Establish governance and architecture foundation. |
+| 2 | Backend Foundation | Core repository/service/API framework. |
+| 3 | Player Domain | Identity + profile management. |
+| 4 | Shop Domain | Server‑auth purchases. |
+| 5 | Cloud Save v1 | Server‑authoritative client‑state persistence. |
+| 6 | Progression Domain v1 | Player leveling + XP tracking. |
+| 7 | Unlocks Domain v1 | Controlled unlock state management. |
+| 8 | Achievements Domain v1 | Achievement tracking and rewards. |
+| 9 | Quests Domain v1 | Quest objectives and progress tracking. |
+| 10 | Daily Rewards v1 | Daily login and engagement reward eligibility (Reward Engine stub). |
+| 11 | Reward Engine v1 | Central authority for XP, currency, inventory, and unlock grants. |
+| 12 | Economy v2 | Transaction ledger integration with Reward Engine. |
+| 13 | Inventory Enhancements | Full item type and stacking logic. |
+| 14 | LiveOps | Remote config and event system. |
+| 15 | Shop Enhancements | Dynamic pricing + event coupling. |
+| 16 | Leaderboards v1 | Player ranking system. |
+| 17 | Multiplayer Foundation | Session + sync architecture. |
 
-## Overview
-Defines the prioritized development order for all backend domains and their dependencies.  
-Each domain follows server‑authoritative design and includes its own repository, service, and API layers.
-
----
-
-| Domain | Purpose | Dependencies | Status |
-|---------|----------|--------------|---------|
-| **Unlocks** | Manage character and cosmetic unlocks | Progression, Inventory | Planned |
-| **Achievements** | Track player milestones and rewards | Progression | Planned |
-| **Quests** | Daily/weekly objectives that grant XP and currency | Progression, Achievements | Planned |
-| **Daily Rewards** | Login streak tracking and claim handling | Profile | Planned |
-| **Leaderboards** | Global and seasonal player rankings | Progression, Achievements | Planned |
-| **LiveOps** | Dynamic feature flags and seasonal events | All above | Planned |
-| **Multiplayer Foundation** | Matchmaking, presence, and match state | Auth, Profiles, LiveOps | Planned |
-
----
-
-## Domain Development Principles
-* Server‑authoritative logic only.  
-* Each domain has a dedicated service and repository.  
-* Migrations and policies are additive.  
-* API routes defined *after* service functions are verified.  
-
----
-
-## Future Phases
-1. Establish cross‑domain reward hooks between Progression → Unlocks → Achievements.  
-2. Introduce LiveOps configuration UI for dynamic events.  
-3. Prototype Multiplayer relay and matchmaking architecture.  
-4. Automate leaderboard resets via scheduled maintenance jobs.  
+All forthcoming domains must conform to the canonical architecture introduced in v1.1 with Reward Engine Authority.

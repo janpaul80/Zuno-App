@@ -1,24 +1,25 @@
-# ZUNO Constitution – Change Log
+# CHANGELOG.md
 
-Version: 1.0  
-Status: Active
+## Version 1.1 — 2026‑07‑01
 
----
+### Added
+- **Reward Engine Authority** — single reward pipeline controlling all XP, currency, inventory, unlock, and bundle grants.
+- **Economy Authority** — transaction ledger requirement for all balance changes.
+- **Canonical Architecture** — standardized backend flow:
+  ```
+  Gameplay Domain
+          ↓
+  Reward Engine
+          ↓
+  Economy / Inventory / Progression / Unlocks
+          ↓
+  Repositories
+          ↓
+  Supabase
+  ```
+- **Engineering Standards v1.1** — server‑authoritative rules enforcing Reward Engine and Economy Authority compliance.
+- **Decision Log Entry 2026‑07‑01** — adoption of centralized reward/economy control model.
+- **Backend Roadmap** — updated milestone order including Daily Rewards → Reward Engine → Economy v2.
 
-## Version 1.0 – Initial Release
-**Summary:**
-- Creation of the complete ZUNO Constitution.
-- Added governance, architecture, design, and operational standards.
-- Established INDEX.md as the single entry point.
-- Adopted ADR (Architecture Decision Record) format for major decisions.
-
----
-
-## Future Updates
-All Constitution revisions must increment version numbers and include:
-- Date of change
-- Version number
-- Summary of modifications
-- Approver name(s) or signatures
-
-No revision becomes active until merged into the main branch and noted here.
+### Version History
+- **v1.0** — Original Constitution, Governance, and Server Authoritative Design Framework.

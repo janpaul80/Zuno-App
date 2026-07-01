@@ -1,76 +1,34 @@
-# ZUNO Architecture
+# 02_ARCHITECTURE.md
 
-Version: 1.0  
-Status: Active
+## Canonical Backend Architecture
 
----
-
-```mermaid
-graph TD
-  A[Unity Client (Android)] -->|HTTPS REST| B[Next.js Serverless API (Vercel)]
-  B --> C[Supabase Auth + RLS]
-  C --> D[Postgres Database]
-  D --> E[Repositories]
-  E --> F[Services]
-  F --> G[API Routes / Handlers]
+```
+Gameplay Domain
+        ↓
+Reward Engine
+        ↓
+Economy / Inventory / Progression / Unlocks
+        ↓
+Repositories
+        ↓
+Supabase
 ```
 
-## Components
+### Architectural Principles
+- **Single Source of Truth:** All state‑changing operations flow through authorized services within the canonical stack.
+- **Server Authoritative:** The backend owns all economy, inventory, progression, and reward updates.
+- **Auditability:** Each transaction and reward grant must be transparently logged and traceable back to its source domain.
 
-### Unity Client (Android)
-* Primary game client with rendering, input, and gameplay logic.  
-* Communicates with backend via HTTPS endpoints.  
-* Stores non‑authoritative local preferences synced via Cloud Save.  
+### Reward Engine Layer
+- Responsible for orchestrating all reward distributions.
+- Coordinates with sub‑systems (Economy, Inventory, Progression, Unlocks).
+- Each domain emits validated reward requests rather than granting directly.
 
-### Next.js Backend / Website
-* Dual‑purpose: public site + serverless API.  
-* Implements `/api/v1/...` routes for every gameplay domain.  
+### Economy Layer
+- Maintains full transaction integrity.
+- Every currency change records: player ID, source domain, reason, amount, timestamp, and request ID.
+- Provides an immutable transaction ledger.
 
-### Supabase
-* Backend‑as‑a‑service providing Postgres + Auth.  
-* Row‑Level Security ensures user data isolation.  
-* Schema migrations managed through Git‑versioned SQL.  
-
-### Vercel
-* CI/CD hosting for both web and API deployment.  
-* Handles preview / production environments automatically.  
-
-### GitHub
-* Canonical source of truth.  
-* Vercel builds triggered directly from pushes and tags.  
-
----
-
-## Future Multiplayer Architecture
-* Real‑time service for matchmaking and presence.  
-* Deterministic server simulation validated by authority.  
-* Possible expansion using Supabase Realtime or custom relay.  
-
----
-
-## Coding Conventions
-
-| Element | Convention |
-|----------|-------------|
-| TypeScript files | camelCase filenames |
-| Interfaces / Types | PascalCase |
-| React components | PascalCase |
-| API routes | lowercase-hyphenated |
-| DB tables | snake_case |
-| DB columns | snake_case |
-| Constants | UPPER_CASE |
-| Docs | Capitalized_Names_With_Underscores |
-
----
-
-## Deployment Flow
-
-```mermaid
-graph TD
-  G[GitHub Commit] -->|CI/CD| V[Vercel Build]
-  V -->|Deploy| P[zunobattle.app Production]
-  V -->|Preview| PV[Vercel Preview URL]
-  P --> DB[Supabase Database]
-  PV --> DB
-  A[Android APK] -->|HTTPS API Calls| P
-```
+### Gameplay Domains
+- Daily Rewards, Quests, Achievements, Purchases, Promo Codes, LiveOps Events, Battle Pass, and Seasonal Events must never modify these systems directly.
+- Each emits a Reward Request to the Reward Engine for centralized processing.
