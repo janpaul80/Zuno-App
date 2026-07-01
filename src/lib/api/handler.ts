@@ -3,11 +3,11 @@ import { successResponse, errorResponse } from './response';
 import { ApiError } from './errors';
 import { generateRequestId, extractRequestId } from './requestId';
 
-// Generic API handler wrapper
+// Generic API handler wrapper ensuring Next.js-compatible return type
 export async function apiHandler<T>(
   req: NextRequest,
   handler: (req: NextRequest) => Promise<T>,
-) {
+): Promise<Response> {
   const requestId = extractRequestId(req) ?? generateRequestId();
 
   try {
