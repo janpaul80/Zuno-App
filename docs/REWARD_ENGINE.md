@@ -1,7 +1,7 @@
 # Reward Engine
 
-Version: 1.0
-Status: Architecture Approved
+Version: 1.1
+Status: Active
 
 ## 1. Purpose
 The Reward Engine is the sole authority responsible for orchestrating all gameplay rewards under ADR-003.
@@ -136,6 +136,22 @@ Its responsibility begins only after a gameplay domain produces a validated rewa
 - Economy v2 remains the balance authority for currency.
 - Reward Engine orchestrates downstream services; it does not replace their internal responsibilities.
 - Gameplay domains remain responsible for their own validation and completion logic.
+
+## Reward Engine v1 Implementation Status
+Implemented in v1:
+- canonical reward request validation
+- supported reward type validation
+- request id idempotency via `reward_requests`
+- immutable audit event creation via `reward_events`
+- success/failure status tracking
+- future downstream grant hooks documented as TODOs
+
+Deferred beyond v1:
+- full Economy v2 balance mutation
+- inventory grant execution
+- progression XP application
+- unlock persistence fan-out
+- bundle expansion orchestration
 
 ## Implementation Direction
 Reward Engine v1 should be implemented only after this document is approved and should follow this specification rather than redesigning reward orchestration during coding.

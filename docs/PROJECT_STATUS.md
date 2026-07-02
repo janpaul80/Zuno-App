@@ -1,6 +1,6 @@
 # ZUNO Project Status
 
-**Version:** 1.2  
+**Version:** 1.3  
 **Last Updated:** 2026-07-02
 
 ---
@@ -21,6 +21,7 @@
 | **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine request preparation. | ✅ Completed |
 | **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
+| **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
 
 ---
 
@@ -38,8 +39,7 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Reward Engine v1** | Central orchestration layer for all reward mutations. | Next |
-| **Economy v2** | Immutable transaction ledger and audited currency pipeline. | Upcoming |
+| **Economy v2** | Immutable transaction ledger and audited currency pipeline. | Next |
 | **Inventory Enhancements** | Expanded inventory modeling and auditing. | Upcoming |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Shop** | Reward Engine-coupled shop evolution. | Upcoming |
