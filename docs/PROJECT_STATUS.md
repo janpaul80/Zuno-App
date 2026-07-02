@@ -22,6 +22,7 @@
 | **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 | **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
+| **Economy v2** | Immutable transaction ledger, wallet authority, and Reward Engine currency integration. | ✅ Completed |
 
 ---
 
@@ -39,8 +40,7 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Economy v2** | Immutable transaction ledger and audited currency pipeline. | Next |
-| **Inventory Enhancements** | Expanded inventory modeling and auditing. | Upcoming |
+| **Inventory Enhancements** | Expanded inventory modeling and auditing. | Next |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Shop** | Reward Engine-coupled shop evolution. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |

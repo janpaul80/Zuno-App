@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.0
+Version: 1.1
 Status: Active
 
 ## Purpose
@@ -13,10 +13,10 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - immutable audit event creation via `reward_events`
 - request status tracking (`pending`, `processed`, `failed`, `ignored`)
 - future fan-out hooks documented as TODOs
+- Economy Service integration for `coins` and `gems`
 
 ## Deferred Beyond v1
-- full downstream Economy integration
-- XP mutation through Progression domain
+- full downstream XP mutation through Progression domain
 - inventory grant execution
 - unlock persistence execution
 - bundle expansion orchestration
@@ -30,4 +30,12 @@ Reward Engine v1 focuses on the durable server-authoritative pipeline:
 4. safe orchestration boundary
 5. future hooks for subdomain integration
 
-This keeps the architecture correct before Economy v2 and the remaining reward-capable dependencies are fully implemented.
+This keeps the architecture correct before the remaining reward-capable dependencies are fully implemented.
+
+## Economy Integration Rule
+Reward Engine does not write balances directly.
+
+Currency rewards flow exclusively through:
+Reward Engine → Economy Service → Economy Repository → Database
+
+This preserves Economy v2 as the only balance authority for coins, gems, premium currencies, and future event currencies.

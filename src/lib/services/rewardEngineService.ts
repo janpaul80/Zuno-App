@@ -5,6 +5,7 @@ import {
   type RewardRequestRecord,
   type RewardRequestStatus,
 } from '../repositories/rewardEngineRepository'
+import { economyService } from './economyService'
 
 const SUPPORTED_REWARD_TYPES = [
   'xp',
@@ -16,6 +17,7 @@ const SUPPORTED_REWARD_TYPES = [
 ] as const
 
 type SupportedRewardType = (typeof SUPPORTED_REWARD_TYPES)[number]
+type EconomyRewardType = Extract<SupportedRewardType, 'coins' | 'gems'>
 
 export interface RewardEntry {
   type: SupportedRewardType
@@ -44,6 +46,10 @@ export interface RewardProcessingResult {
 
 function isSupportedRewardType(value: string): value is SupportedRewardType {
   return SUPPORTED_REWARD_TYPES.includes(value as SupportedRewardType)
+}
+
+function isEconomyRewardType(type: SupportedRewardType): type is EconomyRewardType {
+  return type === 'coins' || type === 'gems'
 }
 
 function validateRewardEntry(reward: RewardEntry): void {
@@ -157,9 +163,20 @@ export const rewardEngineService = {
 
     try {
       for (const reward of request.rewards) {
-        // TODO(Reward Engine v1): fan out to Economy / Inventory / Progression / Unlocks.
-        // This v1 milestone establishes the canonical pipeline, validation, idempotency,
-        // and audit trail without performing full downstream mutations.
+        if (isEconomyRewardType(reward.type)) {
+          await economyService.credit({
+            transactionId: `${request.requestId}:${reward.type}`,
+            playerId: request.playerId,
+            currency: reward.type,
+            amount: reward.amount ?? 0,
+            sourceDomain: request.sourceDomain,
+            sourceReference: request.sourceReference,
+            requestId: request.requestId,
+          })
+        }
+
+        // TODO(Reward Engine v1): fan out inventory_item, xp, unlock, and bundle
+        // rewards through their authoritative downstream services.
         await rewardEngineRepository.createRewardEvent(
           createRewardEventRecord(request, reward, 'processed', null),
         )
