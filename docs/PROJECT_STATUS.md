@@ -1,6 +1,6 @@
 # ZUNO Project Status
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Last Updated:** 2026-07-02
 
 ---
@@ -9,7 +9,7 @@
 
 | Milestone | Description | Status |
 |------------|--------------|--------|
-| **ZUNO Constitution v1** | Established permanent engineering and governance framework defining standards and architecture. | ✅ Completed |
+| **ZUNO Constitution v1.1** | Governance frozen; ADR system established; Reward Engine authority codified. | ✅ Completed |
 | **Backend Foundation** | Core repository, service, and API architecture setup. | ✅ Completed |
 | **Player Domain** | Server-authoritative player profiles and identity management. | ✅ Completed |
 | **Shop Domain** | Item shop, purchasing logic, server-controlled economy flow. | ✅ Completed |
@@ -19,8 +19,19 @@
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, and progress persistence. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
 | **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine request preparation. | ✅ Completed |
+| **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |
 
 ---
+
+## Deployment Status
+- Production domain: `zunobattle.app`
+- Deployment platform: Vercel
+- Deployment source: GitHub `main`
+
+## Security Status
+- `.env*` is ignored by Git
+- `.env.example` is the only environment template intended for version control
+- Supabase and Langdock credentials remain environment-managed
 
 ## Planned Next Milestones
 
@@ -36,4 +47,12 @@
 
 ---
 
-**Governance:** All backend development must remain consistent with the ZUNO Constitution, ADR-003, and server-authoritative Reward Engine architecture.
+## Future Systems Documented
+- AI Director / Game Assistant
+- Android Google auth prerequisites
+- Stripe sandbox-only policy
+- Level Cinematic / Narrative System
+
+---
+
+**Governance:** All backend development must remain consistent with the ZUNO Constitution, ADR-003, and the Reward Engine-centered server-authoritative architecture.
