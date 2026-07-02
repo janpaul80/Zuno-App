@@ -6,6 +6,7 @@ import {
   type RewardRequestStatus,
 } from '../repositories/rewardEngineRepository'
 import { economyService } from './economyService'
+import { inventoryService } from './inventoryService'
 
 const SUPPORTED_REWARD_TYPES = [
   'xp',
@@ -44,6 +45,14 @@ export interface RewardProcessingResult {
   alreadyProcessed: boolean
 }
 
+function assertInventoryItemId(reward: RewardEntry): string {
+  if (!reward.itemId) {
+    throw new ApiError('BAD_REQUEST', 'inventory_item rewards require itemId', 400)
+  }
+
+  return reward.itemId
+}
+
 function isSupportedRewardType(value: string): value is SupportedRewardType {
   return SUPPORTED_REWARD_TYPES.includes(value as SupportedRewardType)
 }
@@ -67,8 +76,18 @@ function validateRewardEntry(reward: RewardEntry): void {
     }
   }
 
-  if (reward.type === 'inventory_item' && !reward.itemId) {
-    throw new ApiError('BAD_REQUEST', 'inventory_item rewards require itemId', 400)
+  if (reward.type === 'inventory_item') {
+    if (!reward.itemId) {
+      throw new ApiError('BAD_REQUEST', 'inventory_item rewards require itemId', 400)
+    }
+
+    if (typeof reward.amount !== 'number' || reward.amount <= 0) {
+      throw new ApiError(
+        'BAD_REQUEST',
+        'inventory_item rewards require a positive quantity',
+        400,
+      )
+    }
   }
 
   if (reward.type === 'unlock' && !reward.unlockKey) {
@@ -175,8 +194,23 @@ export const rewardEngineService = {
           })
         }
 
-        // TODO(Reward Engine v1): fan out inventory_item, xp, unlock, and bundle
-        // rewards through their authoritative downstream services.
+        if (reward.type === 'inventory_item') {
+          const itemId = assertInventoryItemId(reward)
+
+          await inventoryService.grantItem({
+            transactionId: `${request.requestId}:${itemId}`,
+            playerId: request.playerId,
+            itemId,
+            quantity: reward.amount ?? 0,
+            sourceDomain: request.sourceDomain,
+            sourceReference: request.sourceReference,
+            requestId: request.requestId,
+            metadata: request.metadata,
+          })
+        }
+
+        // TODO(Reward Engine v1): fan out xp, unlock, and bundle rewards
+        // through their authoritative downstream services.
         await rewardEngineRepository.createRewardEvent(
           createRewardEventRecord(request, reward, 'processed', null),
         )

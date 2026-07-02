@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.1
+Version: 1.2
 Status: Active
 
 ## Purpose
@@ -14,10 +14,10 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - request status tracking (`pending`, `processed`, `failed`, `ignored`)
 - future fan-out hooks documented as TODOs
 - Economy Service integration for `coins` and `gems`
+- Inventory Service integration for `inventory_item`
 
 ## Deferred Beyond v1
 - full downstream XP mutation through Progression domain
-- inventory grant execution
 - unlock persistence execution
 - bundle expansion orchestration
 - public or player-facing reward mutation API
@@ -39,3 +39,11 @@ Currency rewards flow exclusively through:
 Reward Engine → Economy Service → Economy Repository → Database
 
 This preserves Economy v2 as the only balance authority for coins, gems, premium currencies, and future event currencies.
+
+## Inventory Integration Rule
+Reward Engine does not write inventory directly.
+
+Item rewards flow exclusively through:
+Reward Engine → Inventory Service → Inventory Repository → Database
+
+This preserves Inventory Enhancements v2 as the only authority for inventory grants, removals, stack changes, and inventory transaction records.

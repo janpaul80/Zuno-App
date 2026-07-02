@@ -23,6 +23,7 @@
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 | **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
 | **Economy v2** | Immutable transaction ledger, wallet authority, and Reward Engine currency integration. | ✅ Completed |
+| **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | 🚧 In Progress |
 
 ---
 
@@ -40,7 +41,7 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Inventory Enhancements** | Expanded inventory modeling and auditing. | Next |
+| **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Shop** | Reward Engine-coupled shop evolution. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
