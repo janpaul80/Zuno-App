@@ -37,6 +37,14 @@ Returns quest definitions and player quest progress.
 
 ---
 
+## Daily Rewards
+
+### `GET /api/v1/player/daily-reward`
+Returns daily reward definitions, player streak metadata, current eligibility, pending reward metadata, and a future Reward Engine request payload.
+
+### `POST /api/v1/player/daily-reward/claim`
+Validates eligibility and records claim metadata only. Does not directly grant currency, XP, inventory, unlocks, or bundles.
+
 **Notes:**
-- No mutation endpoints are available yet.
-- Reward claiming logic will be introduced in a future milestone.
+- Daily Rewards v1 follows ADR-003 and prepares a reward request without executing reward mutations.
+- Reward granting remains deferred until Reward Engine v1 is implemented.

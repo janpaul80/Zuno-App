@@ -1,7 +1,7 @@
 # ZUNO Project Status
 
 **Version:** 1.1  
-**Last Updated:** 2026-07-01
+**Last Updated:** 2026-07-02
 
 ---
 
@@ -18,6 +18,7 @@
 | **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, and progress persistence. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
+| **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine request preparation. | ✅ Completed |
 
 ---
 
@@ -25,11 +26,14 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Daily Rewards v1** | Recurring login/engagement reward system tied to player retention. | Upcoming |
-| **Leaderboards v1** | Competitive ranking system for achievements, XP, and scores. | Upcoming |
-| **LiveOps v1** | Remote configuration and limited-time event management. | Upcoming |
-| **Multiplayer Foundation** | Core multiplayer session architecture and synchronization. | Future |
+| **Reward Engine v1** | Central orchestration layer for all reward mutations. | Next |
+| **Economy v2** | Immutable transaction ledger and audited currency pipeline. | Upcoming |
+| **Inventory Enhancements** | Expanded inventory modeling and auditing. | Upcoming |
+| **LiveOps** | Remote configuration and event management. | Upcoming |
+| **Shop** | Reward Engine-coupled shop evolution. | Upcoming |
+| **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
+| **Multiplayer Foundation** | Session architecture and synchronization. | Future |
 
 ---
 
-**Governance:** All backend development must remain consistent with the ZUNO Constitution and follow server-authoritative design and documented API patterns.
+**Governance:** All backend development must remain consistent with the ZUNO Constitution, ADR-003, and server-authoritative Reward Engine architecture.
