@@ -23,6 +23,11 @@
   ```
 - Finalized cross‑document references for clarity and maintainability.
 
+## Project Documentation Updates — 2026-07-02
+- Added `docs/REWARD_ENGINE.md` as the approved blueprint for Reward Engine v1 implementation.
+- Updated `docs/PROJECT_STATUS.md` to mark the Reward Engine architecture spec milestone as completed.
+- Established the implementation-first rule that Reward Engine coding must follow the approved architecture specification.
+
 ### Version History
 - **v1.1** — Introduced centralized Reward Engine and Economy Authority architecture.
 - **v1.0** — Original Governance Framework and Server‑Authoritative Design.

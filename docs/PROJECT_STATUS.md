@@ -20,6 +20,7 @@
 | **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
 | **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine request preparation. | ✅ Completed |
 | **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |
+| **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 
 ---
 
@@ -52,6 +53,7 @@
 - Android Google auth prerequisites
 - Stripe sandbox-only policy
 - Level Cinematic / Narrative System
+- Reward Engine orchestration blueprint
 
 ---
 
