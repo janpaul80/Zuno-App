@@ -106,15 +106,13 @@ CREATE TABLE IF NOT EXISTS inventory_events (
 CREATE INDEX IF NOT EXISTS idx_inventory_events_player_id ON inventory_events(player_id);
 
 -- =============================
--- cloud_saves
+-- player_cloud_saves
 -- =============================
-CREATE TABLE IF NOT EXISTS cloud_saves (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS player_cloud_saves (
+    player_id UUID PRIMARY KEY REFERENCES players(id) ON DELETE CASCADE,
     save_data JSONB NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_cloud_saves_player_id ON cloud_saves(player_id);
 
 -- End of migration

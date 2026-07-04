@@ -28,7 +28,7 @@ This document drafts the Phase 2 Supabase schema for ZUNO's backend foundation. 
 | `purchases` | Purchase attempts/results | Own rows | No direct inserts from client | Yes |
 | `currency_ledger` | Append-only currency audit trail | Own rows | No | Yes |
 | `inventory_events` | Append-only inventory audit trail | Own rows | No | Yes |
-| `cloud_saves` | Cloud save metadata/payload history | Own rows | Prefer route-validated only | Yes |
+| `player_cloud_saves` | Cloud save metadata/payload history | Own rows | Prefer route-validated only | Yes |
 
 ---
 
@@ -412,7 +412,7 @@ Suggested constraints/indexes:
 
 ---
 
-## 9. `cloud_saves`
+## 9. `player_cloud_saves`
 
 ### Purpose
 
@@ -502,7 +502,7 @@ Suggested constraints/indexes:
 1. API authenticates player.
 2. API validates payload schema and app version.
 3. API strips/rejects economy-owned fields.
-4. Server writes sanitized payload to `cloud_saves`.
+4. Server writes sanitized payload to `player_cloud_saves`.
 5. Server marks older active save for the same slot as `superseded` if desired.
 
 ---
@@ -519,7 +519,7 @@ The final migration should express policies in SQL, but the intended policy mode
 - `purchases`: users read own purchases; writes/status changes server-only.
 - `currency_ledger`: users read own ledger; append-only server writes.
 - `inventory_events`: users read own events; append-only server writes.
-- `cloud_saves`: users read own saves; writes should be route-validated/server-only in Phase 2.
+- `player_cloud_saves`: users read own saves; writes should be route-validated/server-only in Phase 2.
 
 ---
 
@@ -529,7 +529,7 @@ The final migration should express policies in SQL, but the intended policy mode
 - Should `player_profiles.display_name` be globally unique, or only validated for safety/length?
 - Are `coins`, `gems`, and `revive_tokens` enough for Phase 2, or should currencies be normalized into a row-per-currency table?
 - Should equipment be unique by `player_id + item_id`, or should ZUNO support multiple rolled instances of the same item later?
-- Which cloud-save fields are considered safe enough to persist in `cloud_saves.payload`?
+- Which cloud-save fields are considered safe enough to persist in `player_cloud_saves.save_data`?
 - Should level progression be added to this Phase 2 schema immediately or kept for a follow-up schema draft?
 - How will real-money platform receipts be validated when premium purchases begin?
 

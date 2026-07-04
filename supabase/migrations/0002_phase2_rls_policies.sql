@@ -12,7 +12,7 @@ ALTER TABLE shop_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE purchases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE currency_ledger ENABLE ROW LEVEL SECURITY;
 ALTER TABLE inventory_events ENABLE ROW LEVEL SECURITY;
-ALTER TABLE cloud_saves ENABLE ROW LEVEL SECURITY;
+ALTER TABLE player_cloud_saves ENABLE ROW LEVEL SECURITY;
 
 -- =============================
 -- Player-Owned Tables
@@ -47,7 +47,7 @@ CREATE POLICY select_own_inventory_events ON inventory_events
     FOR SELECT
     USING (player_id = auth.uid());
 
-CREATE POLICY select_own_cloud_saves ON cloud_saves
+CREATE POLICY select_own_player_cloud_saves ON player_cloud_saves
     FOR SELECT
     USING (player_id = auth.uid());
 

@@ -26,6 +26,8 @@ The following client‑side state is allowed in the cloud document:
 ---
 
 ## Document Schema
+Cloud Save documents are persisted in the `player_cloud_saves` table under the `save_data` JSONB column. There is one active Cloud Save document per player, keyed by `player_id`.
+
 | Field | Type | Description |
 |-------|------|-------------|
 | `saveVersion` | integer | Server‑incremented optimistic version number |
@@ -63,6 +65,7 @@ If `baseSaveVersion ≤ existing.saveVersion`, the request is rejected wit
 
 ## Security Considerations
 * Schema and payload validated via Zod.
+* `player_cloud_saves.player_id` is the primary key and references `players(id)` with cascading delete.
 * Auth integration (Supabase Auth) pending — currently uses mock ID placeholder.
 * No direct database calls in route handlers.
 * Never accepts or overwrites authoritative gameplay data.

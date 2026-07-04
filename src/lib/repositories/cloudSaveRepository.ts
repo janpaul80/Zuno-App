@@ -24,8 +24,7 @@ export const cloudSaveRepository = {
   async upsert(playerId: string, document: CloudSaveDocument): Promise<CloudSaveDocument> {
     const { error } = await supabaseServer
       .from('player_cloud_saves')
-      .upsert({ player_id: playerId, save_data: document })
-      .eq('player_id', playerId);
+      .upsert({ player_id: playerId, save_data: document }, { onConflict: 'player_id' });
     if (error) throw new ApiError('INTERNAL_ERROR', error.message, 500);
     return document;
   },

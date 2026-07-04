@@ -14,7 +14,7 @@ This draft migration establishes the foundation for all player‑related backend
 | `purchases` | Transaction history of player purchases. |
 | `currency_ledger` | Historical log of currency changes (source, gain/spend reason). |
 | `inventory_events` | Event log of inventory additions/removals (for analytics/debug). |
-| `cloud_saves` | Player save data synced in JSON format. |
+| `player_cloud_saves` | Player save data synced in JSON format. |
 
 ### Implementation Choices
 * All primary keys use **UUID** (`gen_random_uuid()` assumed for PostgreSQL + Supabase default).
