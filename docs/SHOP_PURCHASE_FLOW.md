@@ -20,19 +20,19 @@ POST /api/v1/shop/purchase
 6. **Ensure transaction_id (if provided) is unused** to maintain idempotency.
 
 ### 3. Currency Deduction Rules
-* Deduct currency from `player_currency` atomically within transaction.
+* Deduct currency through Economy v2 (`economyService.debit`).
 * Prefer integer arithmetic (no floats).
 * Insufficient balance → reject with `INSUFFICIENT_FUNDS`.
 
 ### 4. Inventory Grant Rules
-* Insert / upsert purchased item into `player_inventory`.
+* Grant purchased items through Inventory v2 (`inventoryService.grantItem`).
 * If stackable → increment quantity.
 * If unique item → reject duplicate acquisition.
 
 ### 5. Ledger / Audit Requirements
-* Every purchase creates a row in `currency_ledger`:
-  - `player_id`, `currency_type`, `delta`, `reason = 'purchase'`, `reference_id` = `purchase_id`.
-* Optionally, a record in `purchases` table for analytics.
+* Every currency debit creates an Economy v2 `economy_transactions` row through Economy Service.
+* Every item grant creates an Inventory v2 `inventory_transactions` row through Inventory Service.
+* Every purchase creates a `purchases` audit row with `idempotency_key`, `currency_type`, `price`, `status`, and `completed_at`.
 * Use database triggers or Supabase RPC for atomic ledger + inventory consistency.
 
 ### 6. Idempotency Strategy
@@ -45,17 +45,18 @@ POST /api/v1/shop/purchase
 * Service supports an `idempotency_key` parameter on purchase creation.
 * A duplicate replay with the same key is detected before any deduction occurs, returning a `409 IDEMPOTENT_REPLAY` error.
 * This prevents double‑charges and duplicate inventory grants.
+* The database enforces a unique `(player_id, idempotency_key)` purchase index.
 
 ### 6.1 Duplicate Non‑Consumable Protection
 * Non‑consumable items (`is_consumable = false`) are protected against re‑purchase.
-* Existing ownership is checked in `player_inventory` before currency deduction.
+* Existing ownership is checked in Inventory v2 (`player_inventory_items`) before currency deduction.
 * A second attempt yields `409 ALREADY_OWNED`.
 
 ### 6.2 Atomicity Limitation
 * The current implementation issues multiple Supabase API calls sequentially.
 * This design is **not fully atomic**—a partial failure between updates could leave intermediate state.
 * Planned improvement: consolidate into a single Postgres RPC or **transaction block** ensuring full ACID integrity.
-* Until migration, the server strives for ordering safety and defensive checks to minimize partial‑write risk.
+* Until then, the server records a pending purchase audit row first, routes balance and inventory mutations through Economy v2 and Inventory v2, then marks the purchase completed or failed.
 
 ### 7. Failure Cases
 | Case | Behavior |

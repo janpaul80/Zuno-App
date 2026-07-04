@@ -42,6 +42,8 @@ export interface ShopItem {
   price_coins: number;
   price_gems: number;
   category: string;
+  is_active: boolean;
+  is_consumable: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -53,5 +55,10 @@ export interface Purchase {
   quantity: number;
   total_cost_coins: number;
   total_cost_gems: number;
+  currency_type: 'coins' | 'gems';
+  price: number;
+  idempotency_key: string;
+  status: 'pending' | 'completed' | 'failed';
+  completed_at: string | null;
   created_at: string;
 }

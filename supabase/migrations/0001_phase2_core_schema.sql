@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS shop_items (
     price_coins BIGINT DEFAULT 0,
     price_gems BIGINT DEFAULT 0,
     category TEXT,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_consumable BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -75,9 +77,15 @@ CREATE TABLE IF NOT EXISTS purchases (
     quantity INT DEFAULT 1,
     total_cost_coins BIGINT DEFAULT 0,
     total_cost_gems BIGINT DEFAULT 0,
+    currency_type TEXT NOT NULL DEFAULT 'coins' CHECK (currency_type IN ('coins', 'gems')),
+    price BIGINT NOT NULL DEFAULT 0 CHECK (price >= 0),
+    idempotency_key TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'failed')),
+    completed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_purchases_player_id ON purchases(player_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_purchases_player_id_idempotency_key ON purchases(player_id, idempotency_key);
 
 -- =============================
 -- currency_ledger
