@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.4
+Version: 1.5
 Status: Active
 
 ## Purpose
@@ -17,6 +17,7 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - Inventory Service integration for `inventory_item`
 - Daily Rewards claim integration via canonical `RewardRequest`
 - Achievement completion integration via canonical `RewardRequest`
+- Quest completion integration via canonical `RewardRequest`
 
 ## Deferred Beyond v1
 - full downstream XP mutation through Progression domain
@@ -63,3 +64,10 @@ Achievements owns progress tracking and completion metadata. When an achievement
 Achievements never writes directly to currency, inventory, XP, or unlock state. Reward execution and audit records flow through Reward Engine and its downstream authority services.
 
 The current integration is still multi-call rather than a single database transaction. If Reward Engine processing fails after achievement completion metadata is persisted, the failed reward request remains auditable through Reward Engine records and the stable request ID prevents duplicate reward grants on replay.
+
+## Quests Integration Rule
+Quests owns progress tracking, completion metadata, and claim state. When a quest first transitions from incomplete to completed, Quests submits a canonical Reward Engine request using `sourceDomain = quests` and `requestId = quests:<playerId>:<questKey>`.
+
+Quests never writes directly to currency, inventory, XP, or unlock state. Reward execution and audit records flow through Reward Engine and its downstream authority services.
+
+The current integration is still multi-call rather than a single database transaction. If Reward Engine processing fails after quest completion metadata is persisted, the failed reward request remains auditable through Reward Engine records and the stable request ID prevents duplicate reward grants on replay.
