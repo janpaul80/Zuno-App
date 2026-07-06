@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.2
+Version: 1.3
 Status: Active
 
 ## Purpose
@@ -15,6 +15,7 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - future fan-out hooks documented as TODOs
 - Economy Service integration for `coins` and `gems`
 - Inventory Service integration for `inventory_item`
+- Daily Rewards claim integration via canonical `RewardRequest`
 
 ## Deferred Beyond v1
 - full downstream XP mutation through Progression domain
@@ -47,3 +48,10 @@ Item rewards flow exclusively through:
 Reward Engine → Inventory Service → Inventory Repository → Database
 
 This preserves Inventory Enhancements v2 as the only authority for inventory grants, removals, stack changes, and inventory transaction records.
+
+## Daily Rewards Integration Rule
+Daily Rewards owns eligibility, streak, and claim metadata. After a claim is validated and metadata is persisted, Daily Rewards submits a canonical Reward Engine request using `sourceDomain = daily_rewards` and a stable claim-based `requestId`.
+
+Daily Rewards never writes directly to currency, inventory, XP, or unlock state. Reward execution and audit records flow through Reward Engine and its downstream authority services.
+
+The current integration is still multi-call rather than a single database transaction. If Reward Engine processing fails after Daily Rewards metadata is persisted, the failed reward request remains auditable through Reward Engine records and the stable request ID prevents duplicate reward grants on replay.

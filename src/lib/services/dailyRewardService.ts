@@ -4,25 +4,24 @@ import {
   type DailyRewardDefinition,
   type PlayerDailyReward,
 } from '../repositories/dailyRewardRepository'
-
-export interface RewardEngineRequest {
-  source: 'daily_rewards'
-  playerId: string
-  rewardType: string | null
-  rewardAmount: number
-  rewardBundle: Record<string, unknown> | null
-  reason: string
-}
+import {
+  rewardEngineService,
+  type RewardEntry,
+  type RewardProcessingResult,
+  type RewardRequest,
+} from './rewardEngineService'
 
 export interface DailyRewardSummary {
   definitions: DailyRewardDefinition[]
   playerReward: PlayerDailyReward
   eligibleToClaim: boolean
   pendingReward: DailyRewardDefinition | null
-  rewardRequest: RewardEngineRequest | null
+  rewardRequest: RewardRequest | null
+  rewardProcessingResult: RewardProcessingResult | null
 }
 
 const DAILY_REWARD_COOLDOWN_MS = 24 * 60 * 60 * 1000
+const DAILY_REWARD_SOURCE_DOMAIN = 'daily_rewards'
 
 function createDefaultPlayerDailyReward(playerId: string): PlayerDailyReward {
   const now = new Date().toISOString()
@@ -61,6 +60,97 @@ function resolveNextRewardDay(
   return nextDay > maxDay ? 1 : nextDay
 }
 
+function getStringField(
+  record: Record<string, unknown> | null,
+  keys: string[],
+): string | null {
+  if (!record) return null
+
+  for (const key of keys) {
+    const value = record[key]
+    if (typeof value === 'string' && value.length > 0) {
+      return value
+    }
+  }
+
+  return null
+}
+
+function createRewardEntry(definition: DailyRewardDefinition): RewardEntry {
+  const rewardType = definition.reward_type
+  const amount = definition.reward_amount
+
+  if (rewardType === 'coins' || rewardType === 'gems' || rewardType === 'xp') {
+    return { type: rewardType, amount }
+  }
+
+  if (rewardType === 'inventory_item') {
+    const itemId = getStringField(definition.reward_bundle, ['itemId', 'item_id'])
+    if (!itemId) {
+      throw new ApiError(
+        'BAD_REQUEST',
+        'Daily reward inventory_item definitions require itemId in reward_bundle',
+        400,
+      )
+    }
+
+    return { type: 'inventory_item', itemId, amount }
+  }
+
+  if (rewardType === 'unlock') {
+    const unlockKey = getStringField(definition.reward_bundle, ['unlockKey', 'unlock_key'])
+    if (!unlockKey) {
+      throw new ApiError(
+        'BAD_REQUEST',
+        'Daily reward unlock definitions require unlockKey in reward_bundle',
+        400,
+      )
+    }
+
+    return { type: 'unlock', unlockKey }
+  }
+
+  if (rewardType === 'bundle' || (!rewardType && definition.reward_bundle)) {
+    const bundleId = getStringField(definition.reward_bundle, ['bundleId', 'bundle_id', 'id', 'key'])
+    if (!bundleId) {
+      throw new ApiError(
+        'BAD_REQUEST',
+        'Daily reward bundle definitions require bundleId in reward_bundle',
+        400,
+      )
+    }
+
+    return { type: 'bundle', bundleId }
+  }
+
+  throw new ApiError('BAD_REQUEST', 'Daily reward definition has no supported reward type', 400)
+}
+
+function createDailyRewardRequest(
+  playerId: string,
+  definition: DailyRewardDefinition,
+  claimNumber: number,
+  createdAt: string,
+): RewardRequest {
+  const sourceReference = `daily_reward_day_${definition.day}:claim_${claimNumber}`
+
+  return {
+    requestId: `${DAILY_REWARD_SOURCE_DOMAIN}:${playerId}:claim:${claimNumber}`,
+    playerId,
+    sourceDomain: DAILY_REWARD_SOURCE_DOMAIN,
+    sourceReference,
+    rewards: [createRewardEntry(definition)],
+    metadata: {
+      rewardDay: definition.day,
+      claimNumber,
+      rewardType: definition.reward_type,
+      rewardAmount: definition.reward_amount,
+      rewardBundle: definition.reward_bundle,
+    },
+    createdAt,
+  }
+}
+
 export const dailyRewardService = {
   async getDailyRewardSummary(playerId: string): Promise<DailyRewardSummary> {
     const definitions = await dailyRewardRepository.listDefinitions()
@@ -73,15 +163,14 @@ export const dailyRewardService = {
     const nextRewardDay = resolveNextRewardDay(definitions, playerReward.current_streak)
     const pendingReward = await dailyRewardRepository.getDefinitionByDay(nextRewardDay)
 
+    const nextClaimNumber = playerReward.total_claims + 1
     const rewardRequest = pendingReward
-      ? {
-          source: 'daily_rewards' as const,
+      ? createDailyRewardRequest(
           playerId,
-          rewardType: pendingReward.reward_type,
-          rewardAmount: pendingReward.reward_amount,
-          rewardBundle: pendingReward.reward_bundle,
-          reason: `daily_reward_day_${pendingReward.day}`,
-        }
+          pendingReward,
+          nextClaimNumber,
+          new Date().toISOString(),
+        )
       : null
 
     return {
@@ -90,11 +179,12 @@ export const dailyRewardService = {
       eligibleToClaim,
       pendingReward,
       rewardRequest,
+      rewardProcessingResult: null,
     }
   },
 
   async claimDailyReward(playerId: string): Promise<DailyRewardSummary> {
-    const summary = await this.getDailyRewardSummary(playerId)
+    const summary = await dailyRewardService.getDailyRewardSummary(playerId)
 
     if (!summary.eligibleToClaim) {
       throw new ApiError('CONFLICT', 'Daily reward is not yet eligible to claim', 409)
@@ -105,12 +195,13 @@ export const dailyRewardService = {
     }
 
     const now = new Date()
+    const claimNumber = summary.playerReward.total_claims + 1
     const streak = summary.pendingReward.day
 
     const updatedRecord: PlayerDailyReward = {
       ...summary.playerReward,
       current_streak: streak,
-      total_claims: summary.playerReward.total_claims + 1,
+      total_claims: claimNumber,
       last_claim_day: summary.pendingReward.day,
       last_claimed_at: now.toISOString(),
       next_eligible_claim_at: new Date(now.getTime() + DAILY_REWARD_COOLDOWN_MS).toISOString(),
@@ -119,10 +210,23 @@ export const dailyRewardService = {
 
     await dailyRewardRepository.upsertPlayerDailyReward(updatedRecord)
 
-    // TODO(Reward Engine v1):
-    // Submit rewardRequest to Reward Engine after successful metadata update.
-    // Daily Rewards must never grant rewards directly.
+    const rewardRequest = createDailyRewardRequest(
+      playerId,
+      summary.pendingReward,
+      claimNumber,
+      now.toISOString(),
+    )
 
-    return this.getDailyRewardSummary(playerId)
+    const rewardProcessingResult = await rewardEngineService.processRewardRequest(
+      rewardRequest,
+    )
+
+    const updatedSummary = await dailyRewardService.getDailyRewardSummary(playerId)
+
+    return {
+      ...updatedSummary,
+      rewardRequest,
+      rewardProcessingResult,
+    }
   },
 }

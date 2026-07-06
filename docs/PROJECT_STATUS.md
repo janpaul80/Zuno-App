@@ -18,7 +18,7 @@
 | **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, and progress persistence. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
-| **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine request preparation. | ✅ Completed |
+| **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine claim submission. | ✅ Completed |
 | **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 | **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
@@ -54,7 +54,14 @@
 - Android Google auth prerequisites
 - Stripe sandbox-only policy
 - Level Cinematic / Narrative System
+- Game Intro Video / Startup Cinematic asset planned at `public/video.mp4`
+- Zunlandia story/lore direction for future cinematics, level briefings, and AI Director behavior
 - Reward Engine orchestration blueprint
+
+## Asset Status
+- Game assets are actively evolving and incomplete.
+- Additional assets will be added gradually until there is enough coverage for the game.
+- Backend remediation milestones must not delete or modify unrelated asset files.
 
 ---
 
