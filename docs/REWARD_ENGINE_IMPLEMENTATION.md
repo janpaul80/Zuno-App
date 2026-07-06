@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.5
+Version: 1.6
 Status: Active
 
 ## Purpose
@@ -15,12 +15,12 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - future fan-out hooks documented as TODOs
 - Economy Service integration for `coins` and `gems`
 - Inventory Service integration for `inventory_item`
+- Progression Service integration for `xp`
 - Daily Rewards claim integration via canonical `RewardRequest`
 - Achievement completion integration via canonical `RewardRequest`
 - Quest completion integration via canonical `RewardRequest`
 
 ## Deferred Beyond v1
-- full downstream XP mutation through Progression domain
 - unlock persistence execution
 - bundle expansion orchestration
 - public or player-facing reward mutation API
@@ -50,6 +50,14 @@ Item rewards flow exclusively through:
 Reward Engine → Inventory Service → Inventory Repository → Database
 
 This preserves Inventory Enhancements v2 as the only authority for inventory grants, removals, stack changes, and inventory transaction records.
+
+## Progression Integration Rule
+Reward Engine does not write XP or levels directly.
+
+XP rewards flow exclusively through:
+Reward Engine → Progression Service → Progression Repository → Database
+
+Progression Service validates positive XP grants, performs level-up calculations, and persists XP/level state in `player_progression`. Reward Engine request IDs remain the idempotency and audit boundary for XP grants.
 
 ## Daily Rewards Integration Rule
 Daily Rewards owns eligibility, streak, and claim metadata. After a claim is validated and metadata is persisted, Daily Rewards submits a canonical Reward Engine request using `sourceDomain = daily_rewards` and a stable claim-based `requestId`.

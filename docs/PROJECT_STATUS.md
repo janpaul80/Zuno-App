@@ -14,7 +14,7 @@
 | **Player Domain** | Server-authoritative player profiles and identity management. | ✅ Completed |
 | **Shop Domain** | Item shop, purchasing logic, server-controlled economy flow. | ✅ Completed |
 | **Cloud Save v1** | Server-controlled client-state synchronization, versioned schema, checksum validation. | ✅ Completed |
-| **Progression Domain v1** | Player progression, XP tracking, and level computation. | ✅ Completed |
+| **Progression Domain v2** | Server-authoritative XP grants, level computation, and Reward Engine XP integration. | ✅ Completed |
 | **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, progress persistence, and Reward Engine completion submission. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative quest tracking, completion state, claim state preservation, and Reward Engine completion submission. | ✅ Completed |

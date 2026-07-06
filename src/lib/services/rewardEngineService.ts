@@ -7,6 +7,7 @@ import {
 } from '../repositories/rewardEngineRepository'
 import { economyService } from './economyService'
 import { inventoryService } from './inventoryService'
+import { progressionService } from './progressionService'
 
 const SUPPORTED_REWARD_TYPES = [
   'xp',
@@ -19,6 +20,7 @@ const SUPPORTED_REWARD_TYPES = [
 
 type SupportedRewardType = (typeof SUPPORTED_REWARD_TYPES)[number]
 type EconomyRewardType = Extract<SupportedRewardType, 'coins' | 'gems'>
+type ProgressionRewardType = Extract<SupportedRewardType, 'xp'>
 
 export interface RewardEntry {
   type: SupportedRewardType
@@ -59,6 +61,12 @@ function isSupportedRewardType(value: string): value is SupportedRewardType {
 
 function isEconomyRewardType(type: SupportedRewardType): type is EconomyRewardType {
   return type === 'coins' || type === 'gems'
+}
+
+function isProgressionRewardType(
+  type: SupportedRewardType,
+): type is ProgressionRewardType {
+  return type === 'xp'
 }
 
 function validateRewardEntry(reward: RewardEntry): void {
@@ -194,6 +202,16 @@ export const rewardEngineService = {
           })
         }
 
+        if (isProgressionRewardType(reward.type)) {
+          await progressionService.grantXp({
+            playerId: request.playerId,
+            amount: reward.amount ?? 0,
+            sourceDomain: request.sourceDomain,
+            sourceReference: request.sourceReference,
+            requestId: request.requestId,
+          })
+        }
+
         if (reward.type === 'inventory_item') {
           const itemId = assertInventoryItemId(reward)
 
@@ -209,7 +227,7 @@ export const rewardEngineService = {
           })
         }
 
-        // TODO(Reward Engine v1): fan out xp, unlock, and bundle rewards
+        // TODO(Reward Engine v1): fan out unlock and bundle rewards
         // through their authoritative downstream services.
         await rewardEngineRepository.createRewardEvent(
           createRewardEventRecord(request, reward, 'processed', null),
