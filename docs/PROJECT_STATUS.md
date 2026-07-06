@@ -16,7 +16,7 @@
 | **Cloud Save v1** | Server-controlled client-state synchronization, versioned schema, checksum validation. | ✅ Completed |
 | **Progression Domain v1** | Player progression, XP tracking, and level computation. | ✅ Completed |
 | **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
-| **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, and progress persistence. | ✅ Completed |
+| **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, progress persistence, and Reward Engine completion submission. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative daily/weekly quest tracking, progress, and claiming framework. | ✅ Completed |
 | **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine claim submission. | ✅ Completed |
 | **Deployment / Docs Readiness** | Deployment domain, AI direction, Android auth notes, Stripe sandbox policy, and cinematic planning documented. | ✅ Completed |

@@ -1,6 +1,6 @@
 # Reward Engine Implementation Notes
 
-Version: 1.3
+Version: 1.4
 Status: Active
 
 ## Purpose
@@ -16,6 +16,7 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - Economy Service integration for `coins` and `gems`
 - Inventory Service integration for `inventory_item`
 - Daily Rewards claim integration via canonical `RewardRequest`
+- Achievement completion integration via canonical `RewardRequest`
 
 ## Deferred Beyond v1
 - full downstream XP mutation through Progression domain
@@ -55,3 +56,10 @@ Daily Rewards owns eligibility, streak, and claim metadata. After a claim is val
 Daily Rewards never writes directly to currency, inventory, XP, or unlock state. Reward execution and audit records flow through Reward Engine and its downstream authority services.
 
 The current integration is still multi-call rather than a single database transaction. If Reward Engine processing fails after Daily Rewards metadata is persisted, the failed reward request remains auditable through Reward Engine records and the stable request ID prevents duplicate reward grants on replay.
+
+## Achievements Integration Rule
+Achievements owns progress tracking and completion metadata. When an achievement first transitions from incomplete to completed, Achievements submits a canonical Reward Engine request using `sourceDomain = achievements` and `requestId = achievements:<playerId>:<achievementKey>`.
+
+Achievements never writes directly to currency, inventory, XP, or unlock state. Reward execution and audit records flow through Reward Engine and its downstream authority services.
+
+The current integration is still multi-call rather than a single database transaction. If Reward Engine processing fails after achievement completion metadata is persisted, the failed reward request remains auditable through Reward Engine records and the stable request ID prevents duplicate reward grants on replay.
