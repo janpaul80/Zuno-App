@@ -8,6 +8,8 @@ import {
 import { economyService } from './economyService'
 import { inventoryService } from './inventoryService'
 import { progressionService } from './progressionService'
+import { unlockService } from './unlockService'
+import type { UnlockType } from '../repositories/unlockRepository'
 
 const SUPPORTED_REWARD_TYPES = [
   'xp',
@@ -21,12 +23,14 @@ const SUPPORTED_REWARD_TYPES = [
 type SupportedRewardType = (typeof SUPPORTED_REWARD_TYPES)[number]
 type EconomyRewardType = Extract<SupportedRewardType, 'coins' | 'gems'>
 type ProgressionRewardType = Extract<SupportedRewardType, 'xp'>
+type UnlockRewardType = Extract<SupportedRewardType, 'unlock'>
 
 export interface RewardEntry {
   type: SupportedRewardType
   amount?: number
   itemId?: string
   unlockKey?: string
+  unlockType?: UnlockType
   bundleId?: string
 }
 
@@ -67,6 +71,24 @@ function isProgressionRewardType(
   type: SupportedRewardType,
 ): type is ProgressionRewardType {
   return type === 'xp'
+}
+
+function isUnlockRewardType(type: SupportedRewardType): type is UnlockRewardType {
+  return type === 'unlock'
+}
+
+function getMetadataString(
+  metadata: Record<string, unknown>,
+  keys: string[],
+): string | null {
+  for (const key of keys) {
+    const value = metadata[key]
+    if (typeof value === 'string' && value.length > 0) {
+      return value
+    }
+  }
+
+  return null
 }
 
 function validateRewardEntry(reward: RewardEntry): void {
@@ -212,6 +234,20 @@ export const rewardEngineService = {
           })
         }
 
+        if (isUnlockRewardType(reward.type)) {
+          await unlockService.grantUnlock({
+            playerId: request.playerId,
+            unlockKey: reward.unlockKey ?? '',
+            unlockType:
+              reward.unlockType ??
+              (getMetadataString(request.metadata, ['unlockType', 'unlock_type']) as UnlockType | null) ??
+              'reward',
+            sourceDomain: request.sourceDomain,
+            sourceReference: request.sourceReference,
+            requestId: request.requestId,
+          })
+        }
+
         if (reward.type === 'inventory_item') {
           const itemId = assertInventoryItemId(reward)
 
@@ -227,7 +263,7 @@ export const rewardEngineService = {
           })
         }
 
-        // TODO(Reward Engine v1): fan out unlock and bundle rewards
+        // TODO(Reward Engine v1): fan out bundle rewards
         // through their authoritative downstream services.
         await rewardEngineRepository.createRewardEvent(
           createRewardEventRecord(request, reward, 'processed', null),

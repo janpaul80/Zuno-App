@@ -10,6 +10,7 @@ import {
   type RewardProcessingResult,
   type RewardRequest,
 } from './rewardEngineService'
+import type { UnlockType } from '../repositories/unlockRepository'
 
 export interface DailyRewardSummary {
   definitions: DailyRewardDefinition[]
@@ -22,6 +23,18 @@ export interface DailyRewardSummary {
 
 const DAILY_REWARD_COOLDOWN_MS = 24 * 60 * 60 * 1000
 const DAILY_REWARD_SOURCE_DOMAIN = 'daily_rewards'
+const SUPPORTED_UNLOCK_TYPES: readonly UnlockType[] = [
+  'character',
+  'cosmetic',
+  'reward',
+  'weapon',
+  'ability',
+  'feature',
+]
+
+function isSupportedUnlockType(value: string): value is UnlockType {
+  return SUPPORTED_UNLOCK_TYPES.includes(value as UnlockType)
+}
 
 function createDefaultPlayerDailyReward(playerId: string): PlayerDailyReward {
   const now = new Date().toISOString()
@@ -99,6 +112,7 @@ function createRewardEntry(definition: DailyRewardDefinition): RewardEntry {
 
   if (rewardType === 'unlock') {
     const unlockKey = getStringField(definition.reward_bundle, ['unlockKey', 'unlock_key'])
+    const unlockType = getStringField(definition.reward_bundle, ['unlockType', 'unlock_type'])
     if (!unlockKey) {
       throw new ApiError(
         'BAD_REQUEST',
@@ -107,7 +121,12 @@ function createRewardEntry(definition: DailyRewardDefinition): RewardEntry {
       )
     }
 
-    return { type: 'unlock', unlockKey }
+    return {
+      type: 'unlock',
+      unlockKey,
+      unlockType:
+        unlockType !== null && isSupportedUnlockType(unlockType) ? unlockType : undefined,
+    }
   }
 
   if (rewardType === 'bundle' || (!rewardType && definition.reward_bundle)) {

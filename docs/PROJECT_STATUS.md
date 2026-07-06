@@ -15,7 +15,7 @@
 | **Shop Domain** | Item shop, purchasing logic, server-controlled economy flow. | ✅ Completed |
 | **Cloud Save v1** | Server-controlled client-state synchronization, versioned schema, checksum validation. | ✅ Completed |
 | **Progression Domain v2** | Server-authoritative XP grants, level computation, and Reward Engine XP integration. | ✅ Completed |
-| **Unlocks Domain v1** | Manages item and feature unlocks via player progression and purchases. | ✅ Completed |
+| **Unlocks Domain v2** | Server-authoritative unlock grants, duplicate protection, category support, and Reward Engine unlock integration. | ✅ Completed |
 | **Achievements Domain v1** | Server-authoritative achievement tracking, completion state, progress persistence, and Reward Engine completion submission. | ✅ Completed |
 | **Quests Domain v1** | Server-authoritative quest tracking, completion state, claim state preservation, and Reward Engine completion submission. | ✅ Completed |
 | **Daily Rewards v1** | Eligibility, streak tracking, claim metadata, and Reward Engine claim submission. | ✅ Completed |
@@ -42,8 +42,9 @@
 | Milestone | Description | Target |
 |------------|--------------|---------|
 | **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
+| **Supabase Authentication Integration** | Replace mock player IDs with authenticated Supabase identity. | Upcoming |
+| **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Upcoming |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
-| **Shop** | Reward Engine-coupled shop evolution. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |
 
