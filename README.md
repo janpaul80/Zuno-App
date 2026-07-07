@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZUNO App
 
-## Getting Started
+ZUNO is my mobile game project. It is a 3D platformer and adventure game with characters, levels, coins, rewards, upgrades, inventory, shop systems, and a backend for player progress.
 
-First, run the development server:
+This repo is the web and backend side of the project. It shows the game world, the public pages, the trailer, and the service layer that would support accounts, rewards, purchases, and cloud saves.
+
+Live site: [zunobattle.app](https://zunobattle.app)
+
+## What is in here
+
+- Next.js site for the game
+- Pages for gameplay, levels, weapons, rewards, roadmap, support, and legal info
+- Supabase services for player profiles, inventory, economy, quests, unlocks, and achievements
+- API routes under `/api/v1/player/*` and `/api/v1/shop/*`
+- Validators, repositories, and domain services for game data
+- Trailer video, character art, weapons, rewards, and level assets
+
+## Tech stack
+
+- Next.js, React, TypeScript
+- Tailwind CSS and CSS modules
+- Supabase for player data
+- Framer Motion and Lucide React
+- Zod for validation
+
+## Run it locally
 
 ```bash
+git clone https://github.com/janpaul80/Zuno-App.git
+cd Zuno-App
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local` with Supabase values:
 
-## Learn More
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+Use local or test credentials while developing. Do not commit production secrets.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Useful scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev      # Start local development
+npm run build    # Build the app
+npm run start    # Run the production build
+npm run lint     # Run lint checks
+```
 
-## Deploy on Vercel
+## Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/app/` has pages and API routes.
+- `src/lib/services/` has progression, rewards, inventory, shop, and player services.
+- `src/lib/repositories/` has the data access layer.
+- `supabase/migrations/` has the schema work for the game systems.
+- `public/` has the art, trailer, characters, weapons, and reward media.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Status
+
+Active prototype. The repo shows the web presence and backend plan for the game. A real release still needs the playable build, store packaging, security review, and live Supabase setup.
