@@ -32,6 +32,10 @@ Current behavior (conceptual):
 
 Non-atomic risk: steps 2–4 can partially succeed across multiple tables.
 
+Status:
+- Implemented in Phase 16 as `process_reward_request_rpc`.
+- Reward Engine now executes reward side effects atomically and writes `reward_requests` + `reward_events` in the same transaction.
+
 ### 2. Shop Purchase
 Current behavior (conceptual):
 1. Verify item availability / pricing.
@@ -124,6 +128,11 @@ Suggested outputs:
 - deltas applied (wallet, items, xp, unlocks)
 - error code if failed
 
+Status:
+- Implemented in Phase 16.
+- Uses Economy v2 `credit_wallet_rpc` and Inventory v2 `grant_inventory_item_rpc` internally.
+- Adds dedicated helpers for progression and unlocks: `grant_xp_rpc`, `grant_unlock_rpc`.
+
 #### `process_shop_purchase_rpc`
 Purpose:
 - Atomically:
@@ -215,6 +224,9 @@ Do not remove existing non-RPC code until:
 3. Shop purchase RPC (ties Economy + Inventory/Unlock + receipt)
 4. Reward Engine RPC (ties all authorities + reward request status + audit)
 5. Progression/Unlock hardening (dedicated RPCs if needed; ensure concurrency correctness)
+
+Status:
+- Step 4 and the required Step 5 helpers are implemented in Phase 16.
 
 ## Known Limitations
 - Supabase JS does not expose multi-statement transactions directly from application code.

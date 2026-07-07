@@ -13,10 +13,10 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - immutable audit event creation via `reward_events`
 - request status tracking (`pending`, `processed`, `failed`, `ignored`)
 - future fan-out hooks documented as TODOs
-- Economy Service integration for `coins` and `gems`
-- Inventory Service integration for `inventory_item`
-- Progression Service integration for `xp`
-- Unlock Service integration for `unlock`
+- Economy integration for `coins` and `gems`
+- Inventory integration for `inventory_item`
+- Progression integration for `xp`
+- Unlock integration for `unlock`
 - Daily Rewards claim integration via canonical `RewardRequest`
 - Achievement completion integration via canonical `RewardRequest`
 - Quest completion integration via canonical `RewardRequest`
@@ -26,7 +26,16 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - public or player-facing reward mutation API
 
 ## Transactional Orchestration Note
-Reward Engine v1 is intentionally multi-call across authority services. Transactional orchestration (Postgres RPC) will migrate reward processing to a single atomic procedure (planned as `process_reward_request_rpc`). See: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
+Reward Engine processing is now implemented as a single atomic database orchestration RPC:
+`process_reward_request_rpc`.
+
+This RPC:
+- enforces idempotency via `reward_requests.request_id`
+- applies side effects in one transaction (economy, inventory, progression, unlocks)
+- writes the immutable audit trail to `reward_events`
+- updates final request state (`processed` / `failed` / `ignored`)
+
+See: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
 
 ## Why This Scope
 Reward Engine v1 focuses on the durable server-authoritative pipeline:
@@ -41,34 +50,30 @@ This keeps the architecture correct before the remaining reward-capable dependen
 ## Economy Integration Rule
 Reward Engine does not write balances directly.
 
-Currency rewards flow exclusively through:
-Reward Engine → Economy Service → Economy Repository → Database
+Currency rewards flow through:
+Reward Engine → Reward Engine Repository → `process_reward_request_rpc` → `credit_wallet_rpc` → Database
 
 This preserves Economy v2 as the only balance authority for coins, gems, premium currencies, and future event currencies.
 
 ## Inventory Integration Rule
 Reward Engine does not write inventory directly.
 
-Item rewards flow exclusively through:
-Reward Engine → Inventory Service → Inventory Repository → Database
+Item rewards flow through:
+Reward Engine → Reward Engine Repository → `process_reward_request_rpc` → `grant_inventory_item_rpc` → Database
 
 This preserves Inventory Enhancements v2 as the only authority for inventory grants, removals, stack changes, and inventory transaction records.
 
 ## Progression Integration Rule
 Reward Engine does not write XP or levels directly.
 
-XP rewards flow exclusively through:
-Reward Engine → Progression Service → Progression Repository → Database
-
-Progression Service validates positive XP grants, performs level-up calculations, and persists XP/level state in `player_progression`. Reward Engine request IDs remain the idempotency and audit boundary for XP grants.
+XP rewards flow through:
+Reward Engine → Reward Engine Repository → `process_reward_request_rpc` → `grant_xp_rpc` → `player_progression`
 
 ## Unlock Integration Rule
 Reward Engine does not write unlock state directly.
 
-Unlock rewards flow exclusively through:
-Reward Engine → Unlock Service → Unlock Repository → Database
-
-Unlock Service validates trusted unlock grants, avoids duplicates, supports current and future unlock categories, and persists unlock state in `player_unlocks`. Reward Engine request IDs remain the idempotency and audit boundary for unlock grants.
+Unlock rewards flow through:
+Reward Engine → Reward Engine Repository → `process_reward_request_rpc` → `grant_unlock_rpc` → `player_unlocks`
 
 ## Daily Rewards Integration Rule
 Daily Rewards owns eligibility, streak, and claim metadata. After a claim is validated and metadata is persisted, Daily Rewards submits a canonical Reward Engine request using `sourceDomain = daily_rewards` and a stable claim-based `requestId`.

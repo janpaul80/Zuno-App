@@ -2,13 +2,9 @@ import { ApiError } from '../api/errors'
 import {
   rewardEngineRepository,
   type RewardEventRecord,
-  type RewardRequestRecord,
   type RewardRequestStatus,
+  type ProcessRewardRequestRpcResult,
 } from '../repositories/rewardEngineRepository'
-import { economyService } from './economyService'
-import { inventoryService } from './inventoryService'
-import { progressionService } from './progressionService'
-import { unlockService } from './unlockService'
 import type { UnlockType } from '../repositories/unlockRepository'
 
 const SUPPORTED_REWARD_TYPES = [
@@ -21,8 +17,6 @@ const SUPPORTED_REWARD_TYPES = [
 ] as const
 
 type SupportedRewardType = (typeof SUPPORTED_REWARD_TYPES)[number]
-type EconomyRewardType = Extract<SupportedRewardType, 'coins' | 'gems'>
-type ProgressionRewardType = Extract<SupportedRewardType, 'xp'>
 type UnlockRewardType = Extract<SupportedRewardType, 'unlock'>
 
 export interface RewardEntry {
@@ -51,26 +45,20 @@ export interface RewardProcessingResult {
   alreadyProcessed: boolean
 }
 
-function assertInventoryItemId(reward: RewardEntry): string {
-  if (!reward.itemId) {
-    throw new ApiError('BAD_REQUEST', 'inventory_item rewards require itemId', 400)
+function toProcessingResult(
+  row: ProcessRewardRequestRpcResult,
+  alreadyProcessed: boolean,
+): RewardProcessingResult {
+  return {
+    requestId: row.request_id,
+    status: row.status,
+    processedAt: row.processed_at,
+    alreadyProcessed,
   }
-
-  return reward.itemId
 }
 
 function isSupportedRewardType(value: string): value is SupportedRewardType {
   return SUPPORTED_REWARD_TYPES.includes(value as SupportedRewardType)
-}
-
-function isEconomyRewardType(type: SupportedRewardType): type is EconomyRewardType {
-  return type === 'coins' || type === 'gems'
-}
-
-function isProgressionRewardType(
-  type: SupportedRewardType,
-): type is ProgressionRewardType {
-  return type === 'xp'
 }
 
 function isUnlockRewardType(type: SupportedRewardType): type is UnlockRewardType {
@@ -153,44 +141,6 @@ function validateRewardRequest(request: RewardRequest): void {
   request.rewards.forEach(validateRewardEntry)
 }
 
-function createRewardRequestRecord(request: RewardRequest): RewardRequestRecord {
-  return {
-    request_id: request.requestId,
-    player_id: request.playerId,
-    source_domain: request.sourceDomain,
-    source_reference: request.sourceReference,
-    status: 'pending',
-    rewards: request.rewards,
-    metadata: request.metadata,
-    error_message: null,
-    processed_at: null,
-    created_at: request.createdAt,
-  }
-}
-
-function createRewardEventRecord(
-  request: RewardRequest,
-  reward: RewardEntry,
-  status: RewardRequestStatus,
-  errorMessage: string | null,
-): RewardEventRecord {
-  return {
-    request_id: request.requestId,
-    player_id: request.playerId,
-    source_domain: request.sourceDomain,
-    reward_type: reward.type,
-    amount: reward.amount ?? null,
-    status,
-    metadata: {
-      ...request.metadata,
-      itemId: reward.itemId ?? null,
-      unlockKey: reward.unlockKey ?? null,
-      bundleId: reward.bundleId ?? null,
-    },
-    error_message: errorMessage,
-  }
-}
-
 export const rewardEngineService = {
   async processRewardRequest(
     request: RewardRequest,
@@ -208,105 +158,30 @@ export const rewardEngineService = {
       }
     }
 
-    await rewardEngineRepository.createRewardRequest(createRewardRequestRecord(request))
-
-    try {
-      for (const reward of request.rewards) {
-        if (isEconomyRewardType(reward.type)) {
-          await economyService.credit({
-            transactionId: `${request.requestId}:${reward.type}`,
-            playerId: request.playerId,
-            currency: reward.type,
-            amount: reward.amount ?? 0,
-            sourceDomain: request.sourceDomain,
-            sourceReference: request.sourceReference,
-            requestId: request.requestId,
-          })
-        }
-
-        if (isProgressionRewardType(reward.type)) {
-          await progressionService.grantXp({
-            playerId: request.playerId,
-            amount: reward.amount ?? 0,
-            sourceDomain: request.sourceDomain,
-            sourceReference: request.sourceReference,
-            requestId: request.requestId,
-          })
-        }
-
-        if (isUnlockRewardType(reward.type)) {
-          await unlockService.grantUnlock({
-            playerId: request.playerId,
-            unlockKey: reward.unlockKey ?? '',
-            unlockType:
-              reward.unlockType ??
-              (getMetadataString(request.metadata, ['unlockType', 'unlock_type']) as UnlockType | null) ??
-              'reward',
-            sourceDomain: request.sourceDomain,
-            sourceReference: request.sourceReference,
-            requestId: request.requestId,
-          })
-        }
-
-        if (reward.type === 'inventory_item') {
-          const itemId = assertInventoryItemId(reward)
-
-          await inventoryService.grantItem({
-            transactionId: `${request.requestId}:${itemId}`,
-            playerId: request.playerId,
-            itemId,
-            quantity: reward.amount ?? 0,
-            sourceDomain: request.sourceDomain,
-            sourceReference: request.sourceReference,
-            requestId: request.requestId,
-            metadata: request.metadata,
-          })
-        }
-
-        // TODO(Reward Engine v1): fan out bundle rewards
-        // through their authoritative downstream services.
-        await rewardEngineRepository.createRewardEvent(
-          createRewardEventRecord(request, reward, 'processed', null),
-        )
+    // The orchestration is now a single ACID RPC. This avoids partial success
+    // across Economy/Inventory/Progression/Unlock referrals.
+    const normalizedRewards = request.rewards.map((reward) => {
+      if (isUnlockRewardType(reward.type)) {
+        const unlockType =
+          reward.unlockType ??
+          (getMetadataString(request.metadata, ['unlockType', 'unlock_type']) as UnlockType | null) ??
+          'reward'
+        return { ...reward, unlockType }
       }
+      return reward
+    })
 
-      const processedAt = new Date().toISOString()
-      await rewardEngineRepository.updateRewardRequestStatus(
-        request.requestId,
-        'processed',
-        processedAt,
-        null,
-      )
+    const row = await rewardEngineRepository.processRewardRequestRpc({
+      requestId: request.requestId,
+      playerId: request.playerId,
+      sourceDomain: request.sourceDomain,
+      sourceReference: request.sourceReference,
+      rewards: normalizedRewards,
+      metadata: request.metadata,
+      createdAt: request.createdAt,
+    })
 
-      return {
-        requestId: request.requestId,
-        status: 'processed',
-        processedAt,
-        alreadyProcessed: false,
-      }
-    } catch (error) {
-      const message =
-        error instanceof ApiError ? error.message : 'Reward processing failed'
-
-      for (const reward of request.rewards) {
-        await rewardEngineRepository.createRewardEvent(
-          createRewardEventRecord(request, reward, 'failed', message),
-        )
-      }
-
-      await rewardEngineRepository.updateRewardRequestStatus(
-        request.requestId,
-        'failed',
-        null,
-        message,
-      )
-
-      if (error instanceof ApiError) {
-        throw error
-      }
-
-      throw new ApiError('INTERNAL_ERROR', message, 500)
-    }
+    return toProcessingResult(row, false)
   },
 
   async listPlayerRewardEvents(playerId: string): Promise<RewardEventRecord[]> {

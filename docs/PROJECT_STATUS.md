@@ -1,7 +1,7 @@
 # ZUNO Project Status
 
 **Version:** 1.3  
-**Last Updated:** 2026-07-06
+**Last Updated:** 2026-07-07
 
 ---
 
@@ -43,14 +43,15 @@
 |------------|--------------|---------|
 | **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
 | **Supabase Authentication Integration** | Replace mock player IDs with authenticated Supabase identity. | ✅ Completed |
-| **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Upcoming |
+| **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Active |
 
 ### Transactional Orchestration Planning (Milestone 9B)
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
   
-| **Economy Transactional RPCs** | Make Economy v2 balance mutations atomic via Postgres RPCs. | Active |
-| **Inventory Transactional RPCs** | Make Inventory v2 item mutations atomic via Postgres RPCs. | Active |
-| **Shop Purchase Transactional RPC** | Make shop purchases ACID across wallet debit + inventory grant + purchase receipt. | Active |
+| **Economy Transactional RPCs** | Make Economy v2 balance mutations atomic via Postgres RPCs. | ✅ Completed |
+| **Inventory Transactional RPCs** | Make Inventory v2 item mutations atomic via Postgres RPCs. | ✅ Completed |
+| **Shop Purchase Transactional RPC** | Make shop purchases ACID across wallet debit + inventory grant + purchase receipt. | ✅ Completed |
+| **Reward Engine Transactional RPC** | Make reward processing ACID across wallet credits + inventory grants + XP + unlocks. | ✅ Completed |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |
