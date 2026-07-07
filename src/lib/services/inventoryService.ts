@@ -130,6 +130,35 @@ export const inventoryService = {
     return updatedItem
   },
 
+  // Ensures a starter inventory item exists without writing legacy tables.
+  // Uses Inventory v2 upsert + ledgering through the existing grantItem path.
+  async ensureItem(
+    input: Omit<InventoryOperation, 'transactionId' | 'quantity'> & {
+      transactionId: string
+      quantity?: number
+    },
+  ): Promise<PlayerInventoryItemRecord> {
+    const existing = await inventoryRepository.getInventoryItem(
+      input.playerId,
+      input.itemId,
+    )
+
+    if (existing && existing.quantity > 0) {
+      return existing
+    }
+
+    return inventoryService.grantItem({
+      transactionId: input.transactionId,
+      playerId: input.playerId,
+      itemId: input.itemId,
+      quantity: input.quantity ?? 1,
+      sourceDomain: input.sourceDomain,
+      sourceReference: input.sourceReference,
+      requestId: input.requestId,
+      metadata: input.metadata,
+    })
+  },
+
   async removeItem(operation: InventoryOperation): Promise<PlayerInventoryItemRecord> {
     assertPositiveQuantity(operation.quantity)
 

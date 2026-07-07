@@ -61,6 +61,15 @@ Validates eligibility and records claim metadata only. Does not directly grant c
 ### `POST /api/v1/shop/purchase`
 Purchases an active shop item using server-authoritative pricing.
 
+### `GET /api/v1/shop/items`
+Returns active shop catalog items.
+
+**Authentication:** required (Supabase User)
+
+All protected endpoints require:
+
+`Authorization: Bearer <SUPABASE_ACCESS_TOKEN>`
+
 **Request:**
 ```json
 {

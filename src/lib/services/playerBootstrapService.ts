@@ -1,5 +1,9 @@
-import { supabaseServer } from '../supabase/server';
 import { ApiError } from '../api/errors';
+import { supabaseServer } from '../supabase/server';
+import { economyService } from './economyService'
+import { inventoryService } from './inventoryService'
+import { playerCurrencyService } from './playerCurrencyService'
+import { playerInventoryService } from './playerInventoryService'
 import type {
   Player,
   PlayerProfile,
@@ -45,6 +49,8 @@ export const playerBootstrapService = {
       .eq('player_id', playerId)
       .maybeSingle();
 
+    if (profErr) throw new ApiError('INTERNAL_ERROR', profErr.message, 500);
+
     let currentProfile = profile;
     if (!currentProfile) {
       const { data: newProf, error: insertProfErr } = await client
@@ -56,41 +62,26 @@ export const playerBootstrapService = {
       currentProfile = newProf;
     }
 
-    // 3. Ensure currency
-    const { data: currency, error: curErr } = await client
-      .from('player_currency')
-      .select('*')
-      .eq('player_id', playerId)
-      .maybeSingle();
+    // 3. Ensure wallet (Economy v2)
+    // Bootstrap should not write to legacy `player_currency`.
+    await economyService.ensureWallet(playerId)
 
-    let currentCurrency = currency;
-    if (!currentCurrency) {
-      const { data: newCur, error: newCurErr } = await client
-        .from('player_currency')
-        .insert({ player_id: playerId, coins: 0, gems: 0 })
-        .select('*')
-        .maybeSingle();
-      if (newCurErr) throw new ApiError('INTERNAL_ERROR', newCurErr.message, 500);
-      currentCurrency = newCur;
-    }
+    // 4. Ensure starter inventory (Inventory v2)
+    // Bootstrap should not write to legacy `player_inventory`.
+    await inventoryService.ensureItem({
+      transactionId: `bootstrap:${playerId}:explorer-suit`,
+      playerId,
+      itemId: 'explorer_suit_default',
+      quantity: 1,
+      sourceDomain: 'bootstrap',
+      sourceReference: 'starter_inventory',
+      requestId: `bootstrap:${playerId}`,
+      metadata: { starterItem: true },
+    })
 
-    // 4. Ensure starter inventory (Explorer Suit)
-    const { data: existingInv } = await client
-      .from('player_inventory')
-      .select('*')
-      .eq('player_id', playerId);
-
-    const currentInventory: PlayerInventoryItem[] = existingInv || [];
-
-    const hasExplorerSuit = currentInventory.some(
-      (i: PlayerInventoryItem) => i.item_id === 'explorer_suit_default',
-    );
-    if (!hasExplorerSuit) {
-      const { error: invErr } = await client
-        .from('player_inventory')
-        .insert({ player_id: playerId, item_id: 'explorer_suit_default', quantity: 1 });
-      if (invErr) throw new ApiError('INTERNAL_ERROR', invErr.message, 500);
-    }
+    // Return legacy shapes sourced from v2 authority stores.
+    const currentCurrency = await playerCurrencyService.getCurrency(playerId)
+    const currentInventory = await playerInventoryService.getInventory(playerId)
 
     return {
       player: currentPlayer,

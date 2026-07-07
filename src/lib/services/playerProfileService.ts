@@ -7,6 +7,8 @@ import type {
   PlayerInventoryItem,
 } from '../repositories/types';
 import type { PlayerSummary } from './playerBootstrapService';
+import { playerCurrencyService } from './playerCurrencyService'
+import { playerInventoryService } from './playerInventoryService'
 
 export const playerProfileService = {
   async getProfileSummary(playerId: string): Promise<PlayerSummary> {
@@ -17,11 +19,8 @@ export const playerProfileService = {
     if (!player) throw new ApiError('NOT_FOUND', 'Player not found', 404);
 
     const { data: profile } = await client.from('player_profiles').select('*').eq('player_id', playerId).maybeSingle();
-    const { data: currency } = await client.from('player_currency').select('*').eq('player_id', playerId).maybeSingle();
-    const { data: inventory } = await client
-      .from('player_inventory')
-      .select('*')
-      .eq('player_id', playerId);
+    const currency = await playerCurrencyService.getCurrency(playerId)
+    const inventory = await playerInventoryService.getInventory(playerId)
 
     return {
       player: player as Player,

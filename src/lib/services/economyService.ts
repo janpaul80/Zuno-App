@@ -68,6 +68,17 @@ export const economyService = {
     return (await economyRepository.getWallet(playerId)) ?? createDefaultWallet(playerId)
   },
 
+  // Creates a zero-balance wallet row if it doesn't exist.
+  // Intentionally does not create a ledger entry.
+  async ensureWallet(playerId: string): Promise<PlayerWalletRecord> {
+    const existing = await economyRepository.getWallet(playerId)
+    if (existing) return existing
+
+    const record = createDefaultWallet(playerId)
+    await economyRepository.upsertWallet(record)
+    return record
+  },
+
   async credit(operation: EconomyOperation): Promise<PlayerWalletRecord> {
     assertPositiveAmount(operation.amount)
 
