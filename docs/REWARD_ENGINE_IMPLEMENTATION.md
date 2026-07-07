@@ -25,6 +25,9 @@ This document records the concrete scope of Reward Engine v1 implementation.
 - bundle expansion orchestration
 - public or player-facing reward mutation API
 
+## Transactional Orchestration Note
+Reward Engine v1 is intentionally multi-call across authority services. Transactional orchestration (Postgres RPC) will migrate reward processing to a single atomic procedure (planned as `process_reward_request_rpc`). See: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
+
 ## Why This Scope
 Reward Engine v1 focuses on the durable server-authoritative pipeline:
 1. canonical request model

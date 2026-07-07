@@ -1,7 +1,7 @@
 # ZUNO Project Status
 
 **Version:** 1.3  
-**Last Updated:** 2026-07-02
+**Last Updated:** 2026-07-06
 
 ---
 
@@ -44,6 +44,9 @@
 | **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
 | **Supabase Authentication Integration** | Replace mock player IDs with authenticated Supabase identity. | ✅ Completed |
 | **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Upcoming |
+
+### Transactional Orchestration Planning (Milestone 9B)
+Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |
