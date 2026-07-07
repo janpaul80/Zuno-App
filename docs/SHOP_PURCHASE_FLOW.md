@@ -20,14 +20,18 @@ POST /api/v1/shop/purchase
 6. **Ensure transaction_id (if provided) is unused** to maintain idempotency.
 
 ### 3. Currency Deduction Rules
-* Deduct currency through Economy v2 (`economyService.debit`).
+* Deduct currency through Shop Purchase RPC (`process_shop_purchase_rpc`), which internally debits via Economy v2.
 * Prefer integer arithmetic (no floats).
 * Insufficient balance → reject with `INSUFFICIENT_FUNDS`.
 
 ### 4. Inventory Grant Rules
-* Grant purchased items through Inventory v2 (`inventoryService.grantItem`).
+* Grant purchased items through Shop Purchase RPC (`process_shop_purchase_rpc`), which internally grants via Inventory v2.
 * If stackable → increment quantity.
 * If unique item → reject duplicate acquisition.
+
+### 4.1 Quantity Limitation
+* Current implementation supports `quantity = 1` only.
+* Multi-quantity purchases require explicit product/UI support and careful stack-limit UX.
 
 ### 5. Ledger / Audit Requirements
 * Every currency debit creates an Economy v2 `economy_transactions` row through Economy Service.
@@ -41,11 +45,10 @@ POST /api/v1/shop/purchase
 * Repeated request with same ID → returns previous result (idempotent).
 * Database constraint (unique index) enforces consistency.
 
-**Current Implementation (2026‑06):**
-* Service supports an `idempotency_key` parameter on purchase creation.
-* A duplicate replay with the same key is detected before any deduction occurs, returning a `409 IDEMPOTENT_REPLAY` error.
-* This prevents double‑charges and duplicate inventory grants.
-* The database enforces a unique `(player_id, idempotency_key)` purchase index.
+**Current Implementation (2026‑07):**
+* Shop purchases execute through a single RPC: `process_shop_purchase_rpc`.
+* Idempotency is enforced by the unique `(player_id, idempotency_key)` purchase index.
+* Retries return the existing purchase receipt without double-charging or duplicating inventory grants.
 
 ### 6.1 Duplicate Non‑Consumable Protection
 * Non‑consumable items (`is_consumable = false`) are protected against re‑purchase.
@@ -53,10 +56,9 @@ POST /api/v1/shop/purchase
 * A second attempt yields `409 ALREADY_OWNED`.
 
 ### 6.2 Atomicity Limitation
-* The current implementation issues multiple Supabase API calls sequentially.
-* This design is **not fully atomic**—a partial failure between updates could leave intermediate state.
-* Planned improvement: consolidate into a single Postgres RPC or **transaction block** ensuring full ACID integrity.
-* Until then, the server records a pending purchase audit row first, routes balance and inventory mutations through Economy v2 and Inventory v2, then marks the purchase completed or failed.
+* The purchase flow is now implemented as a single Postgres RPC: `process_shop_purchase_rpc`.
+* Wallet debit (Economy v2), inventory grant (Inventory v2), and purchase receipt updates occur atomically inside the database transaction.
+* Idempotency is enforced by `(player_id, idempotency_key)` uniqueness on `purchases` and returns the original receipt on retries.
 
 ### 7. Failure Cases
 | Case | Behavior |

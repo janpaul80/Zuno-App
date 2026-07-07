@@ -23,7 +23,7 @@
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 | **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
 | **Economy v2** | Immutable transaction ledger, wallet authority, and Reward Engine currency integration. | ✅ Completed |
-| **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | 🚧 In Progress |
+ | **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | ✅ Completed |
 
 ---
 
@@ -47,9 +47,10 @@
 
 ### Transactional Orchestration Planning (Milestone 9B)
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
- 
+  
 | **Economy Transactional RPCs** | Make Economy v2 balance mutations atomic via Postgres RPCs. | Active |
 | **Inventory Transactional RPCs** | Make Inventory v2 item mutations atomic via Postgres RPCs. | Active |
+| **Shop Purchase Transactional RPC** | Make shop purchases ACID across wallet debit + inventory grant + purchase receipt. | Active |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |

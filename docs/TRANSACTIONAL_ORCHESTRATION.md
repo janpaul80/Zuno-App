@@ -1,6 +1,6 @@
 # Transactional Orchestration (Milestone 9B Planning)
 
-**Status:** Planning only (do not implement SQL/RPC in this milestone)
+**Status:** Planning complete; implementation in progress across domains.
 
 ## Goal
 Make multi-step reward, purchase, economy, inventory, progression, and unlock flows atomic (all-or-nothing) using database-backed transactions.
@@ -143,6 +143,9 @@ Suggested outputs:
 - receipt
 - any grants/unlocks
 - updated balances and/or deltas
+
+Status:
+- Implemented for Shop purchases in Phase 15 as an atomic orchestration over Economy v2 + Inventory v2 + purchases.
 
 #### `credit_wallet_rpc` / `debit_wallet_rpc` (if needed)
 Purpose:
