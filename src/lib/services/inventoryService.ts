@@ -3,7 +3,11 @@ import {
   inventoryRepository,
   type InventoryTransactionRecord,
   type PlayerInventoryItemRecord,
+  type InventoryRpcResult,
 } from '../repositories/inventoryRepository'
+
+// InventoryRepository remains the persistence boundary; direct transaction writes
+// are still supported for rare administrative/repair operations.
 
 const DEFAULT_STACK_LIMIT = 999
 
@@ -16,20 +20,6 @@ export interface InventoryOperation {
   sourceReference: string
   requestId: string
   metadata?: Record<string, unknown>
-}
-
-function createDefaultInventoryItem(
-  playerId: string,
-  itemId: string,
-  metadata: Record<string, unknown>,
-): PlayerInventoryItemRecord {
-  return {
-    player_id: playerId,
-    item_id: itemId,
-    quantity: 0,
-    metadata,
-    updated_at: new Date().toISOString(),
-  }
 }
 
 function assertPositiveQuantity(quantity: number): void {
@@ -63,25 +53,20 @@ function validateStackLimits(
   }
 }
 
-function createInventoryTransaction(
-  operation: InventoryOperation,
-  quantityDelta: number,
-  quantityBefore: number,
-  quantityAfter: number,
-): InventoryTransactionRecord {
+function mapInventoryRpcResultToItem(
+  playerId: string,
+  itemId: string,
+  result: InventoryRpcResult,
+): PlayerInventoryItemRecord {
   return {
-    transaction_id: operation.transactionId,
-    player_id: operation.playerId,
-    item_id: operation.itemId,
-    quantity_delta: quantityDelta,
-    quantity_before: quantityBefore,
-    quantity_after: quantityAfter,
-    source_domain: operation.sourceDomain,
-    source_reference: operation.sourceReference,
-    request_id: operation.requestId,
-    created_at: new Date().toISOString(),
+    player_id: playerId,
+    item_id: itemId,
+    quantity: result.item_quantity,
+    metadata: result.item_metadata ?? {},
+    updated_at: result.item_updated_at,
   }
 }
+
 
 export const inventoryService = {
   validateStackLimits,
@@ -93,41 +78,32 @@ export const inventoryService = {
   async grantItem(operation: InventoryOperation): Promise<PlayerInventoryItemRecord> {
     assertPositiveQuantity(operation.quantity)
 
-    const existing =
-      (await inventoryRepository.getInventoryItem(operation.playerId, operation.itemId)) ??
-      createDefaultInventoryItem(
-        operation.playerId,
-        operation.itemId,
-        operation.metadata ?? {},
-      )
-
-    const quantityBefore = existing.quantity
-    const quantityAfter = quantityBefore + operation.quantity
+    // Stack limit enforcement remains in service based on metadata; stackLimit is passed
+    // explicitly to the RPC to keep the mutation atomic.
+    const existing = await inventoryRepository.getInventoryItem(operation.playerId, operation.itemId)
+    const existingMetadata = existing?.metadata ?? (operation.metadata ?? {})
     const mergedMetadata = {
-      ...existing.metadata,
+      ...existingMetadata,
       ...(operation.metadata ?? {}),
     }
 
+    const stackLimit = resolveStackLimit(mergedMetadata)
+    const quantityAfter = (existing?.quantity ?? 0) + operation.quantity
     validateStackLimits(quantityAfter, mergedMetadata)
 
-    const updatedItem: PlayerInventoryItemRecord = {
-      ...existing,
-      quantity: quantityAfter,
-      metadata: mergedMetadata,
-      updated_at: new Date().toISOString(),
-    }
+    const result = await inventoryRepository.grantInventoryItem({
+      transactionId: operation.transactionId,
+      playerId: operation.playerId,
+      itemId: operation.itemId,
+      quantity: operation.quantity,
+      sourceDomain: operation.sourceDomain,
+      sourceReference: operation.sourceReference,
+      requestId: operation.requestId,
+      metadata: operation.metadata,
+      stackLimit,
+    })
 
-    await inventoryRepository.upsertInventoryItem(updatedItem)
-    await inventoryRepository.createInventoryTransaction(
-      createInventoryTransaction(
-        operation,
-        operation.quantity,
-        quantityBefore,
-        quantityAfter,
-      ),
-    )
-
-    return updatedItem
+    return mapInventoryRpcResultToItem(operation.playerId, operation.itemId, result)
   },
 
   // Ensures a starter inventory item exists without writing legacy tables.
@@ -162,39 +138,17 @@ export const inventoryService = {
   async removeItem(operation: InventoryOperation): Promise<PlayerInventoryItemRecord> {
     assertPositiveQuantity(operation.quantity)
 
-    const existing = await inventoryRepository.getInventoryItem(
-      operation.playerId,
-      operation.itemId,
-    )
+    const result = await inventoryRepository.removeInventoryItem({
+      transactionId: operation.transactionId,
+      playerId: operation.playerId,
+      itemId: operation.itemId,
+      quantity: operation.quantity,
+      sourceDomain: operation.sourceDomain,
+      sourceReference: operation.sourceReference,
+      requestId: operation.requestId,
+    })
 
-    if (!existing) {
-      throw new ApiError('NOT_FOUND', 'Inventory item not found', 404)
-    }
-
-    const quantityBefore = existing.quantity
-    const quantityAfter = quantityBefore - operation.quantity
-
-    if (quantityAfter < 0) {
-      throw new ApiError('CONFLICT', 'Insufficient item quantity', 409)
-    }
-
-    const updatedItem: PlayerInventoryItemRecord = {
-      ...existing,
-      quantity: quantityAfter,
-      updated_at: new Date().toISOString(),
-    }
-
-    await inventoryRepository.upsertInventoryItem(updatedItem)
-    await inventoryRepository.createInventoryTransaction(
-      createInventoryTransaction(
-        operation,
-        -operation.quantity,
-        quantityBefore,
-        quantityAfter,
-      ),
-    )
-
-    return updatedItem
+    return mapInventoryRpcResultToItem(operation.playerId, operation.itemId, result)
   },
 
   async recordInventoryTransaction(

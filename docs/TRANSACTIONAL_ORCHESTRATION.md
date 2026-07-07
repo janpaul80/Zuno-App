@@ -162,6 +162,9 @@ Purpose:
 Notes:
 - Prefer calling via higher-level RPCs unless direct mutation endpoints require it.
 
+Status:
+- Implemented for Inventory v2 in Phase 14 as the foundation for transactional orchestration.
+
 #### `grant_xp_rpc` (if needed)
 Purpose:
 - Atomically grant XP and persist the derived progression state.

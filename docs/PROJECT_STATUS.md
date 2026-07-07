@@ -49,6 +49,7 @@
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
  
 | **Economy Transactional RPCs** | Make Economy v2 balance mutations atomic via Postgres RPCs. | Active |
+| **Inventory Transactional RPCs** | Make Inventory v2 item mutations atomic via Postgres RPCs. | Active |
 | **LiveOps** | Remote configuration and event management. | Upcoming |
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |
