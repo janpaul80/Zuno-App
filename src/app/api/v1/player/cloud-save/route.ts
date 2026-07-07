@@ -4,12 +4,7 @@ import { z } from 'zod'
 import { cloudSaveService } from '@/lib/services/cloudSaveService'
 import { MAX_CLOUD_SAVE_BYTES } from '@/lib/config/constants'
 import { ApiError } from '@/lib/api/errors'
-
-// Temporary mock player identity for development
-// TODO: Replace with authenticated Supabase user ID before production
-function getMockPlayerId() {
-  return '00000000-0000-0000-0000-000000000001'
-}
+import { resolveAuthenticatedPlayerId } from '@/lib/auth/player'
 
 const CloudSaveSchema = z.object({
   baseSaveVersion: z.number().int().nonnegative().optional().default(0),
@@ -19,15 +14,15 @@ const CloudSaveSchema = z.object({
 })
 
 export const GET = (req: NextRequest) =>
-  apiHandler(req, async () => {
-    const playerId = getMockPlayerId()
+  apiHandler(req, async (request) => {
+    const playerId = await resolveAuthenticatedPlayerId(request)
     const summary = await cloudSaveService.getCloudSaveSummary(playerId)
     return summary
   })
 
 export const POST = (req: NextRequest) =>
-  apiHandler(req, async () => {
-    const playerId = getMockPlayerId()
+  apiHandler(req, async (request) => {
+    const playerId = await resolveAuthenticatedPlayerId(request)
     const json = await req.json().catch(() => {
       throw new ApiError('BAD_REQUEST', 'Invalid JSON body', 400)
     })

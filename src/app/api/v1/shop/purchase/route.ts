@@ -1,14 +1,9 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { apiHandler } from '@/lib/api/handler';
+import { resolveAuthenticatedPlayerId } from '@/lib/auth/player';
 import { shopPurchaseService } from '@/lib/services/shopPurchaseService';
 import { ApiError } from '@/lib/api/errors';
-
-// Temporary mock player identity for development
-// TODO: replace with authenticated Supabase user ID before production
-function getMockPlayerId() {
-  return '00000000-0000-0000-0000-000000000001';
-}
 
 const PurchaseRequestSchema = z.object({
   itemId: z.string().min(1, 'itemId is required'),
@@ -16,7 +11,7 @@ const PurchaseRequestSchema = z.object({
 });
 
 export const POST = (req: NextRequest) =>
-  apiHandler(req, async () => {
+  apiHandler(req, async (request) => {
     const body = await req.json().catch(() => {
       throw new ApiError('BAD_REQUEST', 'Invalid JSON body', 400);
     });
@@ -30,7 +25,7 @@ export const POST = (req: NextRequest) =>
     }
 
     const { itemId, idempotencyKey } = parse.data;
-    const playerId = getMockPlayerId();
+    const playerId = await resolveAuthenticatedPlayerId(request);
 
     const result = await shopPurchaseService.purchase(playerId, itemId, 'coins', idempotencyKey);
     return {

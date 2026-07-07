@@ -32,8 +32,13 @@ Returns quest definitions and player quest progress.
 }
 ```
 
-**Authentication:** required (Supabase User)  
-**Authorization:*** player-owned data only.
+**Authentication:** required (Supabase User)
+
+All protected endpoints require:
+
+`Authorization: Bearer <SUPABASE_ACCESS_TOKEN>`
+
+**Authorization:** player-owned data only.
 
 ---
 
@@ -46,8 +51,8 @@ Returns daily reward definitions, player streak metadata, current eligibility, p
 Validates eligibility and records claim metadata only. Does not directly grant currency, XP, inventory, unlocks, or bundles.
 
 **Notes:**
-- Daily Rewards v1 follows ADR-003 and prepares a reward request without executing reward mutations.
-- Reward granting remains deferred until Reward Engine v1 is implemented.
+- Daily Rewards v1 follows ADR-003 and submits a canonical Reward Engine request.
+- Reward Engine routes rewards through authoritative services (Economy, Inventory, Progression, Unlocks) where supported.
 
 ---
 

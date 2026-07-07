@@ -1,16 +1,11 @@
 import { NextRequest } from 'next/server';
 import { apiHandler } from '@/lib/api/handler';
+import { resolveAuthenticatedPlayerId } from '@/lib/auth/player';
 import { playerBootstrapService } from '@/lib/services/playerBootstrapService';
 
-// Temporary simulated authentication (placeholder until real auth pipeline)
-function getMockPlayerId() {
-  // Generate a static mock UUID for now
-  return '00000000-0000-0000-0000-000000000001';
-}
-
 export const POST = (req: NextRequest) =>
-  apiHandler(req, async () => {
-    const playerId = getMockPlayerId();
+  apiHandler(req, async (request) => {
+    const playerId = await resolveAuthenticatedPlayerId(request);
     const summary = await playerBootstrapService.bootstrap(playerId);
     return summary;
   });
