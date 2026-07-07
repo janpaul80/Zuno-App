@@ -152,6 +152,9 @@ Purpose:
 Notes:
 - Prefer keeping these internal helpers called by higher-level RPCs unless there is a strong need for direct invocation.
 
+Status:
+- Implemented for Economy v2 in Phase 13 as the foundation for transactional orchestration.
+
 #### `grant_inventory_item_rpc` / `remove_inventory_item_rpc` (if needed)
 Purpose:
 - Provide atomic inventory state updates + inventory transaction record.

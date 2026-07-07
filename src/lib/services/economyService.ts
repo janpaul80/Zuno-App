@@ -4,6 +4,7 @@ import {
   type EconomyTransactionRecord,
   type PlayerWalletRecord,
   type SupportedCurrency,
+  type WalletRpcResult,
 } from '../repositories/economyRepository'
 
 export interface EconomyOperation {
@@ -31,35 +32,12 @@ function assertPositiveAmount(amount: number): void {
   }
 }
 
-function resolveNextBalance(
-  balance: number,
-  delta: number,
-): number {
-  const nextBalance = balance + delta
-
-  if (nextBalance < 0) {
-    throw new ApiError('CONFLICT', 'Insufficient balance', 409)
-  }
-
-  return nextBalance
-}
-
-function createTransactionRecord(
-  operation: EconomyOperation,
-  balanceBefore: number,
-  balanceAfter: number,
-): EconomyTransactionRecord {
+function mapWalletRpcResultToWallet(result: WalletRpcResult): PlayerWalletRecord {
   return {
-    transaction_id: operation.transactionId,
-    player_id: operation.playerId,
-    currency: operation.currency,
-    amount: operation.amount,
-    balance_before: balanceBefore,
-    balance_after: balanceAfter,
-    source_domain: operation.sourceDomain,
-    source_reference: operation.sourceReference,
-    request_id: operation.requestId,
-    created_at: new Date().toISOString(),
+    player_id: result.player_id,
+    coins: result.wallet_coins,
+    gems: result.wallet_gems,
+    updated_at: result.wallet_updated_at,
   }
 }
 
@@ -82,49 +60,33 @@ export const economyService = {
   async credit(operation: EconomyOperation): Promise<PlayerWalletRecord> {
     assertPositiveAmount(operation.amount)
 
-    const wallet = await this.getBalance(operation.playerId)
-    const balanceBefore = wallet[operation.currency]
-    const balanceAfter = resolveNextBalance(balanceBefore, operation.amount)
-    const updatedAt = new Date().toISOString()
+    const result = await economyRepository.creditWallet({
+      transactionId: operation.transactionId,
+      playerId: operation.playerId,
+      currency: operation.currency,
+      amount: operation.amount,
+      sourceDomain: operation.sourceDomain,
+      sourceReference: operation.sourceReference,
+      requestId: operation.requestId,
+    })
 
-    const updatedWallet: PlayerWalletRecord = {
-      ...wallet,
-      [operation.currency]: balanceAfter,
-      updated_at: updatedAt,
-    }
-
-    await economyRepository.upsertWallet(updatedWallet)
-    await economyRepository.createTransaction(
-      createTransactionRecord(operation, balanceBefore, balanceAfter),
-    )
-
-    return updatedWallet
+    return mapWalletRpcResultToWallet(result)
   },
 
   async debit(operation: EconomyOperation): Promise<PlayerWalletRecord> {
     assertPositiveAmount(operation.amount)
 
-    const wallet = await this.getBalance(operation.playerId)
-    const balanceBefore = wallet[operation.currency]
-    const balanceAfter = resolveNextBalance(balanceBefore, -operation.amount)
-    const updatedAt = new Date().toISOString()
+    const result = await economyRepository.debitWallet({
+      transactionId: operation.transactionId,
+      playerId: operation.playerId,
+      currency: operation.currency,
+      amount: operation.amount,
+      sourceDomain: operation.sourceDomain,
+      sourceReference: operation.sourceReference,
+      requestId: operation.requestId,
+    })
 
-    const updatedWallet: PlayerWalletRecord = {
-      ...wallet,
-      [operation.currency]: balanceAfter,
-      updated_at: updatedAt,
-    }
-
-    await economyRepository.upsertWallet(updatedWallet)
-    await economyRepository.createTransaction(
-      createTransactionRecord(
-        { ...operation, amount: -operation.amount },
-        balanceBefore,
-        balanceAfter,
-      ),
-    )
-
-    return updatedWallet
+    return mapWalletRpcResultToWallet(result)
   },
 
   async recordTransaction(record: EconomyTransactionRecord): Promise<void> {
