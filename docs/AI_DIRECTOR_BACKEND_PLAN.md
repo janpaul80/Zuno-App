@@ -1,11 +1,11 @@
 # AI Director Backend Plan
 
 Version: 1.0
-Status: Planned (Documentation Only)
+Status: Phase 1 Implemented (Backend Foundation)
 
-This document defines the AI Director backend architecture before implementation.
+This document defines the AI Director backend architecture and the constraints it must obey.
 
-No runtime AI routes, voice, or video integrations should be implemented in this milestone.
+Phase 1 implements the minimal backend foundation for a Director chat endpoint. Voice and video integrations remain architecture-only.
 
 ## 1. AI Director Responsibilities
 The AI Director is a player-facing Game Director layer.
@@ -86,6 +86,22 @@ Rules:
 - Repositories do not call Langdock.
 - API routes do not call Langdock directly.
 - AI routes must not "reach into" Reward Engine/Economy/Inventory mutation methods.
+
+## 4.1 Phase 1 Runtime Endpoint
+Route:
+- `POST /api/v1/ai/director/message`
+
+Runtime responsibilities:
+- Resolve `playerId` via auth at the API boundary.
+- Assemble a bounded, server-controlled read-only context.
+- Call the LLM provider adapter (Langdock) via a provider client.
+- Return guidance text.
+
+Explicitly out of scope for Phase 1:
+- Voice generation (Voicebox integration is interfaces only).
+- Cinematic generation (Open Higgsfield integration is interfaces only).
+- Persistent chat transcripts/memory.
+- Tool-calling / structured action routing.
 
 ## 5. Player Support Flow
 Goal: answer player questions and explain systems.

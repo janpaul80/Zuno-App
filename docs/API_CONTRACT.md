@@ -95,3 +95,59 @@ Purchase audit record
 - Inventory v2 records the item grant in `inventory_transactions`.
 - `purchases` stores the purchase audit record and enforces `(player_id, idempotency_key)` uniqueness.
 - The current implementation is still multi-call and not fully database-transactional; a future RPC should provide ACID behavior.
+
+---
+
+## AI Director
+
+### `POST /api/v1/ai/director/message`
+Returns an AI Director guidance reply for the authenticated player.
+
+**Purpose:**
+- narration, level introductions, objective explanations
+- recommendations for weapons/armor/gadgets/companions
+- stuck-player help and gameplay questions
+- explaining quests, achievements, currencies, inventory, XP, unlocks, progression
+- support for purchases/rewards/account issues (explanations only)
+
+**Hard constraint:**
+- advisory only
+- MUST NOT directly mutate gameplay state
+
+**Authentication:** required (Supabase User)
+
+All protected endpoints require:
+
+`Authorization: Bearer <SUPABASE_ACCESS_TOKEN>`
+
+**Request:**
+```json
+{
+  "message": "What should I buy next?",
+  "conversationId": "optional-client-thread-id",
+  "locale": "en"
+}
+```
+
+**Response (wrapped by apiHandler):**
+```json
+{
+  "ok": true,
+  "data": {
+    "requestId": "server-generated-request-id",
+    "data": {
+      "reply": "Guidance text...",
+      "conversationId": "optional-client-thread-id"
+    }
+  }
+}
+```
+
+**Authority flow:**
+```text
+API Route
+    ↓
+AI Director Service (read-only context)
+    ↓
+Langdock Provider Client
+```

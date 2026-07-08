@@ -1,7 +1,7 @@
 # Video Generation Pipeline (Cinematics)
 
-Version: 1.0
-Status: Planned (Documentation Only)
+Version: 1.1
+Status: Architecture Designed (No Heavy Generation Yet)
 
 ## Purpose
 Document the planned pipeline for generating and assembling cinematics (intro cinematic, level briefings, and narrative beats).
@@ -61,3 +61,27 @@ No video toolchain may directly mutate gameplay state. Rewards and gameplay chan
 - `docs/LEVEL_CINEMATICS.md`
 - `docs/VOICE_PIPELINE.md`
 - `docs/AI_DIRECTOR.md`
+
+## Existing Asset
+The current shipped intro video is:
+- `public/video.mp4` (vertical)
+
+## Backend Integration (Planned)
+Phase 1 introduces provider interfaces only.
+
+Planned backend interfaces:
+- `src/lib/providers/higgsfield/higgsfieldClient.ts`:
+  - `generateCinematic({ type, levelId?, spec, requestId? })`
+- `src/lib/config/aiProviders.ts`:
+  - `HIGGSFIELD_API_KEY`
+  - `HIGGSFIELD_BASE_URL`
+
+Future runtime behavior (high-level):
+1. AI Director produces a cinematic spec:
+   - mission briefing
+   - recommended weapons/gadgets/armor
+   - strategy
+   - narrator + NPC dialogue script
+2. Voice pipeline generates audio tracks.
+3. Higgsfield generates video clips or an assembled cinematic.
+4. The game streams a finalized asset by level + locale.

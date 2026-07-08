@@ -25,6 +25,7 @@
 | **Economy v2** | Immutable transaction ledger, wallet authority, and Reward Engine currency integration. | ✅ Completed |
 | **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | ✅ Completed |
 | **Testing Foundation v1** | Vitest + backend unit test foundation (service validation + pure business-rule helpers). | ✅ Completed |
+| **AI Director Implementation (Phase 1)** | AI Director backend foundation: read-only context + Langdock provider boundary + advisory endpoint. | ✅ Completed |
 
 ---
 

@@ -1,7 +1,7 @@
 # Level Cinematics / Narrative System
 
-Version: 1.2
-Status: Planned (Documentation Only)
+Version: 1.3
+Status: Architecture Designed (Runtime Foundation Added)
 
 ## Vision
 Each level should eventually include a structured cinematic and narrative presentation layer to improve onboarding, immersion, and preparation.
@@ -33,6 +33,17 @@ ZUNOs AI Director is expected to be the main narrator and guidance layer for mi
 - recommended weapons and tools
 - level objective briefing
 
+## AI Director Cinematic Payload (Planned)
+Each level should eventually support a cinematic payload with:
+- AI narration
+- background music
+- character dialogue
+- mission briefing
+- recommended weapons
+- recommended gadgets
+- recommended armor
+- recommended strategy
+
 ## Output Targets (Planned)
 - Mobile-first video formats (vertical 9:16 preferred for Android)
 - Optional alternate aspect ratios for marketing (16:9)
@@ -60,6 +71,6 @@ See also:
 - `docs/VIDEO_GENERATION_PIPELINE.md`
 
 ## Status
-- documentation only
-- no runtime cinematic orchestration implemented yet
+- Phase 1: backend foundation exists for AI Director text guidance.
+- Voice/video generation is architecture-only (interfaces exist, not production-enabled).
 - current asset library is evolving and incomplete; new assets should be added gradually without deleting unrelated assets during backend milestones

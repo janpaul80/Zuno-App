@@ -1,7 +1,7 @@
 # Voice Pipeline (Narration + Character Voices)
 
-Version: 1.0
-Status: Planned (Documentation Only)
+Version: 1.1
+Status: Architecture Designed (No Heavy Generation Yet)
 
 ## Purpose
 Define the planned voice and narration pipeline for ZUNO cinematics and level narration.
@@ -26,6 +26,30 @@ No voice system may directly mutate gameplay state.
 - Voicebox repo:
   - Local-first voice cloning / TTS option.
   - Intended for narration and character voice generation.
+
+## Backend Integration (Planned)
+The AI Director will generate narration text, but Voicebox will synthesize audio.
+
+Constraints:
+- Voice generation is presentation-only.
+- Voice generation must never mutate gameplay state.
+- No secrets may be hardcoded; configuration lives in `.env.local`.
+
+Planned backend interfaces:
+- `src/lib/providers/voicebox/voiceboxClient.ts`:
+  - `synthesize({ text, voiceRole, voiceId?, locale?, requestId? })`
+- `src/lib/config/aiProviders.ts`:
+  - `VOICEBOX_BASE_URL` (local HTTP endpoint)
+
+Voice roles (initial):
+- narrator
+- npc
+- mission
+- cinematic
+
+Future multilingual support:
+- accept `locale` at the AI Director boundary.
+- store or derive voice packs per locale.
 
 ## Pipeline Stages (Planned)
 1. Script generation

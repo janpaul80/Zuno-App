@@ -1,7 +1,8 @@
+
 # AI Director / Game Director
 
-Version: 1.2
-Status: Planned (Documentation Only)
+Version: 1.3
+Status: Phase 1 Implemented (Backend Foundation)
 
 ## Purpose
 ZUNO's AI should become the central Game Director across the whole game.
@@ -32,6 +33,8 @@ Practical implications:
 ## Story / Lore Direction
 - ZUNO Battle is set in Zunlandia.
 - The animal warriors are protectors of Zunlandia.
+- The animal warriors are the Guardians of Zunlandia.
+- The AI Director is the central intelligence that guides every Guardian throughout the journey.
 - AI Director behavior should preserve this framing when generating future story, cinematic, level briefing, hint, and support content.
 - The AI Director should treat the current asset library as evolving and incomplete.
 
@@ -53,6 +56,20 @@ Only provider names and intended uses are documented here. No secrets.
 - The AI Director can be integrated as a chat/narration layer that consumes read-only game state.
 - Any user intent that results in gameplay mutation must still call the existing backend services.
 
+## Runtime Backend (Phase 1)
+Phase 1 adds the backend foundation for a Director chat endpoint.
+
+Route:
+- `POST /api/v1/ai/director/message`
+
+Flow (read-only + advisory):
+- API → `aiDirectorService` (read-only context assembly) → Langdock (LLM).
+- No gameplay mutations are permitted.
+
+Important:
+- The AI response is guidance only.
+- Purchases, rewards, inventory, XP, unlocks, and progression must continue to be executed via the existing authoritative API/services.
+
 ## Future Scope
 Potential future integrations include:
 - contextual game assistant in menus
@@ -66,5 +83,5 @@ See also:
 - `docs/VIDEO_GENERATION_PIPELINE.md`
 
 ## Implementation Status
-- documentation only
-- no routes or runtime AI orchestration implemented yet
+- Phase 1: a minimal runtime foundation exists for text replies.
+- Voice + video remain architecture-only (see related docs).
