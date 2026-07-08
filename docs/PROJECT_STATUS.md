@@ -1,6 +1,6 @@
 # ZUNO Project Status
 
-**Version:** 1.3  
+**Version:** 1.4  
 **Last Updated:** 2026-07-07
 
 ---
@@ -23,7 +23,8 @@
 | **Reward Engine Architecture Spec** | Reward Engine blueprint documented before implementation. | ✅ Completed |
 | **Reward Engine v1** | Canonical request validation, idempotency, audit trail, and orchestration boundary implemented. | ✅ Completed |
 | **Economy v2** | Immutable transaction ledger, wallet authority, and Reward Engine currency integration. | ✅ Completed |
- | **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | ✅ Completed |
+| **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | ✅ Completed |
+| **Testing Foundation v1** | Vitest + backend unit test foundation (service validation + pure business-rule helpers). | ✅ Completed |
 
 ---
 
@@ -41,10 +42,20 @@
 
 | Milestone | Description | Target |
 |------------|--------------|---------|
-| **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
+| **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | ✅ Completed |
 | **Supabase Authentication Integration** | Replace mock player IDs with authenticated Supabase identity. | ✅ Completed |
-| **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Active |
-| **Testing Foundation v1** | Introduce Vitest and first unit tests for backend/service logic. | Active |
+| **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | ✅ Completed |
+
+Recommended next milestones:
+- Android Google Sign-In configuration (package name, SHA-1, ownership verification)
+- Stripe production integration (sandbox acceptable for now)
+- Bundle reward expansion
+- LiveOps
+- Leaderboards
+- Multiplayer foundation
+- AI Director integration (Langdock)
+- Intro cinematic and level cinematics
+- Remaining frontend/mobile implementation
 
 ### Transactional Orchestration Planning (Milestone 9B)
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
@@ -57,16 +68,35 @@ Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
 | **Leaderboards** | Competitive ranking and stat aggregation. | Upcoming |
 | **Multiplayer Foundation** | Session architecture and synchronization. | Future |
 
+### Testing Roadmap (Incremental)
+Phase 2:
+- Shop purchase service tests
+- Reward Engine orchestration tests
+- Achievement completion tests
+- Quest completion tests
+
+Phase 3:
+- Repository tests using mocked Supabase responses
+- API route tests
+- Authentication tests
+
+Phase 4:
+- End-to-end integration tests against a disposable Supabase test database
+
 ---
 
 ## Future Systems Documented
-- AI Director / Game Assistant
+- AI Director / Game Director
 - Android Google auth prerequisites
 - Stripe sandbox-only policy
 - Level Cinematic / Narrative System
 - Game Intro Video / Startup Cinematic asset planned at `public/video.mp4`
 - Zunlandia story/lore direction for future cinematics, level briefings, and AI Director behavior
 - Reward Engine orchestration blueprint
+
+Additionally documented:
+- Voice pipeline
+- Video generation pipeline
 
 ## Asset Status
 - Game assets are actively evolving and incomplete.
