@@ -44,6 +44,7 @@
 | **Inventory Enhancements v2** | Expanded inventory modeling, ledgering, and audit controls. | Active |
 | **Supabase Authentication Integration** | Replace mock player IDs with authenticated Supabase identity. | ✅ Completed |
 | **Transactional Orchestration** | Introduce Postgres RPC/ACID flows for end-to-end atomic operations. | Active |
+| **Testing Foundation v1** | Introduce Vitest and first unit tests for backend/service logic. | Active |
 
 ### Transactional Orchestration Planning (Milestone 9B)
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.

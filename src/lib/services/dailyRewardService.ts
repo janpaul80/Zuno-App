@@ -11,6 +11,12 @@ import {
   type RewardRequest,
 } from './rewardEngineService'
 import type { UnlockType } from '../repositories/unlockRepository'
+import {
+  buildDailyRewardRequestId,
+  DAILY_REWARD_SOURCE_DOMAIN,
+  isEligibleToClaim,
+  resolveNextRewardDay,
+} from './dailyRewardHelpers'
 
 export interface DailyRewardSummary {
   definitions: DailyRewardDefinition[]
@@ -22,7 +28,6 @@ export interface DailyRewardSummary {
 }
 
 const DAILY_REWARD_COOLDOWN_MS = 24 * 60 * 60 * 1000
-const DAILY_REWARD_SOURCE_DOMAIN = 'daily_rewards'
 const SUPPORTED_UNLOCK_TYPES: readonly UnlockType[] = [
   'character',
   'cosmetic',
@@ -51,27 +56,7 @@ function createDefaultPlayerDailyReward(playerId: string): PlayerDailyReward {
   }
 }
 
-function isEligibleToClaim(nextEligibleClaimAt: string | null): boolean {
-  if (!nextEligibleClaimAt) {
-    return true
-  }
 
-  return Date.now() >= new Date(nextEligibleClaimAt).getTime()
-}
-
-function resolveNextRewardDay(
-  definitions: DailyRewardDefinition[],
-  currentStreak: number,
-): number {
-  if (definitions.length === 0) {
-    return 1
-  }
-
-  const maxDay = definitions[definitions.length - 1].day
-  const nextDay = currentStreak + 1
-
-  return nextDay > maxDay ? 1 : nextDay
-}
 
 function getStringField(
   record: Record<string, unknown> | null,
@@ -154,7 +139,7 @@ function createDailyRewardRequest(
   const sourceReference = `daily_reward_day_${definition.day}:claim_${claimNumber}`
 
   return {
-    requestId: `${DAILY_REWARD_SOURCE_DOMAIN}:${playerId}:claim:${claimNumber}`,
+    requestId: buildDailyRewardRequestId(playerId, claimNumber),
     playerId,
     sourceDomain: DAILY_REWARD_SOURCE_DOMAIN,
     sourceReference,
