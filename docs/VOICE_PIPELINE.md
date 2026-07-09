@@ -1,7 +1,7 @@
 # Voice Pipeline (Narration + Character Voices)
 
-Version: 1.1
-Status: Architecture Designed (No Heavy Generation Yet)
+Version: 1.2
+Status: Blocked Pending Voicebox Repo Access
 
 ## Purpose
 Define the planned voice and narration pipeline for ZUNO cinematics and level narration.
@@ -26,6 +26,15 @@ No voice system may directly mutate gameplay state.
 - Voicebox repo:
   - Local-first voice cloning / TTS option.
   - Intended for narration and character voice generation.
+
+## Current Blocker
+Voicebox runtime integration is **blocked pending repository access**.
+
+Evidence (as of the last verification attempt):
+- `https://github.com/devencornwell/voicebox` returned 404 from this environment.
+- `git clone https://github.com/devencornwell/voicebox` failed with "Repository not found".
+
+Until the repository is reachable (public or access granted), ZUNO will keep `voiceboxClient` as a documented placeholder and will not substitute alternate repos/forks.
 
 ## Backend Integration (Planned)
 The AI Director will generate narration text, but Voicebox will synthesize audio.

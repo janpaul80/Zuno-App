@@ -13,6 +13,10 @@ export interface VoiceboxConfig {
 }
 
 export interface HiggsfieldConfig {
+  /**
+   * Open Higgsfield AI is a UI over Muapi.ai.
+   * We use Muapi as the backend generation service.
+   */
   apiKey: string
   baseUrl: string
 }
@@ -26,9 +30,22 @@ function requireEnv(name: string, value: string | undefined): string {
 
 export function getLangdockConfig(): LangdockConfig {
   // Keep validation lazy so local builds/tests that don't use Langdock remain unblocked.
-  const apiKey = requireEnv('LANGDOCK_API_KEY', process.env.LANGDOCK_API_KEY)
-  const baseUrl = process.env.LANGDOCK_BASE_URL ?? 'https://api.langdock.com'
-  const model = process.env.LANGDOCK_MODEL ?? 'default'
+  // Support existing .env.local keys.
+  const apiKey = requireEnv(
+    'LANGDOCK_API_KEY (or LANGDOCK_API_CODE)',
+    process.env.LANGDOCK_API_KEY ?? process.env.LANGDOCK_API_CODE,
+  )
+
+  const rawBaseUrl =
+    process.env.LANGDOCK_BASE_URL ??
+    process.env.LANGDOCK_ENDPOINT_URL ??
+    // Default to the OpenAI-compatible EU endpoint.
+    'https://api.langdock.com/openai/eu/v1'
+
+  // Some env files include leading/trailing spaces (e.g. `LANGDOCK_ENDPOINT_URL= https://...`).
+  const baseUrl = rawBaseUrl.trim()
+
+  const model = (process.env.LANGDOCK_MODEL ?? process.env.MODEL ?? 'default').trim()
   return { apiKey, baseUrl, model }
 }
 
@@ -39,7 +56,14 @@ export function getVoiceboxConfig(): VoiceboxConfig {
 }
 
 export function getHiggsfieldConfig(): HiggsfieldConfig {
-  const apiKey = requireEnv('HIGGSFIELD_API_KEY', process.env.HIGGSFIELD_API_KEY)
-  const baseUrl = process.env.HIGGSFIELD_BASE_URL ?? 'https://api.higgsfield.ai'
+  // Support existing .env.local keys used by the open-higgsfield-ai project.
+  // Never log keys.
+  const apiKey = requireEnv(
+    'MUAPI_API (or HIGGSFIELD_API_KEY)',
+    process.env.MUAPI_API ?? process.env.HIGGSFIELD_API_KEY,
+  )
+
+  // Muapi base is fixed in their UI project, but support override for testing.
+  const baseUrl = (process.env.MUAPI_BASE_URL ?? process.env.HIGGSFIELD_BASE_URL ?? 'https://api.muapi.ai').trim()
   return { apiKey, baseUrl }
 }

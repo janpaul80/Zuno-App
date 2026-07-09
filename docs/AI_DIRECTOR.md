@@ -1,8 +1,8 @@
 
 # AI Director / Game Director
 
-Version: 1.3
-Status: Phase 1 Implemented (Backend Foundation)
+Version: 1.4
+Status: Phase 2 In Progress (Context + Safety Hardening)
 
 ## Purpose
 ZUNO's AI should become the central Game Director across the whole game.
@@ -69,6 +69,29 @@ Flow (read-only + advisory):
 Important:
 - The AI response is guidance only.
 - Purchases, rewards, inventory, XP, unlocks, and progression must continue to be executed via the existing authoritative API/services.
+
+## Provider Integration: Langdock (Verified)
+This project uses **Langdock's OpenAI-compatible API**.
+
+Adapter:
+- `src/lib/providers/langdock/langdockClient.ts`
+
+Environment variables supported (read lazily; only required when the AI Director endpoint is exercised):
+- `LANGDOCK_API_KEY` or `LANGDOCK_API_CODE`
+- `LANGDOCK_BASE_URL` or `LANGDOCK_ENDPOINT_URL`
+- `LANGDOCK_MODEL` or `MODEL`
+
+Verified behavior:
+- Authentication: `Authorization: Bearer <key>`
+- Endpoint: `${BASE_URL}/chat/completions` (where `BASE_URL` typically already contains `/v1`)
+- Response: standard OpenAI-style `choices[0].message.content`
+
+Local smoke test helper (reads `.env.local`, sends a single request, prints status + first ~900 chars of response):
+- `scripts/langdock-smoke.mjs`
+
+Limitations / Notes:
+- Node cannot import the TypeScript adapter directly without a TS runtime. The smoke script is the simplest live test.
+- Do not log or commit the API key.
 
 ## Future Scope
 Potential future integrations include:

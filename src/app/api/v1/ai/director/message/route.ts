@@ -5,6 +5,7 @@ import { apiHandler } from '@/lib/api/handler'
 import { ApiError } from '@/lib/api/errors'
 import { resolveAuthenticatedPlayerId } from '@/lib/auth/player'
 import { aiDirectorService } from '@/lib/services/aiDirectorService'
+import { extractRequestId, generateRequestId } from '@/lib/api/requestId'
 
 const DirectorMessageSchema = z.object({
   message: z.string().min(1, 'message is required'),
@@ -30,6 +31,7 @@ export const POST = (req: NextRequest) =>
     }
 
     const playerId = await resolveAuthenticatedPlayerId(request)
+    const requestId = extractRequestId(request) ?? generateRequestId()
 
     // AI Director is advisory/orchestration only. It MUST NOT mutate gameplay state.
     return aiDirectorService.replyToPlayerMessage({
@@ -37,5 +39,6 @@ export const POST = (req: NextRequest) =>
       message: parse.data.message,
       conversationId: parse.data.conversationId,
       locale: parse.data.locale,
+      requestId,
     })
   })

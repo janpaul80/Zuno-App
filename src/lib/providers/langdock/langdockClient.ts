@@ -95,8 +95,9 @@ export const langdockClient = {
       throw new ApiError('INTERNAL_ERROR', 'Langdock configuration error', 500)
     }
 
-    // Generic "chat completions" contract. If Langdock differs, update this adapter.
-    const url = toUrl(cfg.baseUrl, '/v1/chat/completions')
+    // Langdock provides an OpenAI-compatible API. The configured `baseUrl` may
+    // already include `/v1`, so we append `/chat/completions`.
+    const url = toUrl(cfg.baseUrl, '/chat/completions')
     const payload = {
       model: input.model ?? cfg.model,
       temperature: input.temperature ?? 0.7,

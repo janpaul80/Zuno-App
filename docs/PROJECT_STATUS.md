@@ -98,6 +98,7 @@ Phase 4:
 Additionally documented:
 - Voice pipeline
 - Video generation pipeline
+- Meshy AI provider foundation
 
 ## Asset Status
 - Game assets are actively evolving and incomplete.

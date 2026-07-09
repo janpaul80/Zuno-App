@@ -1,7 +1,7 @@
 # Video Generation Pipeline (Cinematics)
 
-Version: 1.1
-Status: Architecture Designed (No Heavy Generation Yet)
+Version: 1.2
+Status: Architecture Designed (MuAPI Adapter Implemented)
 
 ## Purpose
 Document the planned pipeline for generating and assembling cinematics (intro cinematic, level briefings, and narrative beats).
@@ -15,14 +15,26 @@ No video toolchain may directly mutate gameplay state. Rewards and gameplay chan
 
 ## Candidate Tools / Providers
 - open-higgsfield-ai repo:
-  - Candidate cinematic generation pipeline.
-  - Intended use: generating or assisting with cinematic sequences.
-- MuAPI:
-  - External API used by future pipeline tooling.
+  - **Development UI only**.
+  - Used as a reference workflow for calling MuAPI.
+- MuAPI (production):
+  - External API used by the ZUNO backend.
+  - Integrated via the `higgsfieldClient` provider adapter.
+  - API key exists in `.env.local` (do not commit).
+- Meshy AI:
+  - 3D asset generation provider used by future pipelines.
+  - Integrated via `meshyClient` for asset tooling (not runtime mutation).
   - API key exists in `.env.local` (do not commit).
 - Meshy.ai:
   - Potential 3D asset generation.
   - API key exists in `.env.local` (do not commit).
+
+## Open Higgsfield Integration Status
+We evaluated and integrated `open-higgsfield-ai` strictly as a reference UI over Muapi.
+
+- The upstream project is a Vite web UI, not a server API.
+- ZUNO integrates Muapi directly via `higgsfieldClient`.
+- See: `docs/OPEN_HIGGSFIELD_AI.md`
 
 ## Pipeline Stages (Planned)
 1. Narrative plan
