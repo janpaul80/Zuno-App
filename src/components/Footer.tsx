@@ -188,16 +188,16 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* ESRB Ratings Placeholder */}
+            {/* Neutral target-audience marker; official badge is release-gated. */}
             <div>
               <div className="flex max-w-full items-center gap-4 bg-black/40 border border-white/5 rounded-lg p-3 sm:w-max">
-                <div className="h-10 w-8 bg-white text-black font-black font-orbitron text-xl flex items-center justify-center rounded shadow-[0_0_8px_rgba(255,255,255,0.4)]">
-                  E
+                <div className="h-10 w-12 bg-white text-black font-black font-orbitron text-lg flex items-center justify-center rounded shadow-[0_0_8px_rgba(255,255,255,0.4)]">
+                  13+
                 </div>
                 <div>
-                  <div className="text-[9px] font-bold text-white tracking-widest font-orbitron uppercase">ESRB RATING</div>
-                  <div className="text-[11px] font-extrabold text-white">Everyone</div>
-                  <div className="text-[8px] text-gray-400">Comic Mischief, Fantasy Violence</div>
+                  <div className="text-[9px] font-bold text-white tracking-widest font-orbitron uppercase">TARGET AUDIENCE</div>
+                  <div className="text-[11px] font-extrabold text-white">Teen players and older</div>
+                  <div className="text-[8px] text-gray-400">Official store rating pending</div>
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function Footer() {
         {/* Lower footer copyright, credits */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-semibold text-gray-500">
           <div className="text-center md:text-left space-y-1">
-            <div>&copy; {currentYear} ZUNO Game Studio. All rights reserved.</div>
+            <div>&copy; {currentYear} Paul-Hartmann LLC. All rights reserved.</div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link

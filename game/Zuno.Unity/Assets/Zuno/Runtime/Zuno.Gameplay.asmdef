@@ -1,0 +1,17 @@
+{
+  "name": "Zuno.Gameplay",
+  "rootNamespace": "Zuno.Gameplay",
+  "references": [
+    "Unity.InputSystem",
+    "Unity.UGUI"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

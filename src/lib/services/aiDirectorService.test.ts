@@ -1,21 +1,30 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Mock all downstream services so tests don't touch Supabase env/network.
 vi.mock('@/lib/services/playerProfileService', () => ({
   playerProfileService: {
-    getProfileSummary: vi.fn(async () => ({ player: { id: 'p1' }, profile: {}, currency: {}, inventory: [] })),
+    getProfileSummary: vi.fn(async () => ({
+      player: { id: 'p1' },
+      profile: {},
+      currency: {},
+      inventory: [],
+    })),
   },
 }))
 
 vi.mock('@/lib/services/unlockService', () => ({
-  unlockService: {
-    getPlayerUnlocks: vi.fn(async () => []),
-  },
+  unlockService: { getPlayerUnlocks: vi.fn(async () => []) },
 }))
 
 vi.mock('@/lib/services/progressionService', () => ({
   progressionService: {
-    getProgression: vi.fn(async () => ({ player_id: 'p1', level: 1, xp: 0, xp_to_next: 100, created_at: '', updated_at: '' })),
+    getProgression: vi.fn(async () => ({
+      player_id: 'p1',
+      level: 1,
+      xp: 0,
+      xp_to_next: 100,
+      created_at: '',
+      updated_at: '',
+    })),
   },
 }))
 
@@ -32,22 +41,17 @@ vi.mock('@/lib/services/achievementService', () => ({
 }))
 
 vi.mock('@/lib/services/shopService', () => ({
-  shopService: {
-    listActiveItems: vi.fn(async () => []),
-  },
+  shopService: { listActiveItems: vi.fn(async () => []) },
 }))
 
-vi.mock('@/lib/providers/langdock/langdockClient', () => ({
-  langdockClient: {
-    chat: vi.fn(async () => ({
-      content: JSON.stringify({
-        category: 'help',
-        reply: 'hello guardian',
-        suggestions: ['Open the Quests tab', 'Equip your best gear'],
-      }),
-    })),
-  },
-}))
+vi.mock('@/mastra', () => {
+  class AiDirectorInvalidOutputError extends Error {}
+
+  return {
+    AiDirectorInvalidOutputError,
+    runAiDirectorWithMastra: vi.fn(),
+  }
+})
 
 vi.mock('@/lib/services/aiDirectorAudit', () => ({
   auditAiDirectorEvent: vi.fn(),
@@ -61,55 +65,228 @@ vi.mock('@/lib/services/aiDirectorRateLimit', () => ({
   },
 }))
 
+import {
+  AiDirectorInvalidOutputError,
+  runAiDirectorWithMastra,
+} from '@/mastra'
 import { aiDirectorService } from '@/lib/services/aiDirectorService'
+import { auditAiDirectorEvent } from '@/lib/services/aiDirectorAudit'
+import { playerProfileService } from '@/lib/services/playerProfileService'
+
+const safeReply =
+  'I’m having trouble responding right now. Please try again in a moment.'
+
+beforeEach(() => {
+  vi.useRealTimers()
+  vi.clearAllMocks()
+  vi.mocked(runAiDirectorWithMastra).mockResolvedValue({
+    output: {
+      category: 'help',
+      reply: 'hello guardian',
+      suggestions: ['Open the Quests tab', 'Equip your best gear'],
+    },
+    inferenceProvider: 'logicc',
+    model: 'test-model',
+  })
+})
 
 describe('aiDirectorService', () => {
-  it('builds read-only context and replies via LLM', async () => {
-    const { langdockClient } = await import('@/lib/providers/langdock/langdockClient')
-    const { auditAiDirectorEvent } = await import('@/lib/services/aiDirectorAudit')
-    const { aiDirectorRateLimit } = await import('@/lib/services/aiDirectorRateLimit')
-
-    const res = await aiDirectorService.replyToPlayerMessage({
+  it('builds a read-only snapshot and replies through Mastra', async () => {
+    const result = await aiDirectorService.replyToPlayerMessage({
       playerId: 'p1',
       message: 'What should I do next?',
+      conversationId: 'conversation-1',
     })
 
-    expect(res.category).toBe('help')
-    expect(res.reply).toBe('hello guardian')
-    expect(res.suggestions).toEqual(['Open the Quests tab', 'Equip your best gear'])
-    expect(aiDirectorRateLimit.checkOrThrow).toHaveBeenCalledWith({ playerId: 'p1' })
-    expect(langdockClient.chat).toHaveBeenCalledTimes(1)
-    expect(auditAiDirectorEvent).toHaveBeenCalledTimes(1)
-
-    const [auditArg] = vi.mocked(auditAiDirectorEvent).mock.calls[0]
-    expect(auditArg).toMatchObject({
-      playerId: 'p1',
-      provider: 'langdock',
+    expect(result).toMatchObject({
       category: 'help',
+      reply: 'hello guardian',
+      conversationId: 'conversation-1',
     })
-    expect('inputChars' in auditArg).toBe(true)
-    expect('outputChars' in auditArg).toBe(true)
-    // Must not contain raw user input or full context.
-    expect('message' in auditArg).toBe(false)
-    expect('context' in auditArg).toBe(false)
+    expect(runAiDirectorWithMastra).toHaveBeenCalledTimes(1)
+    expect(auditAiDirectorEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        runtime: 'mastra',
+        inferenceProvider: 'logicc',
+        model: 'test-model',
+        category: 'help',
+        status: 'ok',
+      }),
+    )
+
+    const audit = vi.mocked(auditAiDirectorEvent).mock.calls[0][0]
+    expect('message' in audit).toBe(false)
+    expect('context' in audit).toBe(false)
+    expect(JSON.stringify(audit)).not.toContain('What should I do next?')
   })
 
-  it('falls back to category=help when model returns non-JSON', async () => {
-    const { langdockClient } = await import('@/lib/providers/langdock/langdockClient')
+  it('records an explicitly selected Langdock failover result', async () => {
+    vi.mocked(runAiDirectorWithMastra).mockResolvedValueOnce({
+      output: { category: 'level', reply: 'The Heartwood Beacon needs you.' },
+      inferenceProvider: 'langdock',
+      model: 'fallback-model',
+    })
 
-    vi.mocked(langdockClient.chat).mockResolvedValueOnce({ content: 'plain text reply' })
-    const res = await aiDirectorService.replyToPlayerMessage({
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Brief me.',
+    })
+
+    expect(result.category).toBe('level')
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        inferenceProvider: 'langdock',
+        model: 'fallback-model',
+        status: 'ok',
+      }),
+    )
+  })
+
+  it('classifies timeout failures and aborts the runner', async () => {
+    vi.useFakeTimers()
+    let runnerSignal: AbortSignal | undefined
+    vi.mocked(runAiDirectorWithMastra).mockImplementation(
+      async (_input, signal) => {
+        runnerSignal = signal
+        return await new Promise<never>((_resolve, reject) => {
+          signal?.addEventListener('abort', () => reject(new Error('aborted')))
+        })
+      },
+    )
+
+    const pending = aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Help me',
+    })
+    await vi.advanceTimersByTimeAsync(12_000)
+    const result = await pending
+
+    expect(result).toEqual({
+      category: 'troubleshooting',
+      reply: safeReply,
+      conversationId: undefined,
+    })
+    expect(runnerSignal?.aborted).toBe(true)
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 'fallback',
+        failureKind: 'timeout',
+        stage: 'provider',
+      }),
+    )
+  })
+
+  it('returns a safe fallback when snapshot serialization fails', async () => {
+    vi.mocked(playerProfileService.getProfileSummary).mockResolvedValueOnce({
+      unsupported: BigInt(1),
+    } as never)
+
+    const result = await aiDirectorService.replyToPlayerMessage({
       playerId: 'p1',
       message: 'Help me',
     })
 
-    expect(res.category).toBe('help')
-    expect(res.reply).toBe('plain text reply')
+    expect(result.category).toBe('troubleshooting')
+    expect(result.reply).toBe(safeReply)
+    expect(runAiDirectorWithMastra).not.toHaveBeenCalled()
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        inferenceProvider: 'none',
+        status: 'fallback',
+        failureKind: 'snapshot_error',
+        stage: 'snapshot',
+      }),
+    )
   })
 
-  it('rejects empty messages', async () => {
+  it('classifies provider failures without leaking the raw exception', async () => {
+    vi.mocked(runAiDirectorWithMastra).mockRejectedValueOnce(
+      new Error('secret provider response'),
+    )
+
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Help me',
+    })
+
+    expect(result.reply).toBe(safeReply)
+    const audit = vi.mocked(auditAiDirectorEvent).mock.calls.at(-1)?.[0]
+    expect(audit).toMatchObject({
+      inferenceProvider: 'logicc',
+      status: 'fallback',
+      failureKind: 'provider_error',
+      stage: 'provider',
+    })
+    expect(JSON.stringify(audit)).not.toContain('secret provider response')
+  })
+
+  it('classifies malformed structured results as invalid output', async () => {
+    vi.mocked(runAiDirectorWithMastra).mockResolvedValueOnce({
+      output: { category: 'help', reply: '' },
+      inferenceProvider: 'logicc',
+      model: 'test-model',
+    } as never)
+
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Help me',
+    })
+
+    expect(result.reply).toBe(safeReply)
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 'fallback',
+        failureKind: 'invalid_output',
+        stage: 'parse',
+      }),
+    )
+  })
+
+  it('classifies Mastra structured-output failures as invalid output', async () => {
+    vi.mocked(runAiDirectorWithMastra).mockRejectedValueOnce(
+      new AiDirectorInvalidOutputError(),
+    )
+
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Help me',
+    })
+
+    expect(result.reply).toBe(safeReply)
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 'fallback',
+        failureKind: 'invalid_output',
+        stage: 'provider',
+      }),
+    )
+  })
+
+  it('classifies context-building failures before selecting a provider', async () => {
+    vi.mocked(playerProfileService.getProfileSummary).mockRejectedValueOnce(
+      new Error('database unavailable'),
+    )
+
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Help me',
+    })
+
+    expect(result.reply).toBe(safeReply)
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        inferenceProvider: 'none',
+        status: 'fallback',
+        failureKind: 'context_error',
+        stage: 'context',
+      }),
+    )
+  })
+
+  it('rejects empty messages before invoking Mastra', async () => {
     await expect(
       aiDirectorService.replyToPlayerMessage({ playerId: 'p1', message: '' }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    expect(runAiDirectorWithMastra).not.toHaveBeenCalled()
   })
 })

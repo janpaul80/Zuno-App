@@ -1,7 +1,7 @@
 # ZUNO Project Status
 
-**Version:** 1.4  
-**Last Updated:** 2026-07-07
+**Version:** 1.5
+**Last Updated:** 2026-07-21
 
 ---
 
@@ -26,6 +26,19 @@
 | **Inventory Enhancements v2** | Immutable item ledger, stack support, and Reward Engine inventory integration. | ✅ Completed |
 | **Testing Foundation v1** | Vitest + backend unit test foundation (service validation + pure business-rule helpers). | ✅ Completed |
 | **AI Director Implementation (Phase 1)** | AI Director backend foundation: read-only context + Langdock provider boundary + advisory endpoint. | ✅ Completed |
+| **Unity Android Client Foundation** | Unity 6.3 LTS project, Android build automation, mobile input boundary, gameplay-domain tests, and asset-integrity policy. | ✅ Local foundation completed |
+
+---
+
+## Active Implementation
+
+| Milestone | Description | Status |
+|-----------|-------------|--------|
+| **AI Director Phase 6.1** | Mastra-owned, tool-less Agent; Logicc inference; JSON snapshots; strict structured output; cancellation; safe failure auditing. | 🟡 Local candidate awaiting merge and deployment approval |
+| **Grasslands Playable Slice** | Aelis greybox, guided camera, virtual joystick, jump, dash, melee combo, enemies, vitality, mission objective, beacon, and HUD. | 🟡 Implemented; Unity import/device verification pending |
+| **Mission Roadmap + Loadout Shell** | Nine named missions, difficulty tiers, protection/enemy briefings, coin candidates, cinematic playback fallback, visible loadout HUD, blade and pulse blaster. | 🟡 Implemented; Unity import/device verification pending |
+| **Music Intake + Licensing Gate** | Curated free/paid source register, rights checklist, provenance requirements, creative map, and Unity/cinematic mixing rules. | 🟡 Implemented; final tracks pending audition and approval |
+| **Production Providers** | Mastra/Logicc primary, explicit Langdock failover, Meshy preview/refine REST flow, Blackbox image/video contract, local Voicebox generation contract. | 🟡 Mock-verified; live services/credits and asset approval pending |
 
 ---
 
@@ -37,7 +50,7 @@
 ## Security Status
 - `.env*` is ignored by Git
 - `.env.example` is the only environment template intended for version control
-- Supabase and Langdock credentials remain environment-managed
+- Supabase, Logicc, and legacy Langdock credentials remain environment-managed
 
 ## Planned Next Milestones
 
@@ -54,9 +67,10 @@ Recommended next milestones:
 - LiveOps
 - Leaderboards
 - Multiplayer foundation
-- AI Director integration (Langdock)
+- AI Director Phase 6.1 production activation (Mastra + Logicc)
 - Intro cinematic and level cinematics
-- Remaining frontend/mobile implementation
+- Aelis production rig, animation graph, VFX, and audio
+- Grasslands modular environment kit and Android device performance pass
 
 ### Transactional Orchestration Planning (Milestone 9B)
 Planning document created: `docs/TRANSACTIONAL_ORCHESTRATION.md`.
@@ -102,6 +116,7 @@ Additionally documented:
 
 ## Asset Status
 - Game assets are actively evolving and incomplete.
+- Runtime primitives in the Grasslands slice are greybox gameplay bodies only and are not approved production assets.
 - Additional assets will be added gradually until there is enough coverage for the game.
 - Backend remediation milestones must not delete or modify unrelated asset files.
 

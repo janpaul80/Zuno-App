@@ -1,76 +1,50 @@
-# Level Cinematics / Narrative System
+# Level Cinematics and Narrative System
 
-Version: 1.3
-Status: Architecture Designed (Runtime Foundation Added)
+Version: 2.1
+Status: Runtime Player and Mission Catalogue Implemented; Production Media Pending
 
-## Vision
-Each level should eventually include a structured cinematic and narrative presentation layer to improve onboarding, immersion, and preparation.
+## Required experience
 
-ZUNOs AI Director is expected to be the main narrator and guidance layer for mission briefings, stuck-player help, and cinematic narration.
+ZUNO has one game-introduction cinematic and an intro cinematic for every
+mission. Each movie identifies the location, enemy force, protection target,
+objective, stakes, and Guardian assignment before combat. Movies include music,
+narration, character voices where appropriate, and subtitles.
 
-## Game Intro Video / Startup Cinematic
-- Current planned startup cinematic asset: `public/video.mp4`.
-- The asset is vertical and Android-ready.
-- It should eventually play when the user starts the game.
-- Playback is not implemented in this backend remediation milestone.
+The runtime flow is:
 
-## Cinematic Types
-- Intro cinematic (startup)
-- Level intro cinematic (briefing)
-- Level outro cinematic (completion)
-- Mid-level narrative beats (optional)
+`roadmap → written briefing → cinematic (watch/replay/skip) → loadout → mission`
 
-## Story / Lore Direction
-- ZUNO Battle is set in Zunlandia.
-- The animal warriors are protectors of Zunlandia.
-- This direction should guide future story beats, startup cinematics, level briefings, and mission framing.
+Missing video never blocks the mission; the reviewed written briefing remains.
 
-## Planned Components Per Level
-- 3D cinematic intro
-- background music
-- character voices
-- explanation of the next level
-- recommended weapons and tools
-- level objective briefing
+## Runtime media contract
 
-## AI Director Cinematic Payload (Planned)
-Each level should eventually support a cinematic payload with:
-- AI narration
-- background music
-- character dialogue
-- mission briefing
-- recommended weapons
-- recommended gadgets
-- recommended armor
-- recommended strategy
+- game delivery: 16:9 landscape MP4, H.264 + AAC, 1280x720 or 1920x1080
+- master: 1920x1080, 24/30 FPS, constant frame rate
+- marketing derivative: optional 9:16 cut, never used as the landscape game master
+- localized subtitles: reviewed WebVTT source; burned text is prohibited in masters
+- accessibility: captions, replay, skip, separate volume controls, reduced motion
+- asset address: stable mission id + locale + cinematic revision
+- large campaigns: CDN/Addressables or Play Asset Delivery rather than uncontrolled base APK growth
 
-## Output Targets (Planned)
-- Mobile-first video formats (vertical 9:16 preferred for Android)
-- Optional alternate aspect ratios for marketing (16:9)
-- Subtitles and accessibility-friendly text tracks
+Unity's first runtime implementation resolves approved development packages from
+`Assets/StreamingAssets/Zuno/Cinematics`. Production delivery will move to a
+versioned remote catalogue after offline and integrity behavior is implemented.
 
-## Architectural Direction
-- This is a future presentation and narrative system.
-- It may consume progression, loadout, and level metadata, but should not become an authority over inventory, economy, or rewards.
-- Narrative recommendations should align with player progress and unlocked capabilities.
+## Generation and approval flow
 
-## Integration Rule (Server Authority)
-- Cinematics and narration can recommend tactics, gears, and next steps.
-- Cinematics must not cause direct gameplay state mutations.
-- Any rewards granted for milestones must route through Reward Engine and existing transactional orchestration.
+1. Canonical mission data supplies lore, enemies, protection target, and reward candidate.
+2. Mastra orchestrates a structured briefing and shot plan using Logicc.
+3. If explicitly enabled, Langdock may retry a failed Logicc inference.
+4. Blackbox produces concept frames/storyboards and selected video candidates.
+5. Meshy supplies 3D candidates; production artists preserve approved identity, topology, rigs, materials, and LODs.
+6. Voicebox generates local narration and character stems from approved scripts and licensed/consented voices.
+7. Original or commercially licensed music and sound design are cleared through
+   `docs/MUSIC_PIPELINE.md`, then mixed with the voices on separable stems.
+8. Editors assemble, subtitle, review, checksum, and publish the approved package.
 
-## Potential Future Integrations
-- AI Director for adaptive guidance
-- gameplay hint system
-- level preparation assistant
-- story progression and mission briefings
+AI providers never grant rewards or change game state. Raw generated output is
+not a production asset until it passes creative, legal, technical, and mobile
+performance review.
 
-See also:
-- `docs/AI_DIRECTOR.md`
-- `docs/VOICE_PIPELINE.md`
-- `docs/VIDEO_GENERATION_PIPELINE.md`
-
-## Status
-- Phase 1: backend foundation exists for AI Director text guidance.
-- Voice/video generation is architecture-only (interfaces exist, not production-enabled).
-- current asset library is evolving and incomplete; new assets should be added gradually without deleting unrelated assets during backend milestones
+See `docs/ZUNO_GAME_PRODUCTION_ROADMAP.md`, `docs/MUSIC_PIPELINE.md`, and
+`docs/VOICE_PIPELINE.md`.

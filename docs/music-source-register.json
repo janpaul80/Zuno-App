@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "owner": "Paul-Hartmann LLC",
+  "reviewedOn": "2026-07-21",
+  "sources": [
+    {
+      "id": "yannz-indie-meditations",
+      "name": "Indie Meditations FREE Music Pack",
+      "publisher": "YannZ",
+      "sourceUrl": "https://yannz41.itch.io/indie-meditations-free-music-pack",
+      "license": "CC BY 4.0",
+      "costClass": "free",
+      "status": "candidate",
+      "commercialGameUse": "confirmed-on-source-page",
+      "attributionRequirement": "yes",
+      "notes": "Audition only. Preserve metadata and record final attribution. lvl 3 - the grassland is a Grasslands exploration/briefing candidate."
+    },
+    {
+      "id": "yannz-contemplative-fantasy-v1",
+      "name": "Contemplative Fantasy Vol. 1",
+      "publisher": "YannZ",
+      "sourceUrl": "https://yannz41.itch.io/contemplative-fantasy-music-pack",
+      "license": "Custom Free-to-Use With Attribution",
+      "costClass": "name-your-price",
+      "status": "conditional",
+      "commercialGameUse": "claimed-on-source-page",
+      "attributionRequirement": "yes",
+      "notes": "Archive and review the downloaded Docs/LICENSE.txt before any track is accepted."
+    },
+    {
+      "id": "wow-sound-starter-pack",
+      "name": "WOW Sound Starter Pack",
+      "publisher": "W.O.W Sound Pte. Ltd.",
+      "sourceUrl": "https://wowsound.com/p/wow-sound-starter-pack/",
+      "license": "Product page links CC BY-ND 3.0",
+      "costClass": "free",
+      "status": "blocked",
+      "commercialGameUse": "needs-written-clarification",
+      "attributionRequirement": "yes",
+      "notes": "The page permits commercial projects, but the linked license treats synchronization as an adaptation and does not grant adaptation rights."
+    },
+    {
+      "id": "wow-sound-paid-catalogue",
+      "name": "WOW Sound Paid Catalogue",
+      "publisher": "W.O.W Sound Pte. Ltd.",
+      "sourceUrl": "https://wowsound.com/faq/",
+      "license": "WOW Sound commercial game license tier",
+      "costClass": "paid",
+      "status": "paid-option",
+      "commercialGameUse": "conditional-on-purchase-and-tier",
+      "attributionRequirement": "verify-at-purchase",
+      "notes": "Record the exact license and revenue tier. Provider prohibits AI/ML training and generation uses."
+    },
+    {
+      "id": "soundstripe-expanded",
+      "name": "Soundstripe",
+      "publisher": "Soundstripe Inc.",
+      "sourceUrl": "https://www.soundstripe.com/knowledge/licensing/what-does-the-expanded-license-cover",
+      "license": "Expanded license or other written game-covering license",
+      "costClass": "paid",
+      "status": "paid-option",
+      "commercialGameUse": "conditional-on-purchase",
+      "attributionRequirement": "verify-at-purchase",
+      "notes": "The game-covering license includes gameplay, cutscenes, menus, and trailers. Confirm current terms at purchase."
+    },
+    {
+      "id": "agsoundtrax",
+      "name": "AGsoundtrax Stock Music Library",
+      "publisher": "AGsoundtrax, LLC",
+      "sourceUrl": "https://www.agsoundtrax.com/terms",
+      "license": "Selected AGsoundtrax game/application license",
+      "costClass": "paid",
+      "status": "paid-option",
+      "commercialGameUse": "conditional-on-selected-license",
+      "attributionRequirement": "verify-at-purchase",
+      "notes": "Royalty-free does not mean free of charge. Retain the license certificate; previews cannot ship."
+    },
+    {
+      "id": "infinite-lofi-unresolved",
+      "name": "Infinite Lo-Fi",
+      "publisher": "Unverified",
+      "sourceUrl": null,
+      "license": "Unverified",
+      "costClass": "unverified",
+      "status": "blocked",
+      "commercialGameUse": "unverified",
+      "attributionRequirement": "unverified",
+      "notes": "Replace the placeholder URL only after the exact project, rights holder, and commercial game license are identified."
+    }
+  ],
+  "acceptedTracks": []
+}

@@ -1,11 +1,11 @@
 # AI Director Backend Plan
 
-Version: 1.0
-Status: Phase 1 Implemented (Backend Foundation)
+Version: 1.1
+Status: Phase 6.1 Implementation Candidate
 
 This document defines the AI Director backend architecture and the constraints it must obey.
 
-Phase 1 implements the minimal backend foundation for a Director chat endpoint. Voice and video integrations remain architecture-only.
+Phase 1 established the minimal backend foundation. Phase 6.1 moves that endpoint to Mastra orchestration with Logicc inference. Voice and video integrations remain architecture-only.
 
 ## 1. AI Director Responsibilities
 The AI Director is a player-facing Game Director layer.
@@ -56,7 +56,7 @@ Data should be provided via a bounded server-controlled "AI context" object rath
 ## 3. What Data The AI May Not Access
 Disallowed categories:
 - Secrets:
-  - API keys, tokens, credentials (Langdock, Supabase service role, Voicebox, MuAPI, Meshy, etc.)
+  - API keys, tokens, credentials (Logicc, Langdock, Supabase service role, Voicebox, MuAPI, Meshy, etc.)
 - Raw PII beyond what is required for gameplay:
   - emails, phone numbers, payment data
 - Administrative/system state:
@@ -80,27 +80,29 @@ Repositories (read-only queries only)
     ↓
 Supabase (RLS-scoped reads)
 
-The AI provider call (Langdock) is performed by the backend service layer.
+The inference call is owned by a tool-less Mastra Agent configured with Logicc's OpenAI-compatible endpoint.
 
 Rules:
-- Repositories do not call Langdock.
-- API routes do not call Langdock directly.
+- Repositories do not call Mastra or an inference provider.
+- API routes do not call Mastra or an inference provider directly.
 - AI routes must not "reach into" Reward Engine/Economy/Inventory mutation methods.
 
-## 4.1 Phase 1 Runtime Endpoint
+## 4.1 Phase 6.1 Runtime Endpoint
 Route:
 - `POST /api/v1/ai/director/message`
 
 Runtime responsibilities:
 - Resolve `playerId` via auth at the API boundary.
 - Assemble a bounded, server-controlled read-only context.
-- Call the LLM provider adapter (Langdock) via a provider client.
-- Return guidance text.
+- Convert the assembled context through a JSON snapshot boundary.
+- Call `runAiDirectorWithMastra()` with a cancellation signal.
+- Validate the full structured response with `AiDirectorModelResponseSchema`.
+- Return a bounded response or a safe troubleshooting fallback.
 
-Explicitly out of scope for Phase 1:
+Explicitly out of scope for Phase 6.1:
 - Voice generation (Voicebox integration is interfaces only).
 - Cinematic generation (Open Higgsfield integration is interfaces only).
-- Persistent chat transcripts/memory.
+- Persistent chat transcripts/memory or durable agent runs.
 - Tool-calling / structured action routing.
 
 ## 5. Player Support Flow
@@ -188,13 +190,19 @@ Runtime playback and asset serving are separate concerns.
 - Avoid sending raw logs, error traces, or anything containing secrets.
 - Do not store user chat transcripts indefinitely by default (policy TBD).
 
-## 12. Langdock Integration Strategy (Planned)
-- Langdock AI Pro is the primary chat/reasoning layer.
-- Backend will manage provider credentials via environment variables.
-- Responses should be structured when helpful:
-  - `{ message: string, suggestions?: string[], warnings?: string[] }`
+## 12. Mastra and Logicc Integration Strategy
+- Mastra is the orchestration runtime.
+- Logicc is the explicit default inference provider.
+- The stateless Agent executes directly through Mastra `Agent.generate()` and is configured with no tools.
+- Logicc credentials remain server-side environment variables.
+- Mastra structured output uses `AiDirectorModelResponseSchema`; raw provider text is never returned to a player.
+- Langdock is not selected because credentials happen to exist. Any future fallback requires an explicit, documented configuration and tests.
+- Phase 6.1 is stateless and uses no application Mastra storage. Persistent Mastra storage is required before memory or durable runs are enabled.
 
-No SDK or runtime integration is implemented in this milestone.
+Failure behavior:
+- Context, snapshot, provider, timeout, and invalid-output failures return category `troubleshooting` with a fixed safe reply.
+- Audit events contain category, stage, failure kind, provider/runtime identifiers, timing, and character counts only.
+- Prompts, snapshots, raw provider output, credentials, and raw exceptions are not included in AI Director audit events.
 
 ## 13. MuAPI / Meshy / Voicebox / open-higgsfield Usage Boundaries
 These tools are for content pipelines and asset generation, not gameplay mutation.

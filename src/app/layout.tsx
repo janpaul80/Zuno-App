@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   title: "ZUNO — 3D Mobile Platformer Adventure",
   description: "Explore ZUNO, a stylized Android 3D action-platformer with guided-camera levels, coins, gems, weapons, gadgets, online login, cloud inventory, shop, and multiplayer-ready backend services.",
   keywords: ["ZUNO", "3D Platformer", "Android APK", "Mobile Game", "Online Game", "Supabase", "Vercel", "Action Adventure", "Paul Hartmann"],
-  authors: [{ name: "Paul Hartmann" }],
+  authors: [{ name: "Paul-Hartmann LLC" }],
   openGraph: {
     title: "ZUNO — 3D Mobile Platformer Adventure",
     description: "Explore the colorful fantasy world of ZUNO with action-platformer levels, coins, upgrades, online progression, shop, and multiplayer-ready backend services.",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ZUNO — 3D Mobile Platformer Adventure",
-    description: "Explore the stylized Android action-platformer world of ZUNO created by Paul Hartmann.",
+    description: "Explore the stylized Android action-platformer world of ZUNO from Paul-Hartmann LLC.",
   },
 };
 

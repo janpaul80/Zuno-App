@@ -2,7 +2,7 @@
 
 ZUNO is my mobile game project. It is a 3D platformer and adventure game with characters, levels, coins, rewards, upgrades, inventory, shop systems, and a backend for player progress.
 
-This repo is the web and backend side of the project. It shows the game world, the public pages, the trailer, and the service layer that would support accounts, rewards, purchases, and cloud saves.
+This repo contains the Unity Android game client together with the web and backend services. The public site presents the game world, while the service layer supports accounts, rewards, purchases, and cloud saves.
 
 Live site: [zunobattle.app](https://zunobattle.app)
 
@@ -14,6 +14,8 @@ Live site: [zunobattle.app](https://zunobattle.app)
 - API routes under `/api/v1/player/*` and `/api/v1/shop/*`
 - Validators, repositories, and domain services for game data
 - Trailer video, character art, weapons, rewards, and level assets
+- Unity 6.3 Android client under `game/Zuno.Unity`
+- Playable Grasslands vertical-slice foundation with mobile controls and offline gameplay
 
 ## Tech stack
 
@@ -22,6 +24,7 @@ Live site: [zunobattle.app](https://zunobattle.app)
 - Supabase for player data
 - Framer Motion and Lucide React
 - Zod for validation
+- Unity 6.3 LTS, URP, C#, and the Unity Input System for the Android client
 
 ## Run it locally
 
@@ -33,6 +36,21 @@ npm run dev
 ```
 
 Open `http://localhost:3000`.
+
+## Run the Android game client
+
+Install Unity `6000.3.20f1` with Android Build Support, OpenJDK, Android SDK,
+and Android NDK through Unity Hub. Open `game/Zuno.Unity`, then load
+`Assets/Scenes/GrasslandsVerticalSlice.unity` and press Play.
+
+Keyboard controls in the Editor: WASD/arrow keys to move, Space to jump,
+J to attack, and Left Shift to dash. The same slice exposes a virtual joystick
+and action buttons on touch devices.
+
+The current geometric Guardian and enemy bodies are gameplay greyboxes only.
+They are deliberately isolated from gameplay code so approved Meshy/artist-made
+models, rigs, animation controllers, VFX, and audio can replace them without
+changing the combat and mission systems.
 
 ## Environment
 
@@ -65,4 +83,6 @@ npm run lint     # Run lint checks
 
 ## Status
 
-Active prototype. The repo shows the web presence and backend plan for the game. A real release still needs the playable build, store packaging, security review, and live Supabase setup.
+Active production prototype. The first Unity Android vertical slice now exists;
+a release still needs approved 3D assets, animation/audio passes, device QA,
+signed store packaging, security review, and live Supabase setup.

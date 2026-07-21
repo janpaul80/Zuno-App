@@ -9,11 +9,21 @@ export interface AiDirectorAuditEvent {
   conversationIdHash?: string
   locale?: string
   category: AiDirectorCategory
-  provider: 'langdock'
+  runtime: 'mastra'
+  inferenceProvider: 'logicc' | 'langdock' | 'none'
   model?: string
   latencyMs: number
   inputChars: number
   outputChars: number
+  status: 'ok' | 'fallback'
+  failureKind?:
+    | 'timeout'
+    | 'provider_error'
+    | 'invalid_output'
+    | 'snapshot_error'
+    | 'context_error'
+    | 'unknown'
+  stage?: 'context' | 'snapshot' | 'provider' | 'parse'
 }
 
 function safeHash(value: string): string {

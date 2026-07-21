@@ -1,22 +1,22 @@
 import Link from "next/link";
-import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
+import { Award, Heart, Sparkles } from "lucide-react";
 
 export default function CreditsPage() {
   const credits = [
     {
       role: "Game Concept & Art Direction",
-      name: "Paul Hartmann",
-      contribution: "Conceived the ZUNO animal combat universe, designed the glowing neon orange and electric blue visual art tokens, and outlined elements structures.",
+      name: "Paul-Hartmann LLC",
+      contribution: "Created and owns the ZUNO animal combat universe, its Guardians, world direction, product vision, and creative standards.",
     },
     {
       role: "Server Engineering & Isolation",
-      name: "ZUNO Ops Team",
-      contribution: "Maintained rigorous project deployment boundaries inside VPS `217.154.11.234` utilizing isolated PM2 containers and port 3006.",
+      name: "Paul-Hartmann LLC Production",
+      contribution: "Directs the secure backend, Android game client, cinematic production pipeline, and release operations.",
     },
     {
       role: "AI Operations & Balancers",
-      name: "AI Game Systems",
-      contribution: "Designed and stubbed telemetry monitoring systems, anti-exploit balancers, and procedural stage layouts.",
+      name: "Paul-Hartmann LLC",
+      contribution: "Owns and approves all final game, story, character, cinematic, audio, and gameplay deliverables.",
     },
   ];
 
@@ -48,13 +48,13 @@ export default function CreditsPage() {
           <div className="relative z-10 space-y-4">
             <Award className="h-14 w-14 text-neon-orange mx-auto animate-float" />
             <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white uppercase tracking-widest">
-              Creator & Director
+              Rights Holder & Creative Director
             </h2>
             <div className="text-4xl sm:text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-orange to-neon-purple tracking-wide glow-text-orange">
-              Paul Hartmann
+              Paul-Hartmann LLC
             </div>
             <p className="max-w-xl mx-auto text-gray-300 font-semibold text-sm sm:text-base leading-relaxed">
-              ZUNO was created by **Paul Hartmann**. His visual philosophy guides the vibrant color palettes, mobile-game quality presentations, and glowing accents.
+              ZUNO was created by Paul Hartmann and is owned and directed by Paul-Hartmann LLC. All final creative, production, and publishing credit belongs to Paul-Hartmann LLC.
             </p>
           </div>
         </div>

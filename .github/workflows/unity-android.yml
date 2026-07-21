@@ -1,0 +1,156 @@
+name: Unity Android
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/unity-android.yml"
+      - "game/Zuno.Unity/**"
+      - "scripts/validate-unity-*.mjs"
+      - "package.json"
+  push:
+    branches:
+      - main
+      - feat/phase-6-1-ai-director
+    paths:
+      - ".github/workflows/unity-android.yml"
+      - "game/Zuno.Unity/**"
+      - "scripts/validate-unity-*.mjs"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unity-android-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UNITY_VERSION: "6000.3.20f1"
+  UNITY_PROJECT_PATH: game/Zuno.Unity
+  APK_PATH: game/Zuno.Unity/Builds/Android/ZunoBattle-development.apk
+
+jobs:
+  validate:
+    name: Validate Unity project and workflow
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out ZUNO
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Validate Unity project structure
+        run: node scripts/validate-unity-project.mjs
+
+      - name: Validate Unity CI security contract
+        run: node scripts/validate-unity-ci.mjs
+
+  unity-tests:
+    name: Unity EditMode tests
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out ZUNO
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Check Unity license configuration
+        shell: bash
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        run: |
+          if [[ -z "$UNITY_EMAIL" || -z "$UNITY_PASSWORD" ]]; then
+            echo "UNITY_EMAIL and UNITY_PASSWORD must be configured as repository secrets."
+            exit 1
+          fi
+          if [[ -z "$UNITY_LICENSE" && -z "$UNITY_SERIAL" ]]; then
+            echo "Configure UNITY_LICENSE for Personal or UNITY_SERIAL for Pro."
+            exit 1
+          fi
+
+      - name: Run Unity EditMode tests
+        id: unity-tests
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: ${{ env.UNITY_PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: EditMode
+          artifactsPath: artifacts/unity-editmode
+
+      - name: Upload Unity test results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: unity-editmode-results-${{ github.sha }}
+          path: ${{ steps.unity-tests.outputs.artifactsPath }}
+          if-no-files-found: warn
+          retention-days: 14
+
+  android-apk:
+    name: Build Android development APK
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: unity-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out ZUNO
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Check Unity license configuration
+        shell: bash
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        run: |
+          if [[ -z "$UNITY_EMAIL" || -z "$UNITY_PASSWORD" ]]; then
+            echo "UNITY_EMAIL and UNITY_PASSWORD must be configured as repository secrets."
+            exit 1
+          fi
+          if [[ -z "$UNITY_LICENSE" && -z "$UNITY_SERIAL" ]]; then
+            echo "Configure UNITY_LICENSE for Personal or UNITY_SERIAL for Pro."
+            exit 1
+          fi
+
+      - name: Build ZUNO development APK
+        uses: game-ci/unity-builder@d829bfc901f2347c8fe18898f06712b66916ef42 # v5.0.0
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: ${{ env.UNITY_PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: Android
+          buildMethod: Zuno.Editor.ZunoAndroidBuild.BuildDevelopmentApk
+
+      - name: Verify APK output
+        shell: bash
+        run: |
+          test -s "$APK_PATH"
+          sha256sum "$APK_PATH"
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ZunoBattle-Android-development-${{ github.sha }}
+          path: ${{ env.APK_PATH }}
+          if-no-files-found: error
+          retention-days: 14
