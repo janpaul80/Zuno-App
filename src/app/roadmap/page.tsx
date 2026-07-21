@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 type Phase = {
   number: string;
   title: string;
-  status: "Complete" | "Next" | "Planned";
+  status: "Complete" | "In Progress" | "Next" | "Planned";
   summary: string;
   icon: ElementType;
   accent: string;
@@ -36,7 +36,7 @@ const phases: Phase[] = [
   {
     number: "02",
     title: "Backend foundation",
-    status: "Next",
+    status: "Complete",
     summary: "Design and implement the server authority for player identity, economy data, and cloud profile sync.",
     icon: Cloud,
     accent: "#00d2ff",
@@ -49,8 +49,8 @@ const phases: Phase[] = [
   {
     number: "03",
     title: "Android game client",
-    status: "Planned",
-    summary: "Build the APK client around guided-camera levels, mobile controls, character movement, and offline-safe caching.",
+    status: "In Progress",
+    summary: "Build the APK client around guided-camera levels, mobile controls, character movement, combat, and offline-safe caching.",
     icon: Gamepad2,
     accent: "#ff7a00",
     goals: [
@@ -140,7 +140,7 @@ export default function RoadmapPage() {
               Build ZUNO in Safe Phases
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/76">
-              The next work stays website-only until the architecture is clearly communicated. Backend code, Android client work, shop systems, and multiplayer services should come later as separate, focused phases.
+              The backend foundation is established and the Unity Android client is now in production development. Work advances through focused, independently verifiable gameplay slices.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -186,7 +186,7 @@ export default function RoadmapPage() {
                 <h2 className="font-russo text-2xl uppercase tracking-[0.08em] text-white">Current safe step</h2>
               </div>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-white/72">
-                Keep this phase as website planning and communication only. Do not add backend routes, Supabase tables, authentication logic, or Android client code until the backend foundation phase is explicitly started.
+                Complete the Grasslands playable slice: verify the Unity import and APK on Android, replace Aelis’s greybox visual with the approved rig, then build the production animation, VFX, audio, and environment passes.
               </p>
             </div>
             <Link

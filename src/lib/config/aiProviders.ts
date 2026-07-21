@@ -6,6 +6,12 @@ export interface LangdockConfig {
   model: string
 }
 
+export interface LogiccConfig {
+  apiKey: string
+  baseUrl: string
+  model: string
+}
+
 export interface VoiceboxConfig {
   // Local-first: the backend calls a local Voicebox HTTP service.
   // This value is optional until voice generation is enabled.
@@ -46,6 +52,17 @@ export function getLangdockConfig(): LangdockConfig {
   const baseUrl = rawBaseUrl.trim()
 
   const model = (process.env.LANGDOCK_MODEL ?? process.env.MODEL ?? 'default').trim()
+  return { apiKey, baseUrl, model }
+}
+
+export function getLogiccConfig(): LogiccConfig {
+  // Logicc is the explicit default inference provider for the AI Director.
+  // Keep validation lazy so builds and tests that do not invoke the Director
+  // do not require production credentials.
+  const apiKey = requireEnv('LOGICC_API_KEY', process.env.LOGICC_API_KEY)
+  const baseUrl = requireEnv('LOGICC_BASE_URL', process.env.LOGICC_BASE_URL).trim()
+  const model = (process.env.LOGICC_MODEL ?? 'default').trim()
+
   return { apiKey, baseUrl, model }
 }
 

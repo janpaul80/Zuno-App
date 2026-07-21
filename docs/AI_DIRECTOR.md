@@ -1,8 +1,8 @@
 
 # AI Director / Game Director
 
-Version: 1.4
-Status: Phase 2 In Progress (Context + Safety Hardening)
+Version: 1.5
+Status: Phase 6.1 Implementation Candidate (Mastra + Logicc)
 
 ## Purpose
 ZUNO's AI should become the central Game Director across the whole game.
@@ -38,8 +38,10 @@ Practical implications:
 - AI Director behavior should preserve this framing when generating future story, cinematic, level briefing, hint, and support content.
 - The AI Director should treat the current asset library as evolving and incomplete.
 
-## Providers / Tools (Planned)
-- Langdock AI Pro: primary reasoning/chat layer for the AI Director.
+## Providers / Tools
+- Mastra: orchestration runtime for the AI Director.
+- Logicc: explicit default inference provider for the AI Director.
+- Langdock: retained as a legacy provider adapter; it is not an implicit AI Director fallback.
 - Voicebox repo: local-first voice cloning / TTS option for narration and character voices.
 - open-higgsfield-ai repo: candidate video/cinematic generation pipeline.
 - MuAPI: external API used by future pipelines (API key exists in `.env.local`).
@@ -56,22 +58,44 @@ Only provider names and intended uses are documented here. No secrets.
 - The AI Director can be integrated as a chat/narration layer that consumes read-only game state.
 - Any user intent that results in gameplay mutation must still call the existing backend services.
 
-## Runtime Backend (Phase 1)
-Phase 1 adds the backend foundation for a Director chat endpoint.
+## Runtime Backend (Phase 6.1)
+Phase 6.1 moves the Director chat endpoint onto a Mastra-owned execution path.
 
 Route:
 - `POST /api/v1/ai/director/message`
 
 Flow (read-only + advisory):
-- API → `aiDirectorService` (read-only context assembly) → Langdock (LLM).
+- API → `aiDirectorService` → JSON snapshot → tool-less Mastra Agent → Logicc.
 - No gameplay mutations are permitted.
+- The Agent has `tools: {}` and no workspace, browser, memory, or gameplay tools.
+- Logicc is configured through Mastra's supported OpenAI-compatible model contract.
+- Output is generated and validated with `AiDirectorModelResponseSchema`.
+- Player context follows a `JSON.stringify` / `JSON.parse` snapshot boundary and is deeply frozen.
+- The request has a 12-second deadline and propagates cancellation to the Logicc HTTP request.
 
 Important:
 - The AI response is guidance only.
 - Purchases, rewards, inventory, XP, unlocks, and progression must continue to be executed via the existing authoritative API/services.
 
-## Provider Integration: Langdock (Verified)
-This project uses **Langdock's OpenAI-compatible API**.
+## Provider Integration: Logicc through Mastra
+The AI Director uses Logicc through Mastra's OpenAI-compatible model router.
+
+Runtime:
+- `src/mastra/index.ts`
+
+Environment variables:
+- `LOGICC_API_KEY`
+- `LOGICC_BASE_URL` (API base URL; Mastra appends `/chat/completions`)
+- `LOGICC_MODEL` (defaults to `default`)
+
+Audit metadata keeps orchestration and inference separate:
+- `runtime: 'mastra'`
+- `inferenceProvider: 'logicc' | 'langdock' | 'none'`
+
+The Phase 6.1 AI Director path is Logicc-only. Langdock credentials, `AI_TEXT_PROVIDER`, or other unrelated provider settings do not authorize an implicit switch.
+
+## Legacy Langdock Adapter
+The repository still contains a direct Langdock adapter for the earlier Phase 1 path.
 
 Adapter:
 - `src/lib/providers/langdock/langdockClient.ts`
@@ -81,7 +105,7 @@ Environment variables supported (read lazily; only required when the AI Director
 - `LANGDOCK_BASE_URL` or `LANGDOCK_ENDPOINT_URL`
 - `LANGDOCK_MODEL` or `MODEL`
 
-Verified behavior:
+Legacy adapter behavior:
 - Authentication: `Authorization: Bearer <key>`
 - Endpoint: `${BASE_URL}/chat/completions` (where `BASE_URL` typically already contains `/v1`)
 - Response: standard OpenAI-style `choices[0].message.content`
@@ -107,4 +131,6 @@ See also:
 
 ## Implementation Status
 - Phase 1: a minimal runtime foundation exists for text replies.
+- Phase 6.1: Mastra-owned, Logicc-backed, tool-less structured response path implemented locally with direct runner and service tests.
+- Production activation still requires configured Logicc environment variables and merge/deployment approval.
 - Voice + video remain architecture-only (see related docs).

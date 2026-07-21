@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "game:validate": "node scripts/validate-unity-project.mjs"
   },
   "dependencies": {
+    "@mastra/core": "1.51.0",
     "@supabase/supabase-js": "^2.108.2",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.16.0",

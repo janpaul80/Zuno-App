@@ -40,3 +40,25 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Unity game client (keep Assets, Packages, and ProjectSettings tracked)
+/game/Zuno.Unity/[Ll]ibrary/
+/game/Zuno.Unity/[Tt]emp/
+/game/Zuno.Unity/[Oo]bj/
+/game/Zuno.Unity/[Bb]uild/
+/game/Zuno.Unity/[Bb]uilds/
+/game/Zuno.Unity/[Ll]ogs/
+/game/Zuno.Unity/[Uu]ser[Ss]ettings/
+/game/Zuno.Unity/MemoryCaptures/
+/game/Zuno.Unity/Recordings/
+/game/Zuno.Unity/*.csproj
+/game/Zuno.Unity/*.sln
+/game/Zuno.Unity/*.suo
+/game/Zuno.Unity/*.user
+/game/Zuno.Unity/*.userprefs
+/game/Zuno.Unity/*.pidb
+/game/Zuno.Unity/*.booproj
+/game/Zuno.Unity/.idea/
+/game/Zuno.Unity/.gradle/
+/game/Zuno.Unity/ExportedObj/
+/game/Zuno.Unity/gradleOut/

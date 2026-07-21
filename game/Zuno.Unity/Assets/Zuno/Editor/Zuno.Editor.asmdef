@@ -1,0 +1,19 @@
+{
+  "name": "Zuno.Editor",
+  "rootNamespace": "Zuno.Editor",
+  "references": [
+    "Zuno.Gameplay",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

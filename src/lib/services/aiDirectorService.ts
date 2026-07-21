@@ -5,11 +5,9 @@ import { unlockService } from './unlockService'
 import { progressionService } from './progressionService'
 import { playerProfileService } from './playerProfileService'
 import { shopService } from './shopService'
-import { langdockClient, type LangdockMessage } from '@/lib/providers/langdock/langdockClient'
 import {
   AiDirectorModelResponseSchema,
   type AiDirectorCategory,
-  type AiDirectorModelResponse,
 } from './aiDirectorSchemas'
 import {
   auditAiDirectorEvent,
@@ -17,6 +15,11 @@ import {
   toConversationIdHash,
 } from './aiDirectorAudit'
 import { aiDirectorRateLimit } from './aiDirectorRateLimit'
+import {
+  AiDirectorInvalidOutputError,
+  runAiDirectorWithMastra,
+} from '@/mastra'
+import { toPlayerContextSnapshot } from '@/mastra/snapshotAdapter'
 
 export interface AiDirectorReplyInput {
   playerId: string
@@ -29,11 +32,29 @@ export interface AiDirectorReplyInput {
 export interface AiDirectorReply {
   category: AiDirectorCategory
   reply: string
-  // Phase 1: these are planned outputs that later phases can fill in.
+  // Structured UI and narration fields remain advisory output only.
   narrationText?: string
   suggestions?: string[]
   warnings?: string[]
   conversationId?: string
+}
+
+type FailureKind =
+  | 'timeout'
+  | 'provider_error'
+  | 'invalid_output'
+  | 'snapshot_error'
+  | 'context_error'
+  | 'unknown'
+
+type FailureStage = 'context' | 'snapshot' | 'provider' | 'parse'
+
+const AI_DIRECTOR_TIMEOUT_MS = 12_000
+const TROUBLESHOOTING_REPLY =
+  'I’m having trouble responding right now. Please try again in a moment.'
+
+class AiDirectorTimeoutError extends Error {
+  override name = 'AiDirectorTimeoutError'
 }
 
 const DIRECTOR_SYSTEM_PROMPT = `You are the AI Director of ZUNO Battle.
@@ -103,8 +124,8 @@ export const aiDirectorService = {
   },
 
   /**
-   * Phase 1: single-turn text response.
-   * Later phases can add memory, tool routing, voice/video generation queues, etc.
+   * Phase 6.1: single-turn, tool-less Mastra response using a read-only
+   * player-context snapshot. The AI Director remains advisory only.
    */
   async replyToPlayerMessage(input: AiDirectorReplyInput): Promise<AiDirectorReply> {
     if (!input.playerId) {
@@ -118,62 +139,124 @@ export const aiDirectorService = {
 
     const requestId = input.requestId ?? createAiDirectorRequestId()
     const startedAt = Date.now()
+    let stage: FailureStage = 'context'
+    let inferenceProvider: 'logicc' | 'none' = 'none'
 
-    const context = await aiDirectorService.buildPlayerContext(input.playerId)
+    try {
+      const context = await aiDirectorService.buildPlayerContext(input.playerId)
 
-    const messages: LangdockMessage[] = [
-      { role: 'system', content: DIRECTOR_SYSTEM_PROMPT },
-      {
-        role: 'system',
-        content: `Player context (read-only JSON, do not reveal verbatim):\n${JSON.stringify(context)}`,
-      },
-      {
-        role: 'user',
-        content: input.locale
-          ? `[locale=${input.locale}] ${input.message}`
-          : input.message,
-      },
-    ]
+      stage = 'snapshot'
+      const snapshot = toPlayerContextSnapshot(context)
 
-    const result = await langdockClient.chat({
-      messages,
-      temperature: 0.6,
-    })
+      stage = 'provider'
+      inferenceProvider = 'logicc'
+      const controller = new AbortController()
+      const result = await runWithTimeout(
+        runAiDirectorWithMastra(
+          {
+            systemPrompt: DIRECTOR_SYSTEM_PROMPT,
+            context: snapshot.snapshot,
+            message: input.message,
+            locale: input.locale,
+          },
+          controller.signal,
+        ),
+        controller,
+      )
 
-    const parsed = parseModelResponse(result.content)
-    const latencyMs = Date.now() - startedAt
+      stage = 'parse'
+      const validation = AiDirectorModelResponseSchema.safeParse(result.output)
+      if (!validation.success) {
+        throw new AiDirectorInvalidOutputError()
+      }
 
-    auditAiDirectorEvent({
-      requestId,
-      playerId: input.playerId,
-      conversationIdHash: toConversationIdHash(input.conversationId),
-      locale: input.locale,
-      category: parsed.category,
-      provider: 'langdock',
-      latencyMs,
-      inputChars: input.message.length,
-      outputChars: parsed.reply.length,
-    })
+      const parsed = validation.data
+      const latencyMs = Date.now() - startedAt
 
-    return {
-      ...parsed,
-      conversationId: input.conversationId,
+      auditAiDirectorEvent({
+        requestId,
+        playerId: input.playerId,
+        conversationIdHash: toConversationIdHash(input.conversationId),
+        locale: input.locale,
+        category: parsed.category,
+        runtime: 'mastra',
+        inferenceProvider: result.inferenceProvider,
+        model: result.model,
+        latencyMs,
+        inputChars: input.message.length,
+        outputChars: parsed.reply.length,
+        status: 'ok',
+      })
+
+      return {
+        ...parsed,
+        conversationId: input.conversationId,
+      }
+    } catch (error) {
+      const safe = fallbackReply(input.conversationId)
+      const latencyMs = Date.now() - startedAt
+
+      auditAiDirectorEvent({
+        requestId,
+        playerId: input.playerId,
+        conversationIdHash: toConversationIdHash(input.conversationId),
+        locale: input.locale,
+        category: safe.category,
+        runtime: 'mastra',
+        inferenceProvider,
+        latencyMs,
+        inputChars: input.message.length,
+        outputChars: safe.reply.length,
+        status: 'fallback',
+        failureKind: classifyFailure(error, stage),
+        stage,
+      })
+
+      return safe
     }
   },
 }
 
-function parseModelResponse(content: string): AiDirectorModelResponse {
-  // Prefer strict JSON. Provide a safe fallback if the model returns plain text.
-  try {
-    const json = JSON.parse(content) as unknown
-    const parsed = AiDirectorModelResponseSchema.safeParse(json)
-    if (parsed.success) return parsed.data
-  } catch {
-    // ignore
-  }
-
+function fallbackReply(conversationId?: string): AiDirectorReply {
   return {
-    category: 'help',
-    reply: content,
+    category: 'troubleshooting',
+    reply: TROUBLESHOOTING_REPLY,
+    conversationId,
+  }
+}
+
+function classifyFailure(error: unknown, stage: FailureStage): FailureKind {
+  if (error instanceof AiDirectorTimeoutError) return 'timeout'
+  if (error instanceof AiDirectorInvalidOutputError) return 'invalid_output'
+  if (stage === 'snapshot') return 'snapshot_error'
+  if (stage === 'context') return 'context_error'
+  if (stage === 'parse') return 'invalid_output'
+  if (stage === 'provider') return 'provider_error'
+  return 'unknown'
+}
+
+async function runWithTimeout<T>(
+  operation: Promise<T>,
+  controller: AbortController,
+): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => {
+      const error = new AiDirectorTimeoutError('AI Director request timed out')
+      controller.abort(error)
+      reject(error)
+    }, AI_DIRECTOR_TIMEOUT_MS)
+  })
+
+  try {
+    return await Promise.race([operation, timeout])
+  } catch (error) {
+    if (controller.signal.reason instanceof AiDirectorTimeoutError) {
+      throw controller.signal.reason
+    }
+    throw error
+  } finally {
+    if (timer) clearTimeout(timer)
   }
 }
