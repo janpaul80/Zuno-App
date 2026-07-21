@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "game:validate": "node scripts/validate-unity-project.mjs"
+    "game:validate": "node scripts/validate-unity-project.mjs",
+    "game:validate-ci": "node scripts/validate-unity-ci.mjs"
   },
   "dependencies": {
     "@mastra/core": "1.51.0",

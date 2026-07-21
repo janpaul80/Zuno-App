@@ -102,6 +102,13 @@ Unity -batchmode -projectPath game/Zuno.Unity \
   -executeMethod Zuno.Editor.ZunoAndroidBuild.BuildDevelopmentApk -quit
 ```
 
+The same gate is automated by `.github/workflows/unity-android.yml`. Pull
+requests receive structural validation only. Trusted pushes and manual
+dispatches use repository-scoped Unity license secrets, run EditMode tests, and
+only then build and retain `ZunoBattle-development.apk`. The workflow grants
+read-only repository permissions and pins every Action to a reviewed immutable
+commit SHA.
+
 The development build is unsigned/debug-signed. Production signing must run in
 CI from protected secrets and a verified tag.
 

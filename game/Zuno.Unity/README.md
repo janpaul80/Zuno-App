@@ -39,5 +39,18 @@ Unity -batchmode -projectPath game/Zuno.Unity \
 
 Output: `game/Zuno.Unity/Builds/Android/ZunoBattle-development.apk`.
 
+## GitHub Android build gate
+
+`.github/workflows/unity-android.yml` validates every Unity-related pull request
+without credentials. On trusted pushes to `main` or the active production
+branch—and on manual dispatch—it runs EditMode tests before building the
+development APK. The APK and test reports are retained as GitHub Actions
+artifacts for 14 days.
+
+Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and either `UNITY_LICENSE` (Personal)
+or `UNITY_SERIAL` (Pro) as GitHub Actions repository secrets. These values must
+never be committed, placed in the Unity project, or supplied to pull-request
+jobs.
+
 Do not add provider keys or Supabase service-role credentials here. Production
 economy and progression remain backend-authoritative.
