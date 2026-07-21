@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const projectRoot = join(repositoryRoot, "game", "Zuno.Unity");
 const assetsRoot = join(projectRoot, "Assets");
+const musicRegisterPath = join(repositoryRoot, "docs", "music-source-register.json");
 
 function fail(message) {
   throw new Error(`[ZUNO Unity validation] ${message}`);
@@ -58,6 +59,69 @@ requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Domain", "GuardianLoadout.c
 requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Presentation", "MissionCinematicPlayer.cs"), "VideoPlayer");
 requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Presentation", "MissionLaunchFlow.cs"), "ShowRoadmap");
 
+const musicRegister = JSON.parse(requireFile(musicRegisterPath));
+if (musicRegister.schemaVersion !== 1) fail("Unsupported music source register schema");
+if (musicRegister.owner !== "Paul-Hartmann LLC") fail("Music source register owner is incorrect");
+if (!Array.isArray(musicRegister.sources) || musicRegister.sources.length === 0) {
+  fail("Music source register must contain at least one reviewed source");
+}
+
+const musicSourceIds = new Set();
+const allowedMusicStatuses = new Set(["candidate", "conditional", "blocked", "paid-option"]);
+for (const source of musicRegister.sources) {
+  const requiredFields = ["id", "name", "publisher", "license", "costClass", "status", "commercialGameUse", "notes"];
+  for (const field of requiredFields) {
+    if (typeof source[field] !== "string" || source[field].trim().length === 0) {
+      fail(`Music source '${source.id ?? "unknown"}' is missing ${field}`);
+    }
+  }
+  if (musicSourceIds.has(source.id)) fail(`Duplicate music source id: ${source.id}`);
+  musicSourceIds.add(source.id);
+  if (!allowedMusicStatuses.has(source.status)) fail(`Unsupported music source status: ${source.status}`);
+  const allowedAttributionRequirements = new Set(["yes", "no", "verify-at-purchase", "unverified"]);
+  if (!allowedAttributionRequirements.has(source.attributionRequirement)) {
+    fail(`Music source '${source.id}' must declare a supported attributionRequirement`);
+  }
+  if (source.sourceUrl === null) {
+    if (source.status !== "blocked") fail(`Only blocked music sources may omit sourceUrl: ${source.id}`);
+  } else {
+    try {
+      const sourceUrl = new URL(source.sourceUrl);
+      if (sourceUrl.protocol !== "https:") fail(`Music source '${source.id}' must use an HTTPS sourceUrl`);
+    } catch {
+      fail(`Music source '${source.id}' has an invalid sourceUrl`);
+    }
+  }
+}
+
+if (!Array.isArray(musicRegister.acceptedTracks)) fail("Music source register acceptedTracks must be an array");
+for (const track of musicRegister.acceptedTracks) {
+  const requiredFields = [
+    "id",
+    "sourceId",
+    "title",
+    "composer",
+    "sourceUrl",
+    "downloadedOn",
+    "license",
+    "licenseProofPath",
+    "attribution",
+    "approvedUses",
+    "approvalStatus",
+    "sourceSha256",
+    "deliverySha256",
+  ];
+  for (const field of requiredFields) {
+    if (typeof track[field] !== "string" || track[field].trim().length === 0) {
+      fail(`Accepted music track '${track.id ?? "unknown"}' is missing ${field}`);
+    }
+  }
+  if (!musicSourceIds.has(track.sourceId)) fail(`Accepted music track references unknown source: ${track.sourceId}`);
+  if (!/^[a-f0-9]{64}$/i.test(track.sourceSha256) || !/^[a-f0-9]{64}$/i.test(track.deliverySha256)) {
+    fail(`Accepted music track '${track.id}' must contain complete SHA-256 checksums`);
+  }
+}
+
 const assetFiles = walk(assetsRoot);
 for (const file of assetFiles) {
   if (file.endsWith(".meta")) continue;
@@ -103,4 +167,6 @@ console.log(JSON.stringify({
   assetFiles: assetFiles.filter((file) => !file.endsWith(".meta")).length,
   csharpFiles: sourceFiles.length,
   editModeTestFiles: requiredTests.length,
+  reviewedMusicSources: musicRegister.sources.length,
+  acceptedMusicTracks: musicRegister.acceptedTracks.length,
 }, null, 2));

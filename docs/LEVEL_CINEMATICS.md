@@ -1,6 +1,6 @@
 # Level Cinematics and Narrative System
 
-Version: 2.0
+Version: 2.1
 Status: Runtime Player and Mission Catalogue Implemented; Production Media Pending
 
 ## Required experience
@@ -38,11 +38,13 @@ versioned remote catalogue after offline and integrity behavior is implemented.
 4. Blackbox produces concept frames/storyboards and selected video candidates.
 5. Meshy supplies 3D candidates; production artists preserve approved identity, topology, rigs, materials, and LODs.
 6. Voicebox generates local narration and character stems from approved scripts and licensed/consented voices.
-7. Original or commercially licensed music and sound design are mixed with the voices.
+7. Original or commercially licensed music and sound design are cleared through
+   `docs/MUSIC_PIPELINE.md`, then mixed with the voices on separable stems.
 8. Editors assemble, subtitle, review, checksum, and publish the approved package.
 
 AI providers never grant rewards or change game state. Raw generated output is
 not a production asset until it passes creative, legal, technical, and mobile
 performance review.
 
-See `docs/ZUNO_GAME_PRODUCTION_ROADMAP.md` and `docs/VOICE_PIPELINE.md`.
+See `docs/ZUNO_GAME_PRODUCTION_ROADMAP.md`, `docs/MUSIC_PIPELINE.md`, and
+`docs/VOICE_PIPELINE.md`.

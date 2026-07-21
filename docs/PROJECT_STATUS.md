@@ -37,6 +37,7 @@
 | **AI Director Phase 6.1** | Mastra-owned, tool-less Agent; Logicc inference; JSON snapshots; strict structured output; cancellation; safe failure auditing. | 🟡 Local candidate awaiting merge and deployment approval |
 | **Grasslands Playable Slice** | Aelis greybox, guided camera, virtual joystick, jump, dash, melee combo, enemies, vitality, mission objective, beacon, and HUD. | 🟡 Implemented; Unity import/device verification pending |
 | **Mission Roadmap + Loadout Shell** | Nine named missions, difficulty tiers, protection/enemy briefings, coin candidates, cinematic playback fallback, visible loadout HUD, blade and pulse blaster. | 🟡 Implemented; Unity import/device verification pending |
+| **Music Intake + Licensing Gate** | Curated free/paid source register, rights checklist, provenance requirements, creative map, and Unity/cinematic mixing rules. | 🟡 Implemented; final tracks pending audition and approval |
 | **Production Providers** | Mastra/Logicc primary, explicit Langdock failover, Meshy preview/refine REST flow, Blackbox image/video contract, local Voicebox generation contract. | 🟡 Mock-verified; live services/credits and asset approval pending |
 
 ---

@@ -1,6 +1,6 @@
 # ZUNO Battle Production Roadmap
 
-Version: 1.0
+Version: 1.1
 Owner: Paul-Hartmann LLC
 Primary product: 3D Android game (APK/AAB)
 Status: Active
@@ -73,6 +73,8 @@ the player's duty. Mission outro movies are added after intro quality is locked.
 
 Music is not a Voicebox responsibility. Music must be original, commissioned,
 or licensed for commercial game use, with proof retained in asset provenance.
+Free and paid source candidates are governed by `docs/MUSIC_PIPELINE.md` and
+`docs/music-source-register.json`; being listed is not approval to ship a track.
 
 ## Mobile combat and presentation requirements
 
@@ -118,6 +120,7 @@ Exit gate: Unity compile, EditMode tests, Android APK, and on-device control/cam
 
 - modular environment kit, lighting, vegetation, props, and optimized enemies
 - startup and Grasslands intro cinematic with narration, music, subtitles, and skip/replay
+- approved Grasslands music palette with source license, attribution, checksums, mixer routing, and Android listening test
 - loadout preparation screen, weapon quick-switch, armor/gadget behavior
 - coins as visible pickups with server-authoritative mission settlement
 - performance profiles tested on at least low, mid, and high Android tiers
