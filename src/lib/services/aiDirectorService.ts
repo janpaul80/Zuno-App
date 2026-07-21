@@ -140,7 +140,7 @@ export const aiDirectorService = {
     const requestId = input.requestId ?? createAiDirectorRequestId()
     const startedAt = Date.now()
     let stage: FailureStage = 'context'
-    let inferenceProvider: 'logicc' | 'none' = 'none'
+    let inferenceProvider: 'logicc' | 'langdock' | 'none' = 'none'
 
     try {
       const context = await aiDirectorService.buildPlayerContext(input.playerId)

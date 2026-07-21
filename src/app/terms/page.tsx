@@ -64,7 +64,7 @@ export default function TermsPage() {
               <FileText className="h-5 w-5 text-electric-blue" /> 4. Credits & Creator Attributions
             </h3>
             <p>
-              All assets, codebases, and trademark elements of ZUNO remain the exclusive intellectual property of the creators. ZUNO was created by **Paul Hartmann**.
+              All ZUNO assets, code, trademarks, characters, stories, and final deliverables are owned by Paul-Hartmann LLC. ZUNO was created by Paul Hartmann and is published under Paul-Hartmann LLC&apos;s direction.
             </p>
           </div>
 

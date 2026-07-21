@@ -41,8 +41,8 @@ Practical implications:
 ## Providers / Tools
 - Mastra: orchestration runtime for the AI Director.
 - Logicc: explicit default inference provider for the AI Director.
-- Langdock: retained as a legacy provider adapter; it is not an implicit AI Director fallback.
-- Voicebox repo: local-first voice cloning / TTS option for narration and character voices.
+- Langdock: explicit, opt-in Logicc failover; credentials alone never activate it.
+- Voicebox (`jamiepine/voicebox`): local-first voice production through its REST API.
 - open-higgsfield-ai repo: candidate video/cinematic generation pipeline.
 - MuAPI: external API used by future pipelines (API key exists in `.env.local`).
 - Meshy.ai: 3D asset generation support for cinematic and game content pipelines (API key exists in `.env.local`).
@@ -92,7 +92,7 @@ Audit metadata keeps orchestration and inference separate:
 - `runtime: 'mastra'`
 - `inferenceProvider: 'logicc' | 'langdock' | 'none'`
 
-The Phase 6.1 AI Director path is Logicc-only. Langdock credentials, `AI_TEXT_PROVIDER`, or other unrelated provider settings do not authorize an implicit switch.
+Logicc remains primary. Langdock is attempted only when `AI_DIRECTOR_FALLBACK_PROVIDER=langdock` is explicitly configured. Langdock credentials, `AI_TEXT_PROVIDER`, or unrelated provider settings do not authorize a switch.
 
 ## Legacy Langdock Adapter
 The repository still contains a direct Langdock adapter for the earlier Phase 1 path.

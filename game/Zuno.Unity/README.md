@@ -19,6 +19,15 @@ Editor controls:
 
 Touch controls are created at runtime for Android.
 
+The slice now opens on the Zunlandia mission roadmap. Select Grasslands, review
+the briefing, optionally watch the cinematic package, then deploy. Other missions
+remain visibly locked while their production content is built.
+
+The in-game HUD keeps health, objective, coin status, weapon, ammo, armor,
+gadget, movement, attack, jump, and dash controls visible. Tap the gear rows to
+cycle the development loadout. The Energy Blade and Blue Pulse Blaster are
+functional greybox combat modes, not final art or balance.
+
 ## Build a development APK
 
 Use `ZUNO > Build > Development APK` in the Editor, or:

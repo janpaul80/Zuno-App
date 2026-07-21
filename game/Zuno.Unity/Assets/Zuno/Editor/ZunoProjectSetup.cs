@@ -33,14 +33,14 @@ namespace Zuno.Editor
                 return;
             }
 
-            PlayerSettings.companyName = "ZUNO Studios";
+            PlayerSettings.companyName = "Paul-Hartmann LLC";
             PlayerSettings.productName = "ZUNO Battle";
-            PlayerSettings.bundleVersion = "0.1.0";
+            PlayerSettings.bundleVersion = "0.2.0";
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, ApplicationId);
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.MTRendering = true;
-            PlayerSettings.Android.bundleVersionCode = 1;
+            PlayerSettings.Android.bundleVersionCode = 2;
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel24;
             PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;

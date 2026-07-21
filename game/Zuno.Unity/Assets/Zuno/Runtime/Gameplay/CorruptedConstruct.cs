@@ -17,6 +17,7 @@ namespace Zuno.Gameplay
         private Combatant _target;
         private float _nextAttackAt;
         private float _verticalVelocity;
+        private bool _behaviorEnabled = true;
 
         public void Initialize(Combatant target)
         {
@@ -31,7 +32,7 @@ namespace Zuno.Gameplay
 
         private void Update()
         {
-            if (_self.IsDefeated || _target == null || _target.IsDefeated || !_controller.enabled)
+            if (!_behaviorEnabled || _self.IsDefeated || _target == null || _target.IsDefeated || !_controller.enabled)
             {
                 return;
             }
@@ -64,6 +65,11 @@ namespace Zuno.Gameplay
             }
 
             _controller.Move(velocity * Time.deltaTime);
+        }
+
+        public void SetBehaviorEnabled(bool enabled)
+        {
+            _behaviorEnabled = enabled;
         }
     }
 }

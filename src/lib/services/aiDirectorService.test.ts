@@ -120,6 +120,28 @@ describe('aiDirectorService', () => {
     expect(JSON.stringify(audit)).not.toContain('What should I do next?')
   })
 
+  it('records an explicitly selected Langdock failover result', async () => {
+    vi.mocked(runAiDirectorWithMastra).mockResolvedValueOnce({
+      output: { category: 'level', reply: 'The Heartwood Beacon needs you.' },
+      inferenceProvider: 'langdock',
+      model: 'fallback-model',
+    })
+
+    const result = await aiDirectorService.replyToPlayerMessage({
+      playerId: 'p1',
+      message: 'Brief me.',
+    })
+
+    expect(result.category).toBe('level')
+    expect(auditAiDirectorEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        inferenceProvider: 'langdock',
+        model: 'fallback-model',
+        status: 'ok',
+      }),
+    )
+  })
+
   it('classifies timeout failures and aborts the runner', async () => {
     vi.useFakeTimers()
     let runnerSignal: AbortSignal | undefined

@@ -1,99 +1,40 @@
-# Video Generation Pipeline (Cinematics)
+# Video and Image Generation Pipeline
 
-Version: 1.2
-Status: Architecture Designed (MuAPI Adapter Implemented)
+Version: 2.0
+Status: Blackbox Media Adapter Implemented; Production Generation Approval-Gated
 
-## Purpose
-Document the planned pipeline for generating and assembling cinematics (intro cinematic, level briefings, and narrative beats).
+Blackbox AI is ZUNO's configured image/video generation provider for concept
+frames, storyboards, backgrounds, and selected cinematic candidates. The
+server-side adapter implements the official `POST /chat/completions` contract:
 
-This is planning-only. Do not implement runtime video generation or integrations yet.
+- image model default: `flux-pro`
+- video model default: `veo-2`
+- response contract: HTTPS asset URL in `choices[0].message.content`
 
-## Core Constraint
-Video generation is presentation-only.
+Configuration:
 
-No video toolchain may directly mutate gameplay state. Rewards and gameplay changes remain server-authoritative and must flow through existing backend services.
+- `BLACKBOX_API_KEY`
+- `BLACKBOX_BASE_URL` (default `https://api.blackbox.ai`)
+- `BLACKBOX_IMAGE_MODEL`
+- `BLACKBOX_VIDEO_MODEL`
 
-## Candidate Tools / Providers
-- open-higgsfield-ai repo:
-  - **Development UI only**.
-  - Used as a reference workflow for calling MuAPI.
-- MuAPI (production):
-  - External API used by the ZUNO backend.
-  - Integrated via the `higgsfieldClient` provider adapter.
-  - API key exists in `.env.local` (do not commit).
-- Meshy AI:
-  - 3D asset generation provider used by future pipelines.
-  - Integrated via `meshyClient` for asset tooling (not runtime mutation).
-  - API key exists in `.env.local` (do not commit).
-- Meshy.ai:
-  - Potential 3D asset generation.
-  - API key exists in `.env.local` (do not commit).
+Prompts and provider responses are not logged. Audit records contain only
+provider/model metadata, character counts, correlation ids, and latency.
 
-## Open Higgsfield Integration Status
-We evaluated and integrated `open-higgsfield-ai` strictly as a reference UI over Muapi.
+The existing MuAPI/Higgsfield adapter remains a legacy optional provider while
+current assets are migrated. Blackbox is the production direction requested for
+new image/video work.
 
-- The upstream project is a Vite web UI, not a server API.
-- ZUNO integrates Muapi directly via `higgsfieldClient`.
-- See: `docs/OPEN_HIGGSFIELD_AI.md`
+Generation does not equal approval. A candidate cannot ship if the Guardian's
+face, species, armor, proportions, weapon, or art direction drifts from the
+approved Unity/Meshy asset. Complex final character action may be rendered from
+the approved rig inside Unity when generative video cannot hold continuity.
 
-## Pipeline Stages (Planned)
-1. Narrative plan
-   - Define: intro beats, level objective, stakes, recommended loadout.
-   - Primary source: AI Director (Langdock AI Pro), planning-only.
+In-game delivery is 16:9 landscape. Optional 9:16 versions are marketing cuts.
+Every final movie includes approved narration, commercially cleared music,
+sound design, subtitles, checksum, provenance, and a mobile playback test.
 
-2. Script + storyboard
-   - Output: text script and a shot list.
-   - Include: model/scene references, transitions, duration estimates.
+Official APIs:
 
-3. Asset sourcing
-   - 3D: Meshy.ai-assisted workflow (future).
-   - Audio: Voice Pipeline output.
-   - Music/SFX: curated library (future).
-
-4. Video assembly
-   - Compile clips to target format.
-   - Add subtitles.
-   - Add logo/title cards.
-
-5. Export + packaging
-   - Output to `public/` or CDN-backed storage (future decision).
-   - Maintain versioned naming per level.
-
-## Output Targets
-- Primary: vertical 9:16 (Android-first)
-- Secondary: 16:9 for marketing
-- Caption track: WebVTT
-
-## Security
-- Do not commit API keys.
-- Keep `.env.local` gitignored.
-- Only document provider names and intended uses.
-
-## Related Docs
-- `docs/LEVEL_CINEMATICS.md`
-- `docs/VOICE_PIPELINE.md`
-- `docs/AI_DIRECTOR.md`
-
-## Existing Asset
-The current shipped intro video is:
-- `public/video.mp4` (vertical)
-
-## Backend Integration (Planned)
-Phase 1 introduces provider interfaces only.
-
-Planned backend interfaces:
-- `src/lib/providers/higgsfield/higgsfieldClient.ts`:
-  - `generateCinematic({ type, levelId?, spec, requestId? })`
-- `src/lib/config/aiProviders.ts`:
-  - `HIGGSFIELD_API_KEY`
-  - `HIGGSFIELD_BASE_URL`
-
-Future runtime behavior (high-level):
-1. AI Director produces a cinematic spec:
-   - mission briefing
-   - recommended weapons/gadgets/armor
-   - strategy
-   - narrator + NPC dialogue script
-2. Voice pipeline generates audio tracks.
-3. Higgsfield generates video clips or an assembled cinematic.
-4. The game streams a finalized asset by level + locale.
+- https://docs.blackbox.ai/api-reference/image
+- https://docs.blackbox.ai/api-reference/video

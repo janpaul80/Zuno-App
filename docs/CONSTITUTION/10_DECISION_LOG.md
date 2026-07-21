@@ -94,3 +94,38 @@ keeps iteration independent from network, provider, and asset-pipeline failures.
 - `docs/CONSTITUTION/01_PROJECT_VISION.md`
 - `docs/CONSTITUTION/06_GAME_DESIGN_PRINCIPLES.md`
 - `docs/CONSTITUTION/07_SECURITY_MODEL.md`
+
+---
+
+## ADR-006 — 2026-07-21 — Mission Cinematics, Visible Mobile Loadout, and Provider Failover
+
+**Status:** Accepted.
+
+**Resolution:**
+Every ZUNO mission is defined in one canonical catalogue and is introduced by a
+cinematic-capable briefing before a readable third-person battle. The mobile HUD
+keeps combat controls, health, objective, weapon, ammunition, armor, gadget, and
+coin status visible. Provider generation remains an offline production concern.
+
+**Decisions:**
+1. The campaign contains nine initial missions across Scout/Easy,
+   Guardian/Medium, and Legend/Hard tiers.
+2. Every mission identifies enemies, protection target, objective, potential
+   coin reward, and stable cinematic asset name.
+3. Runtime movies are 16:9 landscape with written fallback, replay/skip, and
+   future localized subtitles; marketing may derive 9:16 cuts.
+4. Mastra orchestrates Logicc as primary inference. Langdock failover requires
+   the explicit `AI_DIRECTOR_FALLBACK_PROVIDER=langdock` setting.
+5. Meshy, Blackbox, and Voicebox operate server-side or locally during asset
+   production. Their credentials, runtimes, and raw output never enter the APK.
+6. Generated media requires identity, rights, creative, technical, and Android
+   performance approval before it becomes a production asset.
+7. The target audience is 13+, but official ESRB/PEGI/IARC badges are prohibited
+   until assigned by the applicable rating authority or storefront.
+8. ZUNO and its final deliverables are credited to Paul-Hartmann LLC.
+
+**Cross-Refs:**
+- `docs/ZUNO_GAME_PRODUCTION_ROADMAP.md`
+- `docs/LEVEL_CINEMATICS.md`
+- `docs/CONTENT_RATING.md`
+- `docs/VOICE_PIPELINE.md`

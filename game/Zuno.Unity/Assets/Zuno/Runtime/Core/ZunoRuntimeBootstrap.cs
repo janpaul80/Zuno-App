@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zuno.Gameplay.Domain;
 using Zuno.Gameplay.Input;
 using Zuno.Gameplay.Presentation;
 
@@ -42,9 +43,9 @@ namespace Zuno.Gameplay.Core
             cameraRig.Initialize(guardian.Root.transform);
             guardian.Motor.Initialize(camera.transform);
 
-            BuildEnemies(root.transform, guardian.Combatant, mission);
+            List<CorruptedConstruct> enemies = BuildEnemies(root.transform, guardian.Combatant, mission);
             BuildExitBeacon(root.transform, mission);
-            BuildHud(root.transform, guardian, mission);
+            BuildHud(root.transform, guardian, mission, enemies);
         }
 
         private static void BuildLighting(Transform parent)
@@ -155,6 +156,12 @@ namespace Zuno.Gameplay.Core
             weaponPivot.localPosition = new Vector3(0.62f, 1.03f, 0.2f);
             Transform weapon = CreateVisualPart(PrimitiveType.Cube, "Aelis Energy Blade Greybox", weaponPivot, new Vector3(0f, 0.42f, 0f), new Vector3(0.12f, 0.92f, 0.12f), Quaternion.Euler(0f, 0f, -24f), cyan);
 
+            Transform blasterPivot = new GameObject("Pulse Blaster Pivot").transform;
+            blasterPivot.SetParent(visual, false);
+            blasterPivot.localPosition = new Vector3(-0.58f, 1.08f, 0.25f);
+            CreateVisualPart(PrimitiveType.Cube, "Blue Pulse Blaster Body", blasterPivot, Vector3.zero, new Vector3(0.2f, 0.18f, 0.62f), Quaternion.identity, dark);
+            CreateVisualPart(PrimitiveType.Cylinder, "Blue Pulse Blaster Core", blasterPivot, new Vector3(0f, 0f, 0.32f), new Vector3(0.09f, 0.16f, 0.09f), Quaternion.Euler(90f, 0f, 0f), cyan);
+
             Transform hitOrigin = new GameObject("Melee Hit Origin").transform;
             hitOrigin.SetParent(root.transform, false);
             hitOrigin.localPosition = new Vector3(0f, 1.05f, 1.05f);
@@ -164,7 +171,7 @@ namespace Zuno.Gameplay.Core
             GuardianMotor motor = root.AddComponent<GuardianMotor>();
             motor.Initialize(cameraTransform);
             GuardianCombat combat = root.AddComponent<GuardianCombat>();
-            combat.Initialize(hitOrigin, weaponPivot);
+            combat.Initialize(hitOrigin, weaponPivot, blasterPivot);
             combatant.Defeated += (_, _) =>
             {
                 motor.SetControlEnabled(false);
@@ -174,8 +181,9 @@ namespace Zuno.Gameplay.Core
             return new GuardianReferences(root, combatant, motor, combat);
         }
 
-        private static void BuildEnemies(Transform parent, Combatant guardian, GrasslandsMission mission)
+        private static List<CorruptedConstruct> BuildEnemies(Transform parent, Combatant guardian, GrasslandsMission mission)
         {
+            List<CorruptedConstruct> enemies = new();
             Vector3[] positions =
             {
                 new(-2.1f, 1f, 11f),
@@ -208,8 +216,11 @@ namespace Zuno.Gameplay.Core
                 combatant.Initialize(58 + index * 6, Faction.Corruption, true);
                 CorruptedConstruct brain = enemy.AddComponent<CorruptedConstruct>();
                 brain.Initialize(guardian);
+                enemies.Add(brain);
                 mission.WatchEnemy(combatant);
             }
+
+            return enemies;
         }
 
         private static void BuildExitBeacon(Transform parent, GrasslandsMission mission)
@@ -237,7 +248,11 @@ namespace Zuno.Gameplay.Core
             exit.Initialize(mission, ring.GetComponent<Renderer>());
         }
 
-        private static void BuildHud(Transform parent, GuardianReferences guardian, GrasslandsMission mission)
+        private static void BuildHud(
+            Transform parent,
+            GuardianReferences guardian,
+            GrasslandsMission mission,
+            IReadOnlyList<CorruptedConstruct> enemies)
         {
             EnsureEventSystem(parent);
             _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -271,6 +286,16 @@ namespace Zuno.Gameplay.Core
             dashFill.type = Image.Type.Filled;
             dashFill.fillMethod = Image.FillMethod.Horizontal;
 
+            Text coinsLabel = CreateText(canvasObject.transform, "Coin Balance", "COINS  0  // OFFLINE", 22, TextAnchor.MiddleLeft, new Color(1f, 0.78f, 0.08f));
+            SetRect(coinsLabel.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(252f, -182f), new Vector2(400f, 38f));
+
+            Text gearHeading = CreateText(canvasObject.transform, "Gear Heading", "TAP GEAR TO SWITCH", 18, TextAnchor.MiddleRight, new Color(0.55f, 0.9f, 1f));
+            SetRect(gearHeading.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-240f, -42f), new Vector2(420f, 32f));
+            Text weaponLabel = CreateTopRightLoadoutButton(canvasObject.transform, "WEAPON", new Vector2(-240f, -91f), guardian.Combat.CycleWeapon);
+            Text ammoLabel = CreateTopRightLoadoutButton(canvasObject.transform, "AMMO", new Vector2(-240f, -149f), guardian.Combat.CycleAmmo);
+            Text armorLabel = CreateTopRightLoadoutButton(canvasObject.transform, "ARMOR", new Vector2(-240f, -207f), guardian.Combat.CycleArmor);
+            Text gadgetLabel = CreateTopRightLoadoutButton(canvasObject.transform, "GADGET", new Vector2(-240f, -265f), guardian.Combat.CycleGadget);
+
             BuildVirtualStick(canvasObject.transform, guardian.Motor);
             CreateActionButton(canvasObject.transform, "ATTACK", new Vector2(-155f, 175f), new Color(1f, 0.22f, 0.18f, 0.88f), guardian.Combat.TryAttack);
             CreateActionButton(canvasObject.transform, "JUMP", new Vector2(-315f, 110f), new Color(0.03f, 0.7f, 1f, 0.88f), guardian.Motor.QueueJump);
@@ -285,7 +310,108 @@ namespace Zuno.Gameplay.Core
             CreateActionButton(terminalPanel.transform, "RESTART", new Vector2(0f, 42f), new Color(0.1f, 0.85f, 0.42f, 0.95f), mission.Restart, false, new Vector2(270f, 76f));
 
             ZunoHud hud = canvasObject.AddComponent<ZunoHud>();
-            hud.Initialize(guardian.Combatant, guardian.Motor, mission, healthFill, dashFill, healthLabel, objective, terminalPanel, terminalTitle, terminalBody);
+            hud.Initialize(
+                guardian.Combatant,
+                guardian.Motor,
+                guardian.Combat,
+                mission,
+                healthFill,
+                dashFill,
+                healthLabel,
+                objective,
+                coinsLabel,
+                weaponLabel,
+                ammoLabel,
+                armorLabel,
+                gadgetLabel,
+                terminalPanel,
+                terminalTitle,
+                terminalBody);
+
+            BuildMissionFrontEnd(canvasObject, guardian, enemies);
+        }
+
+        private static void BuildMissionFrontEnd(
+            GameObject canvasObject,
+            GuardianReferences guardian,
+            IReadOnlyList<CorruptedConstruct> enemies)
+        {
+            MissionLaunchFlow flow = canvasObject.AddComponent<MissionLaunchFlow>();
+
+            GameObject roadmapPanel = CreateImage(canvasObject.transform, "Zunlandia Mission Roadmap", new Color(0.008f, 0.018f, 0.055f, 0.985f)).gameObject;
+            Stretch((RectTransform)roadmapPanel.transform, 0f);
+            Text roadmapTitle = CreateText(roadmapPanel.transform, "Roadmap Title", "ZUNLANDIA GUARDIAN ROADMAP", 54, TextAnchor.MiddleCenter, Color.white);
+            SetRect(roadmapTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -72f), new Vector2(1250f, 82f));
+            Text roadmapSubtitle = CreateText(roadmapPanel.transform, "Roadmap Subtitle", "CHOOSE A MISSION // PROTECT THE REALM // EARN SERVER-VALIDATED COINS", 22, TextAnchor.MiddleCenter, new Color(0.35f, 0.85f, 1f));
+            SetRect(roadmapSubtitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -130f), new Vector2(1250f, 42f));
+
+            for (int index = 0; index < MissionCatalogue.All.Count; index++)
+            {
+                MissionDefinition definition = MissionCatalogue.All[index];
+                int column = index % 3;
+                int row = index / 3;
+                Vector2 position = new(-505f + column * 505f, 235f - row * 190f);
+                Color color = definition.Difficulty switch
+                {
+                    MissionDifficulty.Scout => new Color(0.12f, 0.48f, 0.14f, 0.96f),
+                    MissionDifficulty.Guardian => new Color(0.72f, 0.25f, 0.035f, 0.96f),
+                    _ => new Color(0.45f, 0.05f, 0.62f, 0.96f)
+                };
+                string status = definition.Playable ? "DEPLOY" : "LOCKED // IN PRODUCTION";
+                Button button = CreateCenteredButton(
+                    roadmapPanel.transform,
+                    $"{definition.Sequence:00}  {definition.Name.ToUpperInvariant()}\n{definition.DifficultyLabel}  //  {definition.BaseCoinReward:N0} COINS\n{status}",
+                    position,
+                    new Vector2(450f, 150f),
+                    color,
+                    () => flow.ShowBriefing(definition),
+                    20);
+                button.interactable = definition.Playable;
+            }
+
+            Text audienceBadge = CreateText(roadmapPanel.transform, "Audience Badge", "TARGET AUDIENCE 13+  //  OFFICIAL STORE RATING PENDING", 18, TextAnchor.MiddleLeft, new Color(1f, 0.78f, 0.08f));
+            SetRect(audienceBadge.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(365f, 42f), new Vector2(650f, 36f));
+            Text ownerCredit = CreateText(roadmapPanel.transform, "Owner Credit", "© 2026 PAUL-HARTMANN LLC. ALL RIGHTS RESERVED.", 18, TextAnchor.MiddleRight, new Color(1f, 1f, 1f, 0.72f));
+            SetRect(ownerCredit.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-380f, 42f), new Vector2(700f, 36f));
+
+            GameObject briefingPanel = CreateImage(canvasObject.transform, "Mission Briefing", new Color(0.008f, 0.018f, 0.055f, 0.985f)).gameObject;
+            Stretch((RectTransform)briefingPanel.transform, 0f);
+            Text briefingTitle = CreateText(briefingPanel.transform, "Briefing Title", "MISSION BRIEFING", 52, TextAnchor.MiddleCenter, Color.white);
+            SetRect(briefingTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -92f), new Vector2(1400f, 90f));
+            Text briefingBody = CreateText(briefingPanel.transform, "Briefing Body", string.Empty, 28, TextAnchor.MiddleLeft, new Color(0.9f, 0.95f, 1f));
+            SetRect(briefingBody.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-190f, 60f), new Vector2(1040f, 560f));
+            Text briefingReward = CreateText(briefingPanel.transform, "Briefing Reward", string.Empty, 25, TextAnchor.MiddleCenter, new Color(1f, 0.75f, 0.08f));
+            SetRect(briefingReward.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-305f, 110f), new Vector2(480f, 130f));
+            CreateCenteredButton(briefingPanel.transform, "WATCH CINEMATIC", new Vector2(500f, -70f), new Vector2(390f, 82f), new Color(0.1f, 0.55f, 0.95f, 0.96f), flow.PlaySelectedCinematic, 23);
+            CreateCenteredButton(briefingPanel.transform, "DEPLOY GUARDIAN", new Vector2(500f, -180f), new Vector2(390f, 82f), new Color(0.1f, 0.82f, 0.36f, 0.96f), flow.Deploy, 23);
+            CreateCenteredButton(briefingPanel.transform, "BACK TO ROADMAP", new Vector2(500f, -290f), new Vector2(390f, 72f), new Color(0.22f, 0.25f, 0.34f, 0.96f), flow.ShowRoadmap, 20);
+
+            GameObject cinematicPanel = CreateImage(canvasObject.transform, "Cinematic Player", Color.black).gameObject;
+            Stretch((RectTransform)cinematicPanel.transform, 0f);
+            Text cinematicTitle = CreateText(cinematicPanel.transform, "Cinematic Title", "MISSION CINEMATIC", 34, TextAnchor.MiddleCenter, Color.white);
+            SetRect(cinematicTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -42f), new Vector2(1100f, 60f));
+            GameObject videoSurfaceObject = new("Cinematic Surface", typeof(RectTransform));
+            videoSurfaceObject.transform.SetParent(cinematicPanel.transform, false);
+            RawImage videoSurface = videoSurfaceObject.AddComponent<RawImage>();
+            SetRect(videoSurface.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 8f), new Vector2(1280f, 720f));
+            Text cinematicFallback = CreateText(cinematicPanel.transform, "Cinematic Fallback", "PREPARING CINEMATIC...", 30, TextAnchor.MiddleCenter, Color.white);
+            SetRect(cinematicFallback.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 8f), new Vector2(1150f, 500f));
+
+            MissionCinematicPlayer cinematicPlayer = canvasObject.AddComponent<MissionCinematicPlayer>();
+            cinematicPlayer.Initialize(cinematicPanel, videoSurface, cinematicTitle, cinematicFallback);
+            CreateCenteredButton(cinematicPanel.transform, "SKIP / RETURN", new Vector2(0f, -472f), new Vector2(300f, 68f), new Color(0.28f, 0.3f, 0.38f, 0.96f), cinematicPlayer.Close, 20);
+
+            briefingPanel.SetActive(false);
+            flow.Initialize(
+                guardian.Motor,
+                guardian.Combat,
+                enemies,
+                roadmapPanel,
+                briefingPanel,
+                briefingTitle,
+                briefingBody,
+                briefingReward,
+                cinematicPlayer);
         }
 
         private static void EnsureEventSystem(Transform parent)
@@ -310,6 +436,41 @@ namespace Zuno.Gameplay.Core
             SetRect(handle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(92f, 92f));
             VirtualStick stick = background.gameObject.AddComponent<VirtualStick>();
             stick.Initialize(handle.rectTransform, motor);
+        }
+
+        private static Text CreateTopRightLoadoutButton(
+            Transform parent,
+            string slot,
+            Vector2 anchoredPosition,
+            UnityEngine.Events.UnityAction action)
+        {
+            Image image = CreateImage(parent, $"{slot} Loadout Button", new Color(0.02f, 0.08f, 0.18f, 0.9f));
+            SetRect(image.rectTransform, Vector2.one, Vector2.one, anchoredPosition, new Vector2(430f, 50f));
+            Button button = image.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.onClick.AddListener(action);
+            Text label = CreateText(image.transform, "Label", slot, 17, TextAnchor.MiddleCenter, Color.white);
+            Stretch(label.rectTransform, 4f);
+            return label;
+        }
+
+        private static Button CreateCenteredButton(
+            Transform parent,
+            string label,
+            Vector2 anchoredPosition,
+            Vector2 size,
+            Color color,
+            UnityEngine.Events.UnityAction action,
+            int fontSize)
+        {
+            Image image = CreateImage(parent, $"{label} Button", color);
+            SetRect(image.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), anchoredPosition, size);
+            Button button = image.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.onClick.AddListener(action);
+            Text text = CreateText(image.transform, "Label", label, fontSize, TextAnchor.MiddleCenter, Color.white);
+            Stretch(text.rectTransform, 7f);
+            return button;
         }
 
         private static Button CreateActionButton(

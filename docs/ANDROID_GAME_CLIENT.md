@@ -1,7 +1,7 @@
 # ZUNO Android Game Client
 
 Version: 1.0
-Status: Grasslands Vertical Slice Foundation
+Status: Mission Shell and Grasslands Combat Slice
 
 ## Outcome
 
@@ -42,6 +42,10 @@ The Grasslands slice contains:
 - exit beacon locked until the objective is satisfied
 - health, objective, cooldown, and completion UI
 - keyboard/gamepad-friendly Editor controls for rapid iteration
+- nine-mission Zunlandia roadmap with Scout, Guardian, and Legend tiers
+- cinematic-capable written briefing with watch/skip/fallback behavior
+- visible weapon, ammo, armor, gadget, coin, health, objective, and cooldown HUD
+- functional Energy Blade and Blue Pulse Blaster greybox combat modes
 
 ## Architectural boundaries
 
@@ -105,5 +109,6 @@ CI from protected secrets and a verified tag.
 
 Replace Aelis's greybox visual with the approved rigged model and implement the
 animation graph: idle, locomotion, jump, fall, land, three attacks, dash, hit,
-knockout, and victory. In parallel, build the Grasslands modular environment kit
-and add measured Android performance baselines on at least one mid-range device.
+knockout, victory, blade, and blaster states. Produce the startup and Grasslands
+cinematics with approved narration/music/subtitles, build the modular environment
+kit, and add measured Android performance baselines on representative devices.

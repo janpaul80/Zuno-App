@@ -17,7 +17,7 @@ export default function SupportPage() {
   const faqs = [
     {
       q: "What is ZUNO and who created it?",
-      a: "ZUNO is an adventurous animal battle fantasy game where players level up elemental champions, gather currency, and explore balanced worlds. ZUNO was created by Paul Hartmann.",
+      a: "ZUNO is an adventurous animal battle fantasy game where players level up elemental Guardians, gather currency, and protect Zunlandia. ZUNO was created by Paul Hartmann and is owned by Paul-Hartmann LLC.",
     },
     {
       q: "How does the AI-powered progression balance work?",
@@ -52,7 +52,7 @@ export default function SupportPage() {
       } else if (lower.includes("play") || lower.includes("control") || lower.includes("keys")) {
         reply = "ZUNO uses a responsive keyboard layout (W-A-S-D to navigate, Space to Dodge, Q/E to cast elemental spells). You can review all bindings in our How To Play section.";
       } else if (lower.includes("creator") || lower.includes("paul") || lower.includes("hartmann")) {
-        reply = "ZUNO was created by Paul Hartmann, built upon custom modern art direction and advanced AI operations integration.";
+        reply = "ZUNO was created by Paul Hartmann and is owned and directed by Paul-Hartmann LLC, with custom art direction and secure AI-assisted production systems.";
       } else if (lower.includes("bug") || lower.includes("exploit") || lower.includes("cheat")) {
         reply = "Please use our Bug Report or Contact forms on this page. All telemetry logs are monitored by the AI Economy layer to isolate issues.";
       }

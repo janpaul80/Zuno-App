@@ -36,6 +36,7 @@ const expectedPackages = {
   "com.unity.render-pipelines.universal": "17.3.0",
   "com.unity.test-framework": "1.6.0",
   "com.unity.ugui": "2.0.0",
+  "com.unity.modules.video": "1.0.0",
 };
 
 for (const [name, version] of Object.entries(expectedPackages)) {
@@ -52,6 +53,10 @@ requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Core", "ZunoRuntimeBootstra
 requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Gameplay", "GuardianMotor.cs"), "QueueJump");
 requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Gameplay", "GuardianCombat.cs"), "TryAttack");
 requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Domain", "MissionProgress.cs"), "TryCompleteAtExit");
+requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Domain", "MissionCatalogue.cs"), "Titan Arena");
+requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Domain", "GuardianLoadout.cs"), "BluePulseBlaster");
+requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Presentation", "MissionCinematicPlayer.cs"), "VideoPlayer");
+requireIncludes(join(assetsRoot, "Zuno", "Runtime", "Presentation", "MissionLaunchFlow.cs"), "ShowRoadmap");
 
 const assetFiles = walk(assetsRoot);
 for (const file of assetFiles) {
@@ -66,6 +71,9 @@ const forbiddenSourcePatterns = [
   "SUPABASE_SERVICE_ROLE_KEY",
   "MESHY_AI_API",
   "LOGICC_API_KEY",
+  "LANGDOCK_API_KEY",
+  "BLACKBOX_API_KEY",
+  "VOICEBOX_BASE_URL",
   "UnityWebRequest",
 ];
 
@@ -78,7 +86,12 @@ for (const file of sourceFiles) {
   }
 }
 
-const requiredTests = ["VitalityTests.cs", "MissionProgressTests.cs"];
+const requiredTests = [
+  "VitalityTests.cs",
+  "MissionProgressTests.cs",
+  "MissionCatalogueTests.cs",
+  "GuardianLoadoutTests.cs",
+];
 for (const test of requiredTests) {
   if (!sourceFiles.some((file) => file.endsWith(test))) fail(`Missing EditMode test: ${test}`);
 }

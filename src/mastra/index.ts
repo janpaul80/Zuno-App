@@ -1,7 +1,12 @@
 import { Agent } from '@mastra/core/agent'
 import type { OpenAICompatibleConfig } from '@mastra/core/llm'
 
-import { getLogiccConfig, type LogiccConfig } from '@/lib/config/aiProviders'
+import {
+  getLangdockConfig,
+  getLogiccConfig,
+  type LangdockConfig,
+  type LogiccConfig,
+} from '@/lib/config/aiProviders'
 import {
   AiDirectorModelResponseSchema,
   type AiDirectorModelResponse,
@@ -16,7 +21,7 @@ export interface RunAiDirectorWithMastraInput {
 
 export interface RunAiDirectorWithMastraResult {
   output: AiDirectorModelResponse
-  inferenceProvider: 'logicc'
+  inferenceProvider: 'logicc' | 'langdock'
   model: string
 }
 
@@ -40,6 +45,16 @@ export function createLogiccMastraModelConfig(
   }
 }
 
+export function createLangdockMastraModelConfig(
+  config: LangdockConfig = getLangdockConfig(),
+): OpenAICompatibleConfig {
+  return {
+    id: `langdock/${config.model}`,
+    url: config.baseUrl,
+    apiKey: config.apiKey,
+  }
+}
+
 export const aiDirectorAgent = new Agent({
   id: AI_DIRECTOR_AGENT_ID,
   name: 'ZUNO AI Director',
@@ -57,8 +72,25 @@ export async function runAiDirectorWithMastra(
   input: RunAiDirectorWithMastraInput,
   abortSignal?: AbortSignal,
 ): Promise<RunAiDirectorWithMastraResult> {
-  const config = getLogiccConfig()
+  try {
+    const config = getLogiccConfig()
+    return await generateWithProvider(input, 'logicc', config, abortSignal)
+  } catch (primaryError) {
+    if (!isLangdockFallbackEnabled() || abortSignal?.aborted) {
+      throw primaryError
+    }
 
+    const fallbackConfig = getLangdockConfig()
+    return await generateWithProvider(input, 'langdock', fallbackConfig, abortSignal)
+  }
+}
+
+async function generateWithProvider(
+  input: RunAiDirectorWithMastraInput,
+  provider: 'logicc' | 'langdock',
+  config: LogiccConfig | LangdockConfig,
+  abortSignal?: AbortSignal,
+): Promise<RunAiDirectorWithMastraResult> {
   let result
   try {
     result = await aiDirectorAgent.generate(
@@ -74,7 +106,11 @@ export async function runAiDirectorWithMastra(
       ],
       {
         instructions: input.systemPrompt,
-        model: createLogiccMastraModelConfig(config),
+        model: {
+          id: `${provider}/${config.model}`,
+          url: config.baseUrl,
+          apiKey: config.apiKey,
+        },
         maxSteps: 1,
         modelSettings: { temperature: 0.2 },
         abortSignal,
@@ -98,9 +134,13 @@ export async function runAiDirectorWithMastra(
 
   return {
     output: validation.data,
-    inferenceProvider: 'logicc',
+    inferenceProvider: provider,
     model: config.model,
   }
+}
+
+function isLangdockFallbackEnabled(): boolean {
+  return process.env.AI_DIRECTOR_FALLBACK_PROVIDER?.trim().toLowerCase() === 'langdock'
 }
 
 function isStructuredOutputFailure(error: unknown): boolean {

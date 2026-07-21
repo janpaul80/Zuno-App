@@ -13,9 +13,20 @@ export interface LogiccConfig {
 }
 
 export interface VoiceboxConfig {
-  // Local-first: the backend calls a local Voicebox HTTP service.
-  // This value is optional until voice generation is enabled.
   baseUrl: string
+  profiles: {
+    narrator?: string
+    npc?: string
+    mission?: string
+    cinematic?: string
+  }
+}
+
+export interface BlackboxConfig {
+  apiKey: string
+  baseUrl: string
+  imageModel: string
+  videoModel: string
 }
 
 export interface HiggsfieldConfig {
@@ -67,9 +78,39 @@ export function getLogiccConfig(): LogiccConfig {
 }
 
 export function getVoiceboxConfig(): VoiceboxConfig {
-  // Voicebox should run locally; default is safe and explicit.
-  const baseUrl = process.env.VOICEBOX_BASE_URL ?? 'http://127.0.0.1:3009'
-  return { baseUrl }
+  // jamiepine/voicebox is local-first and listens on 17493 by default.
+  const baseUrl = (process.env.VOICEBOX_BASE_URL ?? 'http://127.0.0.1:17493').trim()
+  let parsed: URL
+  try {
+    parsed = new URL(baseUrl)
+  } catch {
+    throw new ApiError('INTERNAL_ERROR', 'VOICEBOX_BASE_URL must be a valid URL', 500)
+  }
+  if (!['127.0.0.1', 'localhost', '::1'].includes(parsed.hostname)) {
+    throw new ApiError(
+      'INTERNAL_ERROR',
+      'Voicebox must remain loopback-only because its local API has no built-in authentication',
+      500,
+    )
+  }
+  return {
+    baseUrl,
+    profiles: {
+      narrator: process.env.VOICEBOX_NARRATOR_PROFILE_ID?.trim() || undefined,
+      npc: process.env.VOICEBOX_NPC_PROFILE_ID?.trim() || undefined,
+      mission: process.env.VOICEBOX_MISSION_PROFILE_ID?.trim() || undefined,
+      cinematic: process.env.VOICEBOX_CINEMATIC_PROFILE_ID?.trim() || undefined,
+    },
+  }
+}
+
+export function getBlackboxConfig(): BlackboxConfig {
+  return {
+    apiKey: requireEnv('BLACKBOX_API_KEY', process.env.BLACKBOX_API_KEY),
+    baseUrl: (process.env.BLACKBOX_BASE_URL ?? 'https://api.blackbox.ai').trim(),
+    imageModel: (process.env.BLACKBOX_IMAGE_MODEL ?? 'flux-pro').trim(),
+    videoModel: (process.env.BLACKBOX_VIDEO_MODEL ?? 'veo-2').trim(),
+  }
 }
 
 export function getHiggsfieldConfig(): HiggsfieldConfig {

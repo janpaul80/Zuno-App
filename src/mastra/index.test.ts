@@ -4,6 +4,7 @@ import {
   AI_DIRECTOR_AGENT_ID,
   AiDirectorInvalidOutputError,
   aiDirectorAgent,
+  createLangdockMastraModelConfig,
   createLogiccMastraModelConfig,
   runAiDirectorWithMastra,
 } from './index'
@@ -163,5 +164,37 @@ describe('Mastra AI Director runner', () => {
       message: expect.stringContaining('LOGICC_API_KEY'),
     })
     expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
+  it('uses Langdock only when explicit failover is enabled', async () => {
+    vi.stubEnv('LOGICC_API_KEY', '')
+    vi.stubEnv('LOGICC_BASE_URL', '')
+    vi.stubEnv('AI_DIRECTOR_FALLBACK_PROVIDER', 'langdock')
+    vi.stubEnv('LANGDOCK_API_KEY', 'langdock-test-key')
+    vi.stubEnv('LANGDOCK_BASE_URL', 'https://langdock.example/eu/v1')
+    vi.stubEnv('LANGDOCK_MODEL', 'fallback-model')
+    let requestUrl = ''
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      requestUrl = String(input)
+      return logiccResponse(JSON.stringify(structuredReply))
+    })
+
+    expect(createLangdockMastraModelConfig()).toMatchObject({
+      id: 'langdock/fallback-model',
+      url: 'https://langdock.example/eu/v1',
+    })
+
+    const result = await runAiDirectorWithMastra({
+      systemPrompt: 'You are the ZUNO AI Director.',
+      context: { guardian: { level: 4 } },
+      message: 'What is next?',
+    })
+
+    expect(result).toMatchObject({
+      inferenceProvider: 'langdock',
+      model: 'fallback-model',
+    })
+    expect(requestUrl).toBe('https://langdock.example/eu/v1/chat/completions')
   })
 })
